@@ -12,6 +12,7 @@ You have **no chat history**. Use **only** the files below to understand what Al
 Optional during implementation:
 
 - [`docs/agents/progress.md`](agents/progress.md) — how to update work-state files
+- [`docs/FRONTIER-REVAMP-EVAL-PROMPT.md`](FRONTIER-REVAMP-EVAL-PROMPT.md) — prompt for frontier agent project re-evaluation
 - [`AGENTS.md`](../AGENTS.md) — commands, safety, pre-commit gate for **this repo**
 
 ## One-paragraph summary
