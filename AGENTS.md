@@ -85,10 +85,12 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 ## Session start
 
 1. Read `docs/agents/current-state.md` (if unfamiliar with repo state).
-2. Read `ROADMAP.md` (first unchecked item only when phase active, not parked).
-3. Read `task.md` / open issues (if present).
+2. Read `ROADMAP.md` (first unchecked item in active phase).
+3. Read `task.md` Work Packet / open issues (if present).
 4. Run `git log -5 --oneline` + `git status` (to sync history).
 5. Do not rely on chat history.
+
+Before Checkpoint (git commit of in-progress work): update Work Packet SFDBN fields in `task.md`.
 
 ---
 

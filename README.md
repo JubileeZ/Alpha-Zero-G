@@ -48,11 +48,6 @@ git pull
 ./azg apply .
 ```
 
-## Legacy
-
-- v3 implementation plan: [docs/archive/V3-PLAN.md](docs/archive/V3-PLAN.md)
-- Agent architecture guides: `docs/antigravity-agent-architect/` (reference; v4 spec wins on conflict)
-
 ## Uninstall
 
 ```bash
