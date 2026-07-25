@@ -17,7 +17,7 @@ Optional during implementation:
 
 ## One-paragraph summary
 
-Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), 12 curated global skills + Ponytail rule, four enforcement hooks, and one PreCompact observability hook. Phase 10 Fable promotion remains parked pending delivery-cost evidence; `REVAMP-SPEC.md` defines design and `current-state.md` records reality.
+Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), 12 curated global skills + Ponytail rule, four enforcement hooks, and one PreCompact observability hook. `REVAMP-SPEC.md` defines design and `current-state.md` records reality.
 
 ## Before writing code
 

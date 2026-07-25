@@ -4,7 +4,7 @@
 
 ## Project Identity
 
-Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for solo/small teams using Cursor and/or Antigravity (`agy`). v4 complete; Phase 10 Fable promotion parked. Canonical spec: `docs/REVAMP-SPEC.md`.
+Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for solo/small teams using Cursor and/or Antigravity (`agy`). v4 complete. Canonical spec: `docs/REVAMP-SPEC.md`.
 
 **Stack:** Bash (>= 4.0) · jq · Python (3.x) · Git · agy (Antigravity CLI)
 
@@ -40,7 +40,7 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 |---------|-------------|
 | `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint Bash scripts |
 | `bash tests/run-all.sh` | Aggregate gate (shellcheck + verifiers + all suites) |
-| `bash evals/run-pair.sh <id> core\|baseline\|core+fable` | Prepare Core Pilot eval workdir |
+| `bash evals/run-pair.sh <id> core\|baseline` | Prepare Core Pilot eval workdir |
 | `bash tests/test-azg.sh` | Run general integration tests |
 | `bash tests/test-phase<0-10>.sh` | Run phase-specific integration/TDD tests |
 | `python3 tests/verify_docs.py` | Verify markdown documentation links |

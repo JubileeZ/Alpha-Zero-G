@@ -95,13 +95,39 @@ fi
 section "5. common.sh — helper functions are defined"
 
 for fn in info ok warn err die step require_cmd require_jq require_agy \
-          ensure_dir atomic_write atomic_copy sed_portable prompt_yn prompt_choice; do
+          ensure_dir atomic_write atomic_copy sed_portable prompt_yn prompt_choice \
+          replace_managed_block; do
   if bash -c "source '${REPO_ROOT}/lib/common.sh' && declare -f ${fn}" > /dev/null 2>&1; then
     pass "function ${fn}() is defined"
   else
     fail "function ${fn}() is missing from common.sh"
   fi
 done
+
+section "5b. replace_managed_block fail-closed markers"
+
+_rmb_dir="$(azg_mktemp_d "tmp_azg_rmb-XXXXXX")"
+printf 'before\n<!-- AZG:MANAGED:START -->\nold\n<!-- AZG:MANAGED:END -->\nafter\n' > "${_rmb_dir}/ok.md"
+if bash -c "source '${REPO_ROOT}/lib/common.sh' && replace_managed_block '${_rmb_dir}/ok.md' '<!-- AZG:MANAGED:START -->' '<!-- AZG:MANAGED:END -->' 'new'"; then
+  if grep -q 'new' "${_rmb_dir}/ok.md" && grep -q 'before' "${_rmb_dir}/ok.md" && grep -q 'after' "${_rmb_dir}/ok.md"; then
+    pass "replace_managed_block rewrites valid markers and keeps outer prose"
+  else
+    fail "replace_managed_block corrupted surrounding prose" "$(cat "${_rmb_dir}/ok.md")"
+  fi
+else
+  fail "replace_managed_block rejected valid markers"
+fi
+
+printf 'before\n<!-- AZG:MANAGED:START -->\nold\nno-end\n' > "${_rmb_dir}/bad.md"
+if bash -c "source '${REPO_ROOT}/lib/common.sh' && replace_managed_block '${_rmb_dir}/bad.md' '<!-- AZG:MANAGED:START -->' '<!-- AZG:MANAGED:END -->' 'new'"; then
+  fail "replace_managed_block accepted missing end marker"
+else
+  if grep -q 'no-end' "${_rmb_dir}/bad.md" && ! grep -q '^new$' "${_rmb_dir}/bad.md"; then
+    pass "replace_managed_block rejects missing end marker without rewrite"
+  else
+    fail "replace_managed_block mutated file despite missing end marker" "$(cat "${_rmb_dir}/bad.md")"
+  fi
+fi
 
 section "6. azg dispatcher — version flags"
 

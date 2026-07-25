@@ -237,7 +237,6 @@ cmd_setup() {
 
   # 3. Copy vendor skills
   local skills_copied=0
-  local skills_skipped=0
   local skills_pruned=0
 
   if [ "${skip_sync}" -eq 1 ]; then
@@ -256,19 +255,15 @@ cmd_setup() {
           [ -d "${skill_dir}" ] || continue
           local skill_name
           skill_name="$(basename "${skill_dir}")"
-          local dest="${AZG_GLOBAL_SKILLS_DIR}/${skill_name}"
 
           if ! is_skill_in_profile "${skill_name}" "${profile}"; then
             continue
           fi
 
-          if [ -d "${dest}" ] && [ "${force}" -eq 0 ]; then
-            info "skill '${skill_name}' already installed, skipping (use --force to re-install)"
-            skills_skipped=$((skills_skipped + 1))
-          else
-            apply_overlay "${skill_name}" "${category_dir}" "${template_global}/skills/overlay/${vendor_name}" "${AZG_GLOBAL_SKILLS_DIR}"
-            skills_copied=$((skills_copied + 1))
-          fi
+          # Stamp changed (or first install / --force): refresh profile skills.
+          # Skipping existing dirs here would stamp a new SHA while leaving stale skills.
+          apply_overlay "${skill_name}" "${category_dir}" "${template_global}/skills/overlay/${vendor_name}" "${AZG_GLOBAL_SKILLS_DIR}"
+          skills_copied=$((skills_copied + 1))
         done
       done
 
@@ -294,12 +289,8 @@ cmd_setup() {
   local _sum_skills=""
   if [ "${skip_sync}" -eq 1 ]; then
     _sum_skills="skills up-to-date (smart sync)"
-  elif [ "${skills_copied}" -gt 0 ] && [ "${skills_skipped}" -gt 0 ]; then
-    _sum_skills="${skills_copied} skill(s) installed, ${skills_skipped} skipped"
   elif [ "${skills_copied}" -gt 0 ]; then
     _sum_skills="${skills_copied} skill(s) installed"
-  elif [ "${skills_skipped}" -gt 0 ]; then
-    _sum_skills="all ${skills_skipped} skill(s) already up-to-date"
   else
     _sum_skills="no skills to install (run 'azg update --vendor' to vendor skills)"
   fi

@@ -7,7 +7,6 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 0
 fi
 
-has_changes=false
 has_code_changes=false
 has_workstate_update=false
 
@@ -21,8 +20,6 @@ while IFS= read -r line; do
   if [ "$file_path" = ".agents/spawn-state.json" ] || [ "$file_path" = ".agents/session-handoff.md.tmpl" ]; then
     continue
   fi
-
-  has_changes=true
 
   if [ "$file_path" = "docs/agents/current-state.md" ] || [ "$file_path" = ".agents/session-handoff.md" ]; then
     has_workstate_update=true

@@ -8,7 +8,7 @@ It ships the following capabilities out-of-the-box across macOS, Linux, and Wind
 - **Safety Hooks**: Provides local `.agents/hooks/` for your repositories to block destructive operations, enforce commit gates, manage subagent spawn budgets, and verify work-state checkpoints.
 - **Brownfield & Greenfield Support**: Easily apply the harness to new projects (`azg new`) or safely retrofit existing repositories (`azg apply`).
 
-**v4 complete; Phase 10 Fable promotion parked pending evidence.** Start here:
+**v4 complete.** Start here:
 
 | Doc | Purpose |
 |-----|---------|

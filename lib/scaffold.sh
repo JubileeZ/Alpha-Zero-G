@@ -16,39 +16,6 @@ TODAY="$(date +%Y-%m-%d 2>/dev/null || echo "unknown")"
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
-ask() {
-    local prompt="$1"
-    local default="${2:-}"
-    local answer
-    if [ -n "$default" ]; then
-        printf "%s [%s]: " "$prompt" "$default" >&2
-    else
-        printf "%s: " "$prompt" >&2
-    fi
-    IFS= read -r answer
-    if [ -z "$answer" ] && [ -n "$default" ]; then
-        echo "$default"
-    else
-        echo "$answer"
-    fi
-}
-
-ask_yn() {
-    local prompt="$1"
-    local default="${2:-y}"
-    local answer
-    while true; do
-        printf "%s [%s]: " "$prompt" "$default" >&2
-        IFS= read -r answer
-        answer="${answer:-$default}"
-        case "$answer" in
-            [Yy]*) echo "yes"; return ;;
-            [Nn]*) echo "no"; return ;;
-            *) printf "Please answer yes or no.\n" >&2 ;;
-        esac
-    done
-}
-
 # Render a template file: replace {{TOKENS}} and write to dest
 render_template() {
     local src="$1"
@@ -82,61 +49,6 @@ copy_template() {
     dst_dir="$(dirname "$dst")"
     mkdir -p "$dst_dir"
     atomic_write "$dst" < "$src"
-}
-
-# ── stack presets ─────────────────────────────────────────────────────────────
-
-build_commands_for_stack() {
-    local stack="$1"
-    case "$stack" in
-        python)
-            printf '| Command | What it does |\n'
-            printf '|---------|-------------|\n'
-            printf '| `uv sync` | Install dependencies |\n'
-            printf '| `ruff check . --fix` | Lint (auto-fix) |\n'
-            printf '| `ruff format .` | Format |\n'
-            printf '| `pytest -v --tb=short` | Test |\n'
-            printf '| `mypy src/ --strict` | Type check |\n'
-            ;;
-        node)
-            printf '| Command | What it does |\n'
-            printf '|---------|-------------|\n'
-            printf '| `npm install` | Install dependencies |\n'
-            printf '| `npm run lint` | Lint |\n'
-            printf '| `npm run format` | Format |\n'
-            printf '| `npm test` | Test |\n'
-            printf '| `npx tsc --noEmit` | Type check |\n'
-            ;;
-        *)
-            printf '| Command | What it does |\n'
-            printf '|---------|-------------|\n'
-            printf '| (add your lint command here) | Lint |\n'
-            printf '| (add your test command here) | Test |\n'
-            ;;
-    esac
-}
-
-done_steps_for_stack() {
-    local stack="$1"
-    case "$stack" in
-        python)
-            printf '1. `ruff check .` exits 0\n'
-            printf '2. `pytest -v` exits 0 with no failures\n'
-            printf '3. `mypy src/ --strict` exits 0\n'
-            printf '4. Changes committed with conventional format: `type(scope): description`\n'
-            ;;
-        node)
-            printf '1. `npm run lint` exits 0\n'
-            printf '2. `npm test` exits 0 with no failures\n'
-            printf '3. `npx tsc --noEmit` exits 0\n'
-            printf '4. Changes committed with conventional format: `type(scope): description`\n'
-            ;;
-        *)
-            printf '1. Lint passes\n'
-            printf '2. Tests pass with no failures\n'
-            printf '3. Changes committed with conventional format: `type(scope): description`\n'
-            ;;
-    esac
 }
 
 # ── main scaffold flow ────────────────────────────────────────────────────────

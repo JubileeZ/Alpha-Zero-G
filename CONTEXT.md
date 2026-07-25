@@ -42,7 +42,7 @@ _Avoid_: Chat transfer, synchronized folder
 
 **Blind Judge**:
 Fixed independent model scoring delivered output against task rubric without knowing treatment, periodically calibrated against human ratings.
-_Avoid_: Self-review, Fable Judge
+_Avoid_: Self-review, treatment-aware judge
 
 **Evaluation Suite**:
 Two-tier task set combining deterministic harness contract cases with realistic hidden-assertion and blind-rubric delivery tasks.

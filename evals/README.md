@@ -1,6 +1,6 @@
-# Evaluation Suite (Phase 9 Core Pilot + Phase 10 Fable arm)
+# Evaluation Suite (Core Pilot)
 
-Fixed fixtures for paired **core** vs **No-Harness Baseline** runs, plus optional **core+fable** treatment (experimental until held-out claim). Blind Judge stays treatment-blind.
+Fixed fixtures for paired **core** vs **No-Harness Baseline** runs. Blind Judge stays treatment-blind.
 
 ## Fixtures
 
@@ -12,16 +12,6 @@ Fixed fixtures for paired **core** vs **No-Harness Baseline** runs, plus optiona
 
 Each fixture: agent-facing `TASK.md`, broken `workspace/`, hidden `assertions/check.sh`, known-good `reference/` to validate assertions.
 
-## Core vs core+fable (Phase 10)
-
-```bash
-bash evals/compare-core-fable.sh          # prepare arms
-bash evals/run-compare-smoke.sh           # reference-fix smoke (not a claim)
-# Artifact: evals/pilot/compare-core-fable-smoke.json
-```
-
-Smoke applies fixture **reference** solutions to both arms — portability only. Live agent how-to: [`evals/pilot/LIVE-AGENT-COMPARE.md`](pilot/LIVE-AGENT-COMPARE.md) (**promote parked** until Delivery Cost + claim).
-
 ## Prepare a paired run
 
 ```bash
@@ -30,13 +20,6 @@ bash evals/run-pair.sh bug-fix core
 
 # No-Harness Baseline (same workspace, no azg apply)
 bash evals/run-pair.sh bug-fix baseline
-
-# Core + opt-in Fable (experimental until held-out claim — ADR 0005)
-bash evals/run-pair.sh bug-fix core+fable
-
-# Prepare core vs core+fable matrix for the suite (or one fixture)
-bash evals/compare-core-fable.sh
-bash evals/compare-core-fable.sh bug-fix
 ```
 
 Prints workdir + empty scorecard path. Operator (or agent) does the task in that workdir, then:

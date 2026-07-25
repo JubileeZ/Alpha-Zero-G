@@ -102,55 +102,6 @@ else
     fail "run-pair baseline incomplete" "out: ${out}"
   fi
 
-  # core+fable treatment (experimental)
-  fout=$(bash "${ROOT}/evals/run-pair.sh" bug-fix core+fable)
-  fdir=$(echo "${fout}" | sed -n 's/^WORKDIR=//p' | head -n1)
-  if [ -n "${fdir}" ] && [ -f "${fdir}/.agents/skills/fable/.fable-installed" ]; then
-    pass "run-pair core+fable installs fable marker"
-    ft=$(jq -r '.treatment' "${fdir}/scorecard.json")
-    if [ "${ft}" = "core+fable" ]; then
-      pass "scorecard treatment=core+fable"
-    else
-      fail "core+fable scorecard treatment wrong" "got ${ft}"
-    fi
-    rm -rf "${fdir}"
-  else
-    fail "run-pair core+fable incomplete" "out: ${fout}"
-  fi
-
-  # compare-core-fable prepares both arms for one fixture
-  assert_file_executable "compare-core-fable.sh" "${ROOT}/evals/compare-core-fable.sh"
-  cout=$(bash "${ROOT}/evals/compare-core-fable.sh" bug-fix)
-  croot=$(echo "${cout}" | sed -n 's/^COMPARE_ROOT=//p' | head -n1)
-  if [ -n "${croot}" ] && [ -f "${croot}/compare-matrix.json" ]; then
-    pass "compare-core-fable writes matrix"
-    if jq -e '.pairs[0].arms["core+fable"].workdir' "${croot}/compare-matrix.json" >/dev/null \
-      && jq -e '.experimental == true' "${croot}/compare-matrix.json" >/dev/null; then
-      pass "compare matrix has core+fable arm + experimental flag"
-    else
-      fail "compare matrix missing core+fable arm"
-    fi
-    # Cleanup prepared workdirs referenced by matrix
-    while IFS= read -r wd; do
-      [ -n "${wd}" ] && [ -d "${wd}" ] && rm -rf "${wd}"
-    done < <(jq -r '.pairs[].arms[].workdir' "${croot}/compare-matrix.json")
-    rm -rf "${croot}"
-  else
-    fail "compare-core-fable incomplete" "out: ${cout}"
-  fi
-
-  assert_file_executable "run-compare-smoke.sh" "${ROOT}/evals/run-compare-smoke.sh"
-  SMOKE_JSON="${ROOT}/evals/pilot/compare-core-fable-smoke.json"
-  if [ -f "${SMOKE_JSON}" ]; then
-    if jq -e '.not_a_claim == true and .promote_default == false and (.pairs | length) == 6' "${SMOKE_JSON}" >/dev/null; then
-      pass "compare smoke artifact is non-claim with 6 scored arms"
-    else
-      fail "compare smoke artifact missing required non-claim shape"
-    fi
-  else
-    skip "compare smoke artifact not present (run evals/run-compare-smoke.sh)"
-  fi
-
   # record-scorecard
   stub="$(azg_mktemp_d "tmp_azg_score-XXXXXX")/scorecard.json"
   mkdir -p "$(dirname "${stub}")"

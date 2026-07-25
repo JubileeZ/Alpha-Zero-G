@@ -245,7 +245,18 @@ replace_managed_block() {
   if [ ! -f "${target}" ]; then
     return 1
   fi
-  if ! grep -q "${start_marker}" "${target}"; then
+
+  # Fail closed: exactly one ordered start/end pair required before rewrite.
+  local marker_state
+  marker_state="$(awk -v start="${start_marker}" -v end="${end_marker}" '
+    index($0, start) { starts += 1; if (ends == 0) order_ok = 1 }
+    index($0, end) { ends += 1 }
+    END {
+      if (starts == 1 && ends == 1 && order_ok == 1) print "ok"
+      else print "bad"
+    }
+  ' "${target}")"
+  if [ "${marker_state}" != "ok" ]; then
     return 1
   fi
 
