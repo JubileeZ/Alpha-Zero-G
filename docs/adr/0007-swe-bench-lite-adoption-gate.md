@@ -1,0 +1,3 @@
+# SWE-bench Lite Adoption Gate
+
+Homemade fixtures + Blind Judge (human-calibrated) are replaced as the official adopt/claim path by a frozen SWE-bench Lite slice scored only by automated tests. Adoption compares three arms — No-Harness Baseline, Current Treatment, Candidate Treatment — and promotes a Candidate only when Task Success is not worse than Current and Baseline; Delivery Cost (token usage) is compared when available, otherwise omitted. Scaffold the Lite harness before deleting the old suite so there is never a gap with zero eval. Default skill-profile expansion is an explicit preference exception to this gate.

@@ -9,19 +9,27 @@ Completion of a user-requested task that passes explicit acceptance gates and ac
 _Avoid_: Guaranteed output, good result
 
 **Task Success**:
-Delivery where all hard project gates and hidden task assertions pass, and a blind rubric judge meets the defined quality threshold.
-_Avoid_: Done, completed run
+Delivery where the evaluation task's automated checks pass (industry-bench tests or equivalent hard gates). No human rubric.
+_Avoid_: Done, completed run, blind-judge pass
 
 **No-Harness Baseline**:
-Paired evaluation run using same task, repository state, model, IDE, permissions, and budget as harness run, with only Alpha-Zero-G configuration removed.
+Evaluation arm using the same task, repository state, model, IDE, permissions, and budget as harness arms, with only Alpha-Zero-G configuration removed.
 _Avoid_: Historical baseline, default setup
 
+**Current Treatment**:
+Evaluation arm with the shipped Alpha-Zero-G harness as of the run (no Candidate changes).
+_Avoid_: Production harness, old core, control with azg
+
+**Candidate Treatment**:
+Evaluation arm with Current Treatment plus one proposed change under test for adoption.
+_Avoid_: Experimental profile, feature flag arm, core+addon
+
 **Delivery Cost**:
-Native model usage or spend consumed by a task run. Wall time and human interventions are separate reported measures, not blended into this value.
-_Avoid_: Composite efficiency score, elapsed time
+Native model token usage or spend for a task run when available; if unavailable, cost is omitted and decisions use Task Success only. Wall time and human interventions are separate reported measures, not blended into this value.
+_Avoid_: Composite efficiency score, elapsed time as cost
 
 **Long-Horizon Task**:
-Task completed across forced fresh-context sessions, including a clean-device clone and a Cursor–Antigravity handoff before acceptance.
+Task completed across forced fresh-context sessions and a clean-device clone before acceptance (optional continuity drill; not part of the Lite adopt gate).
 _Avoid_: Long chat, large task
 
 **Minimal Setup**:
@@ -40,13 +48,9 @@ _Avoid_: Autosave, IDE Stop
 Pushed Checkpoint fetched on another device to resume same Work Packet from identical repository state.
 _Avoid_: Chat transfer, synchronized folder
 
-**Blind Judge**:
-Fixed independent model scoring delivered output against task rubric without knowing treatment, periodically calibrated against human ratings.
-_Avoid_: Self-review, treatment-aware judge
-
 **Evaluation Suite**:
-Two-tier task set combining deterministic harness contract cases with realistic hidden-assertion and blind-rubric delivery tasks.
-_Avoid_: SWE-bench score, trap tests
+Frozen SWE-bench Lite instance list scored by automated tests; adoption runs three arms (No-Harness Baseline, Current Treatment, Candidate Treatment) and promotes only on hard quantitative rules.
+_Avoid_: Homemade fixtures as claim, blind-rubric suite, human-calibrated judge, full SWE-bench Verified by default
 
 **Statusline**:
 The terminal status bar displayed at the bottom of the Antigravity TUI to show real-time agent execution state and resource usage.

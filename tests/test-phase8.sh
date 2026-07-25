@@ -64,4 +64,50 @@ fi
 # Try running uninstall again (idempotent)
 assert_output_contains "uninstall output mentions already removed or removed" "emove" env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" uninstall
 
+section "3. uninstall preserves foreign MCP and custom skills"
+
+TEMP_HOME2="$(azg_mktemp_d "tmp_azg_phase8-home2-XXXXXX")"
+mkdir -p "${TEMP_HOME2}/.gemini/config/skills/my-custom"
+echo "# custom" > "${TEMP_HOME2}/.gemini/config/skills/my-custom/SKILL.md"
+mkdir -p "${TEMP_HOME2}/.gemini/config"
+printf '%s\n' '{"mcpServers":{"keep-me":{}}}' > "${TEMP_HOME2}/.gemini/config/mcp_config.json"
+printf '%s\n' '# my agents' > "${TEMP_HOME2}/.gemini/config/AGENTS.md"
+
+# Setup should not clobber foreign MCP/AGENTS; should install azg dir + skills
+env HOME="${TEMP_HOME2}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup >/dev/null 2>&1 || true
+
+if grep -q 'keep-me' "${TEMP_HOME2}/.gemini/config/mcp_config.json" 2>/dev/null; then
+  pass "setup left foreign mcp_config.json intact"
+else
+  fail "setup overwrote foreign mcp_config.json"
+fi
+if [ -f "${TEMP_HOME2}/.gemini/config/skills/my-custom/SKILL.md" ]; then
+  pass "setup left custom skill intact"
+else
+  fail "setup removed custom skill"
+fi
+
+env HOME="${TEMP_HOME2}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" uninstall >/dev/null 2>&1
+
+if [ -f "${TEMP_HOME2}/.gemini/config/mcp_config.json" ] && grep -q 'keep-me' "${TEMP_HOME2}/.gemini/config/mcp_config.json"; then
+  pass "uninstall left foreign mcp_config.json"
+else
+  fail "uninstall removed foreign mcp_config.json"
+fi
+if [ -f "${TEMP_HOME2}/.gemini/config/skills/my-custom/SKILL.md" ]; then
+  pass "uninstall left custom skill"
+else
+  fail "uninstall removed custom skill"
+fi
+if [ -f "${TEMP_HOME2}/.gemini/config/AGENTS.md" ] && grep -q 'my agents' "${TEMP_HOME2}/.gemini/config/AGENTS.md"; then
+  pass "uninstall left foreign AGENTS.md"
+else
+  fail "uninstall removed foreign AGENTS.md"
+fi
+if [ ! -d "${TEMP_HOME2}/.gemini/antigravity-cli" ]; then
+  pass "uninstall still removes azg antigravity-cli dir"
+else
+  fail "uninstall left antigravity-cli"
+fi
+
 test_summary

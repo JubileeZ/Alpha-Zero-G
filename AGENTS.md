@@ -40,7 +40,8 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 |---------|-------------|
 | `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint Bash scripts |
 | `bash tests/run-all.sh` | Aggregate gate (shellcheck + verifiers + all suites) |
-| `bash evals/run-pair.sh <id> core\|baseline` | Prepare Core Pilot eval workdir |
+| `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare SWE-bench Lite arm workdir |
+| `bash tests/test-lite.sh` | Lite Evaluation Suite structural tests |
 | `bash tests/test-azg.sh` | Run general integration tests |
 | `bash tests/test-phase<0-10>.sh` | Run phase-specific integration/TDD tests |
 | `python3 tests/verify_docs.py` | Verify markdown documentation links |

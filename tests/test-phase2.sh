@@ -206,9 +206,23 @@ if [ "${dec_stop_handoff}" = "allow" ]; then
 else
   fail "Blocked Stop even though .agents/session-handoff.md was updated" "got: ${out_stop_handoff}"
 fi
-# DESTRUCTIVE: clean temporary handoff and source files from isolated scaffold
-rm -f .agents/session-handoff.md src/main.py
+# DESTRUCTIVE: clean temporary handoff; keep src for task.md+code test
+rm -f .agents/session-handoff.md
+git checkout -q docs/agents/current-state.md 2>/dev/null || true
+
+# Test 4b: code + task.md (Work Packet) allows — unified with Cursor Stop
+echo "print('hello')" > src/main.py
+echo "- **Next:** checkpoint unify" >> task.md
+out_stop_wp=$(echo "${stop_json}" | "${CHECKPOINT}")
+dec_stop_wp=$(echo "${out_stop_wp}" | jq -r '.decision')
+if [ "${dec_stop_wp}" = "allow" ]; then
+  pass "Allows Stop when task.md updated alongside code changes"
+else
+  fail "Blocked Stop even though task.md was updated" "got: ${out_stop_wp}"
+fi
+rm -f src/main.py
 rm -rf src
+git checkout -q task.md
 
 # Test 5: Editing only task.md or ROADMAP.md should be allowed without docs/agents/current-state.md changes
 echo "mod" >> task.md

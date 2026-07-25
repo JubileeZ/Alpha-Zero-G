@@ -63,7 +63,7 @@ cd existing-repo && azg apply --tracker github
 | Global (`azg setup` → `~/.gemini/antigravity-cli/`) | Project (git repo) |
 |------------------------------------------------------|---------------------|
 | Ponytail ladder (`PONYTAIL:MANAGED` in global `AGENTS.md`) | Project `AGENTS.md` managed block |
-| 12 default skills (core profile) | `.agents/hooks.json` + hook scripts |
+| All vendored global skills (full setup) | `.agents/hooks.json` + hook scripts |
 | Statusline script | `.cursor/rules/` (thin) |
 | MCP config stub (`gh` default; commented read-only GitHub MCP) | `docs/agents/*` work-state & adapters |
 | | Continuity files: `task.md`, `ROADMAP.md`, `current-state.md`, handoff |
@@ -140,32 +140,13 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 
 ---
 
-## 8. Global skills (core profile)
+## 8. Global skills (full vendor)
 
-Ship via `azg setup` when `VENDOR.lock` SHA changes (smart merge — skip if already at pin).
+Ship via `azg setup` when `VENDOR.lock` SHA changes (smart merge — skip if already at pin). Installs **all** vendored skills (no core allowlist / `--profile`).
 
-**12 default skills** (user-invoked where marked):
+**Ponytail:** global `AGENTS.md` managed block — **not** only the `ponytail` skill.
 
-| Skill | Invocation |
-|-------|------------|
-| grill-with-docs | user |
-| grilling | model (dependency) |
-| domain-modeling | model (dependency) |
-| handoff | user |
-| ask-matt | user |
-| triage | user |
-| to-tickets | user |
-| diagnosing-bugs | model |
-| tdd | model |
-| code-review | user |
-| teach | user |
-| writing-great-skills | user |
-
-**Ponytail:** global `AGENTS.md` managed block — **not** the `ponytail` skill (duplicate).
-
-**Absorb `setup-matt-pocock-skills` for GitHub default:** pre-seed `issue-tracker.md`, `triage-labels.md`, `domain.md` in `azg apply` / `azg new`. Keep setup skill only for non-GitHub tracker reconfiguration.
-
-**Standing token cost target:** ~170–200 tokens for model-invoked skill descriptions.
+**Absorb `setup-matt-pocock-skills` for GitHub default:** pre-seed `issue-tracker.md`, `triage-labels.md`, `domain.md` in `azg apply` / `azg new`.
 
 ---
 
@@ -196,9 +177,7 @@ User:        git pull              →  get new Alpha-Zero-G
 - Separate project-harness update command (`azg update` updates installer checkout; `azg apply` updates projects)
 - Blocking PreCompact hooks
 - Full GitHub MCP enabled by default
-- `implement` skill (broken `/review` upstream reference)
-- `to-spec`, `prototype`, `improve-codebase-architecture` in default bundle
-- ponytail-review / audit / debt skills in default bundle
+- `implement` skill broken `/review` upstream reference (still vendored; fix upstream or overlay)
 - Multi-agent deliberation orchestration beyond spawn-budget guard
 
 ---
@@ -208,9 +187,10 @@ User:        git pull              →  get new Alpha-Zero-G
 1. `azg new` produces harness-only tree matching §5 with no app scaffold questions.
 2. `azg apply` pre-seeds GitHub adapter docs without running setup skill.
 3. Four enforcement hooks + PreCompact observability hook pass shellcheck and integration tests on Linux + documented Windows path.
-4. `azg setup --profile core` installs exactly 12 skills + ponytail block.
+4. `azg setup` installs all vendored skills + ponytail block; refuses `--profile`.
 5. `azg setup` skips skill copy when `VENDOR.lock` commit unchanged.
 6. Cold-start agent reading only onboarding docs produces the same build plan (validated by subagent test).
+7. Lite 3-arm promote gate exists (`evals/lite/`, ADR 0007).
 
 ---
 

@@ -284,3 +284,68 @@ replace_managed_block() {
   unset _RMB_CONTENT _RMB_START _RMB_END
   return 0
 }
+
+# ---------------------------------------------------------------------------
+# Global ownership (ADR 0008)
+# Manifest: ${AZG_GLOBAL_DIR}/azg-ownership.json
+# ---------------------------------------------------------------------------
+AZG_OWNERSHIP_FILE_NAME="azg-ownership.json"
+
+azg_ownership_path() {
+  printf '%s\n' "${AZG_GLOBAL_DIR}/${AZG_OWNERSHIP_FILE_NAME}"
+}
+
+# Ensure ownership file exists (empty owned set).
+azg_ownership_init() {
+  local path
+  path="$(azg_ownership_path)"
+  ensure_dir "${AZG_GLOBAL_DIR}"
+  if [ ! -f "${path}" ]; then
+    printf '%s\n' '{"version":1,"mcp":false,"agents":false,"statusline":false,"skills":[]}' > "${path}"
+  fi
+}
+
+azg_ownership_get() {
+  # Usage: azg_ownership_get mcp|agents|statusline
+  local key="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || { printf 'false\n'; return 0; }
+  jq -r --arg k "${key}" '.[$k] // false | tostring' "${path}"
+}
+
+azg_ownership_set_flag() {
+  # Usage: azg_ownership_set_flag mcp|agents|statusline true|false
+  local key="${1}"
+  local val="${2}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg k "${key}" --argjson v "${val}" '.[$k] = $v' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_add_skill() {
+  local skill="${1}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg s "${skill}" '.skills = ((.skills // []) + [$s] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_owns_skill() {
+  local skill="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 1
+  jq -e --arg s "${skill}" '(.skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
+}
+
+# True if dest skill is foreign custom (exists, no vendor sentinel, not force).
+azg_skill_is_foreign() {
+  local dest="${1}"
+  [ -d "${dest}" ] || return 1
+  [ -f "${dest}/ANTIGRAVITY-NOTE.md" ] && return 1
+  return 0
+}

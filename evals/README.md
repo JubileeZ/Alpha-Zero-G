@@ -1,93 +1,12 @@
-# Evaluation Suite (Core Pilot)
+# Evaluation Suite
 
-Fixed fixtures for paired **core** vs **No-Harness Baseline** runs. Blind Judge stays treatment-blind.
-
-## Fixtures
-
-| id | kind | Task |
-|----|------|------|
-| `bug-fix` | bug fix | Make `clamp` inclusive on upper bound |
-| `scoped-change` | scoped change | Add `--json` without breaking text output |
-| `regression-feature` | regression-prone | Add percent discount; keep existing totals green |
-
-Each fixture: agent-facing `TASK.md`, broken `workspace/`, hidden `assertions/check.sh`, known-good `reference/` to validate assertions.
-
-## Prepare a paired run
+Official gate: **SWE-bench Lite 3-arm** (ADR 0007). See [`lite/README.md`](lite/README.md).
 
 ```bash
-# Core harness treatment (azg apply into copy)
-bash evals/run-pair.sh bug-fix core
-
-# No-Harness Baseline (same workspace, no azg apply)
-bash evals/run-pair.sh bug-fix baseline
+bash evals/run-lite-arm.sh <instance_id> baseline|current|candidate
+bash evals/record-lite-score.sh <workdir>/scorecard.json --task-success 1 [--delivery-cost N]
+bash evals/analyze-lite-promote.sh <campaign_dir>
+bash tests/test-lite.sh
 ```
 
-Prints workdir + empty scorecard path. Operator (or agent) does the task in that workdir, then:
-
-```bash
-bash evals/record-scorecard.sh <workdir>/scorecard.json \
-  --task-success 1 \
-  --delivery-cost 1.23 \
-  --wall-time-sec 480 \
-  --interventions 0
-```
-
-Hidden gate (Task Success hard checks):
-
-```bash
-bash <workdir>/assertions/check.sh
-```
-
-## CI / structural
-
-```bash
-bash tests/test-evals.sh
-```
-
-Asserts suite manifest, three fixtures, assertions fail on broken workspace and pass on reference.
-
-## Blind Judge
-
-Treatment-blind packet + rubric (see `evals/judge/`).
-
-```bash
-# After a run-pair workdir exists (and agent finished):
-bash evals/prepare-judge-packet.sh "$WORKDIR"
-bash evals/judge-score.sh "$WORKDIR"    # stub unless AZG_JUDGE_CMD is set
-cat "$WORKDIR/judge-result.json"
-```
-
-Human calibration: `evals/judge/CALIBRATION.md`. Fixed model id in `evals/judge/config.json`.
-
-## Long-Horizon
-
-```bash
-bash evals/run-long-horizon.sh bug-fix core
-# Session1 in IDE A (new chat) → Checkpoint commit →
-bash evals/run-long-horizon.sh bug-fix core --sync-clone "$SESSION1"
-# Session2 clean clone in IDE B (other IDE, new chat) → assertions/check.sh
-```
-
-See `evals/long-horizon/README.md` and `checklist.md`.
-
-## Pilot (exploratory / confirmation / held-out)
-
-Preregistered thresholds: `evals/pilot/PREREG.md` + `prereg.json` (**locked**).
-
-```bash
-# Document exploratory pipeline smoke (not a reliability claim):
-bash evals/run-exploratory-smoke.sh
-
-# After real paired agent runs:
-bash evals/record-pilot-pair.sh exploratory --fixture bug-fix \
-  --core-scorecard ... --baseline-scorecard ...
-```
-
-Analyze / held-out gate:
-
-```bash
-bash evals/analyze-pilot-log.sh confirmation
-bash evals/analyze-pilot-log.sh held-out
-bash evals/analyze-pilot-gate.sh              # writes gate-status.json
-# bash evals/analyze-pilot-gate.sh --apply-claim   # only when both green
-```
+Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on hard pass rates (+ tokens when present).

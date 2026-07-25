@@ -44,41 +44,30 @@ else
   fail "settings.json not created globally"
 fi
 
-# 1a. Profile validation
-assert_exit "azg setup with invalid profile fails" 1 "${AZG}" setup --profile invalid
+# 1a. --profile removed
+assert_exit "azg setup --profile rejected" 1 "${AZG}" setup --profile core
 
-# 1b. Profile core (default) check
-# Default is core profile. Verify that core skills (e.g. tdd, teach, writing-great-skills) are copied, but ponytail or setup-matt-pocock-skills is NOT.
+# 1b. Full vendor install (default)
 if [ -d "${TEMP_HOME}/.gemini/config/skills/tdd" ] && \
    [ -d "${TEMP_HOME}/.gemini/config/skills/teach" ] && \
    [ -d "${TEMP_HOME}/.gemini/config/skills/writing-great-skills" ]; then
-  pass "core profile copies core skills (tdd, teach, writing-great-skills)"
+  pass "setup copies core skills (tdd, teach, writing-great-skills)"
 else
-  fail "core profile missing some core skills"
+  fail "setup missing some skills"
 fi
 
-if [ ! -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ ! -d "${TEMP_HOME}/.gemini/config/skills/ponytail" ]; then
-  pass "core profile excludes setup-matt-pocock-skills and ponytail"
+if [ -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ -d "${TEMP_HOME}/.gemini/config/skills/ponytail" ]; then
+  pass "setup installs full vendor set including setup-matt-pocock-skills and ponytail"
 else
-  fail "core profile did not exclude setup-matt-pocock-skills or ponytail"
+  fail "setup missing previously non-core skills"
 fi
 
 # 1c. Smart Setup Sync verification
-# Run setup again, capturing output to check if smart sync kicks in
 _setup_sync_out="$("${AZG}" setup 2>&1)"
 if echo "${_setup_sync_out}" | grep -q "Smart Sync: VENDOR.lock commits unchanged"; then
   pass "setup smart sync skips copying skills when lock commit is unchanged"
 else
   fail "setup smart sync failed to skip skill copying" "got: ${_setup_sync_out}"
-fi
-
-# 1d. Profile full check
-# Force setup with full profile to copy all skills
-assert_exit "azg setup --profile full exits 0" 0 "${AZG}" setup --profile full --force >/dev/null
-if [ -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ -d "${TEMP_HOME}/.gemini/config/skills/ponytail" ]; then
-  pass "full profile copies setup-matt-pocock-skills and ponytail"
-else
-  fail "full profile missing setup-matt-pocock-skills or ponytail"
 fi
 
 
