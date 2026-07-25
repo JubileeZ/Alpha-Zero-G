@@ -40,9 +40,10 @@ Both paths consume the same `templates/project/` tree.
 ```bash
 git clone <alpha-zero-g-repo>   # e.g. https://github.com/<org>/alpha-zero-g.git
 cd alpha-zero-g
-azg setup                              # once per machine (global)
-azg new my-app --tracker github        # greenfield
-bash tests/test-harness.sh             # meta-harness gate (in scaffolded project)
+./azg setup                             # once per machine (global)
+./azg new my-app --tracker github       # greenfield
+cd my-app
+bash tests/verify.sh                    # portable delivery gate
 ```
 
 Brownfield (instead of `azg new`):
@@ -62,7 +63,7 @@ cd existing-repo && azg apply --tracker github
 | Global (`azg setup` → `~/.gemini/antigravity-cli/`) | Project (git repo) |
 |------------------------------------------------------|---------------------|
 | Ponytail ladder (`PONYTAIL:MANAGED` in global `AGENTS.md`) | Project `AGENTS.md` managed block |
-| 11 default skills (core profile) | `.agents/hooks.json` + hook scripts |
+| 12 default skills (core profile) | `.agents/hooks.json` + hook scripts |
 | Statusline script | `.cursor/rules/` (thin) |
 | MCP config stub (`gh` default; commented read-only GitHub MCP) | `docs/agents/*` work-state & adapters |
 | | Continuity files: `task.md`, `ROADMAP.md`, `current-state.md`, handoff |
@@ -117,9 +118,9 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 | Hook | Event | Purpose |
 |------|-------|---------|
 | `block-destructive-ops.sh` | PreToolUse / shell | Block `rm -rf`, force-push main, credential leaks |
-| `commit-gate.sh` | PreToolUse on `git commit` | Block commit until `bash tests/test-harness.sh` (and project tests when configured) pass |
+| `commit-gate.sh` | PreToolUse on `git commit` | Block commit until `bash tests/verify.sh` passes |
 | `checkpoint.sh` | **Stop** (Cursor + Antigravity) | Enforce fresh `current-state.md` or handoff before agent stops; return continue/followup if stale |
-| `spawn-budget.sh` | subagentStart | Read `.agents/spawn-budget.json`; deny when `max_spawns: 3` or `max_depth: 2` exceeded |
+| `spawn-budget.sh` | PreToolUse `START_SUBAGENT` | Read `.agents/spawn-budget.json`; deny when `max_spawns: 3` or `max_depth: 2` exceeded; SubagentStart observe-only |
 
 **PreCompact:** Cursor `preCompact` is **observability only** (log/toast) — cannot block compaction on Cursor or Antigravity. Do not design around blocking PreCompact.
 
@@ -192,7 +193,7 @@ User:        git pull              →  get new Alpha-Zero-G
 
 - `azg new --stack` language/framework wizard
 - Jira / Linear / beads issue-tracker adapter templates
-- Separate `azg update` command (use `azg apply` for projects)
+- Separate project-harness update command (`azg update` updates installer checkout; `azg apply` updates projects)
 - Blocking PreCompact hooks
 - Full GitHub MCP enabled by default
 - `implement` skill (broken `/review` upstream reference)
@@ -206,7 +207,7 @@ User:        git pull              →  get new Alpha-Zero-G
 
 1. `azg new` produces harness-only tree matching §5 with no app scaffold questions.
 2. `azg apply` pre-seeds GitHub adapter docs without running setup skill.
-3. All four v4 hooks pass shellcheck and integration tests on Linux + documented Windows path.
+3. Four enforcement hooks + PreCompact observability hook pass shellcheck and integration tests on Linux + documented Windows path.
 4. `azg setup --profile core` installs exactly 12 skills + ponytail block.
 5. `azg setup` skips skill copy when `VENDOR.lock` commit unchanged.
 6. Cold-start agent reading only onboarding docs produces the same build plan (validated by subagent test).

@@ -4,7 +4,7 @@
 
 ## Project Identity
 
-Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for solo/small teams using Cursor and/or Antigravity (`agy`). v4 revamp in progress — canonical spec: `docs/REVAMP-SPEC.md`.
+Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for solo/small teams using Cursor and/or Antigravity (`agy`). v4 complete; Phase 10 Fable promotion parked. Canonical spec: `docs/REVAMP-SPEC.md`.
 
 **Stack:** Bash (>= 4.0) · jq · Python (3.x) · Git · agy (Antigravity CLI)
 
@@ -26,7 +26,7 @@ lib/                         # CLI implementation shell scripts (common, setup, 
 templates/                   # Standard scaffolding templates for new files and projects
   global/                    # Global configurations copied during setup
   project/                   # Project-level templates copied during apply/new
-tests/                       # TDD test suites (test-phase0 through test-phase9) and harness
+tests/                       # TDD test suites (test-phase0 through test-phase10) and harness
 azg                          # Main CLI entrypoint script
 CONTEXT.md                   # Domain terms and vocabulary definition context
 VERSION                      # File indicating the current Alpha-Zero-G release version
@@ -38,11 +38,11 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 
 | Command | What it does |
 |---------|-------------|
-| `shellcheck azg lib/*.sh tests/*.sh` | Lint Bash scripts |
+| `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint Bash scripts |
 | `bash tests/run-all.sh` | Aggregate gate (shellcheck + verifiers + all suites) |
-| `bash evals/run-pair.sh <id> core\|baseline` | Prepare Core Pilot eval workdir |
+| `bash evals/run-pair.sh <id> core\|baseline\|core+fable` | Prepare Core Pilot eval workdir |
 | `bash tests/test-azg.sh` | Run general integration tests |
-| `bash tests/test-phase<0-9>.sh` | Run phase-specific integration/TDD tests |
+| `bash tests/test-phase<0-10>.sh` | Run phase-specific integration/TDD tests |
 | `python3 tests/verify_docs.py` | Verify markdown documentation links |
 | `docs/AGENT-ONBOARDING.md` | Zero-context entry for new agents |
 
@@ -84,7 +84,7 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 ## Session start
 
 1. Read `docs/agents/current-state.md` (if unfamiliar with repo state).
-2. Read `ROADMAP.md` (first unchecked item in active phase).
+2. Read `ROADMAP.md` (first unchecked item only when phase active, not parked).
 3. Read `task.md` / open issues (if present).
 4. Run `git log -5 --oneline` + `git status` (to sync history).
 5. Do not rely on chat history.

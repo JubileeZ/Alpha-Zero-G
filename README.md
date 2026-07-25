@@ -8,7 +8,7 @@ It ships the following capabilities out-of-the-box across macOS, Linux, and Wind
 - **Safety Hooks**: Provides local `.agents/hooks/` for your repositories to block destructive operations, enforce commit gates, manage subagent spawn budgets, and verify work-state checkpoints.
 - **Brownfield & Greenfield Support**: Easily apply the harness to new projects (`azg new`) or safely retrofit existing repositories (`azg apply`).
 
-**v4 revamp in progress.** Start here:
+**v4 complete; Phase 10 Fable promotion parked pending evidence.** Start here:
 
 | Doc | Purpose |
 |-----|---------|
@@ -19,15 +19,23 @@ It ships the following capabilities out-of-the-box across macOS, Linux, and Wind
 
 ## Quick start
 
+Greenfield:
+
 ```bash
 git clone <this-repo>
 cd Alpha-Zero-G
 ./azg setup                    # once per machine
 ./azg new my-app               # greenfield harness (v4: harness-only)
-# OR
-cd existing-repo && /path/to/azg apply .
+cd my-app
+bash tests/verify.sh           # portable delivery gate
+```
 
-bash tests/test-harness.sh     # v4: meta-harness gate (project template)
+Brownfield:
+
+```bash
+cd /path/to/existing-repo
+/path/to/alpha-zero-g/azg apply .
+bash tests/verify.sh
 ```
 
 ## Updating

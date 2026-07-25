@@ -30,7 +30,7 @@ flowchart LR
 ### 1. Start
 
 1. Read `docs/agents/current-state.md` (what exists now).
-2. Read `ROADMAP.md` (find the first unchecked item in the active phase).
+2. Read `ROADMAP.md` (first unchecked item only when phase active, not parked).
 3. Optional: list open issues or use a task runner to assign a chunk of work.
 
 ### 2. During work

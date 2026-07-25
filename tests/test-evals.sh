@@ -347,19 +347,21 @@ else
   td="$(azg_mktemp_d "tmp_azg_pilotrec-XXXXXX")"
   jq -n '{task_success:0,delivery_cost:0,wall_time_sec:0,interventions:0,treatment:"core",model:"",ide:""}' > "${td}/core.json"
   jq -n '{task_success:0,delivery_cost:0,wall_time_sec:0,interventions:0,treatment:"baseline",model:"",ide:""}' > "${td}/base.json"
-  before=$(wc -l < "${ROOT}/evals/pilot/exploratory-log.jsonl" | tr -d ' ')
-  bash "${ROOT}/evals/record-pilot-pair.sh" exploratory \
+  pilot_log="${td}/exploratory-log.jsonl"
+  : > "${pilot_log}"
+  before=$(wc -l < "${pilot_log}" | tr -d ' ')
+  AZG_PILOT_DIR="${td}" bash "${ROOT}/evals/record-pilot-pair.sh" exploratory \
     --fixture bug-fix \
     --core-scorecard "${td}/core.json" \
     --baseline-scorecard "${td}/base.json" \
     --notes "test-evals exploratory append"
-  after=$(wc -l < "${ROOT}/evals/pilot/exploratory-log.jsonl" | tr -d ' ')
+  after=$(wc -l < "${pilot_log}" | tr -d ' ')
   if [ "${after}" -gt "${before}" ]; then
     pass "exploratory smoke appends log line"
   else
     fail "exploratory log not appended"
   fi
-  last=$(tail -n1 "${ROOT}/evals/pilot/exploratory-log.jsonl")
+  last=$(tail -n1 "${pilot_log}")
   if echo "${last}" | jq -e '.phase=="exploratory" and .reliability_claim==false and .fixture_id=="bug-fix"' >/dev/null; then
     pass "exploratory log line is non-claim bug-fix pair"
   else

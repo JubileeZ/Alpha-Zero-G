@@ -57,3 +57,5 @@
 5. Live solves: open `run-pair` WORKDIR, not harness repo root.
 6. `azg apply` refreshes AZG-owned files; custom hooks/skills not in template stay.
 7. Spawn-budget enforce is PreToolUse (ADR 0006), not SubagentStart.
+8. Eval tests set `AZG_PILOT_DIR`; never append synthetic records to tracked pilot logs.
+9. Harness counters do not cross Bash subshells; keep `pass`/`fail` calls in parent test shell.

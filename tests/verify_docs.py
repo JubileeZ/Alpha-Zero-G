@@ -3,10 +3,10 @@ import os
 import re
 import sys
 
+sys.stdout.reconfigure(encoding="utf-8")
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
-DOCS_DIR = os.path.join(project_root, "docs", "antigravity-agent-architect")
-ROUTER_FILE = os.path.join(project_root, "docs", "antigravity-agent-architecture.md")
 
 def check_file_exists(path, referrer):
     if not os.path.exists(path):

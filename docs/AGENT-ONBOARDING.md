@@ -17,12 +17,12 @@ Optional during implementation:
 
 ## One-paragraph summary
 
-Alpha-Zero-G v4 revamps the project from a **v3 production-complete CLI** into a **budget-conscious, multi-IDE agent harness** that ships harness-only project templates (no app stack), filesystem work-state for cross-device continuity, GitHub-as-default issue adapter (with `gh`, not MCP by default), nine curated global skills + ponytail global rule, and four project hooks (safety, commit-gate, Stop checkpoint, spawn budget). Implementation follows `ROADMAP.md` phases; spec details are in `REVAMP-SPEC.md`.
+Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), 12 curated global skills + Ponytail rule, four enforcement hooks, and one PreCompact observability hook. Phase 10 Fable promotion remains parked pending delivery-cost evidence; `REVAMP-SPEC.md` defines design and `current-state.md` records reality.
 
 ## Before writing code
 
 1. Read `current-state.md` — do not rebuild what exists.
-2. Pick the **first unchecked** item in the active `ROADMAP.md` phase.
+2. If phase active, pick **first unchecked** `ROADMAP.md` item; do not resume parked work without approval.
 3. Run verify commands from `AGENTS.md` before proposing commits.
 
 ## What NOT to read for orientation

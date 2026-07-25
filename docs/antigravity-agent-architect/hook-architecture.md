@@ -14,7 +14,7 @@ Category | Events | Can Block?
 **User / completion** | `UserPromptSubmit`, `UserPromptExpansion`, `Stop`, `StopFailure`, `TeammateIdle` | Prompt/expansion/stop/idle can block; `StopFailure` cannot  
 **Tool** | `PreToolUse`, `PermissionRequest`, `PermissionDenied`, `PostToolUse`, `PostToolUseFailure`, `PostToolBatch` | Pre/permission/batch can block; post events cannot  
 **Subagent / task** | `SubagentStart`, `SubagentStop`, `TaskCreated`, `TaskCompleted` | Stop/task events can block; start cannot  
-**Context** | `PreCompact`, `PostCompact`, `InstructionsLoaded` | `PreCompact` can block; post/load cannot  
+**Context** | `PreCompact`, `PostCompact`, `InstructionsLoaded` | Observability only; compaction cannot be blocked
 **Filesystem / workspace** | `CwdChanged`, `FileChanged`, `WorktreeCreate`, `WorktreeRemove` | Worktree creation can block; others cannot  
 **Configuration / notification** | `ConfigChange`, `Notification` | Config changes can block except policy settings; notifications cannot  
 **MCP** | `Elicitation`, `ElicitationResult` | Yes  

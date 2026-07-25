@@ -1,21 +1,28 @@
-# Alpha-Zero-G — Frontier Agent Re-Evaluation & Revamp Prompt
+# Alpha-Zero-G — Post-v4 Architecture Audit Prompt
 
-**File location:** `docs/FRONTIER-REVAMP-EVAL-PROMPT.md`  
-**Purpose:** Copy-paste this prompt to any frontier AI agent (Antigravity `agy`, Cursor, Claude, Gemini, etc.) running on another device or session to conduct a comprehensive architectural re-evaluation and revamp analysis of `alpha-zero-g`.
+**Purpose:** Reusable prompt for evidence-based architecture review from another device, session, or agent host.
 
 ---
 
 ```markdown
 <TASK_INSTRUCTIONS>
-You are acting as a Lead AI Harness Architect and Frontier Agent Evaluator. Your goal is to re-evaluate the `alpha-zero-g` project architecture, assess its current implementation against state-of-the-art (SOTA) agent harness patterns, and produce a crisp Revamp & Optimization Plan.
+Act as lead AI harness architect and evaluator. Re-evaluate `alpha-zero-g` against current host capabilities and proven agent-harness patterns. Produce a crisp optimization verdict; do not assume another revamp is necessary.
 
 ## 1. Project Context & Vision
 
-Alpha-Zero-G is an **outer agent harness installer and template system** designed for solo developers, data/AI analysts, and small engineering teams using Antigravity (`agy`) and/or Cursor.
+Alpha-Zero-G is an **outer agent harness installer and template system** for solo developers and small engineering teams using Antigravity (`agy`) and/or Cursor.
 
 - **Core Vision:** Enable AI agents (Cursor / Antigravity) to reliably ship products with high task success per token/cost budget, without context bloat or fragile over-engineering.
-- **Primary Workloads:** Analytic projects (data pipelines, python/SQL workflows, automated reports) and AI agent harness projects.
-- **Constraints:** Solo analyst budget-conscious ($ / token limits), multi-IDE compatibility (Cursor + Antigravity), cross-platform shell script foundation (Bash >= 4.0, jq, Python 3).
+- **Candidate Workload to Validate:** Analytic projects (data pipelines, Python/SQL workflows, notebooks, automated reports).
+- **Constraints:** Budget-conscious use, multi-IDE compatibility (Cursor + Antigravity), cross-platform shell foundation (Bash >= 4.0, jq, Python 3).
+
+### Audit Safety & Evidence
+
+- Default read-only: preserve worktree; no installs, commits, network writes, or non-dry-run `azg` mutations without explicit approval.
+- Record audit date, commit SHA, `git status`, and host/version assumptions.
+- Classify proposals as IDE-native, OS-native, repo-native, or out of scope.
+- Report conflicts explicitly. Prefer observed implementation + accepted ADRs over stale secondary docs; `docs/REVAMP-SPEC.md` remains product intent.
+- Phase 10 remains parked. No Fable promotion or reliability claim without ADR 0005 evidence gates.
 
 ---
 
@@ -24,57 +31,63 @@ Alpha-Zero-G is an **outer agent harness installer and template system** designe
 Evaluate the repository across the following 5 core pillars:
 
 1. **Current Codebase & v4 Spec Alignment**
-   - Audit current state: `AGENTS.md`, `ROADMAP.md`, `docs/REVAMP-SPEC.md`, `docs/agents/current-state.md`, `lib/`, `templates/`, `tests/`.
+   - Audit current state: `azg`, `AGENTS.md`, `README.md`, `CONTEXT.md`, `ROADMAP.md`, `docs/AGENT-ONBOARDING.md`, `docs/REVAMP-SPEC.md`, `docs/agents/current-state.md`, `docs/adr/`, `lib/`, `templates/project/`, `templates/global/`, `templates/optional/fable/`, `tests/`, `evals/`, `.github/workflows/ci.yml`.
    - Verify if repo-native gates (`tests/run-all.sh`, hooks) and template structures strictly honor the outer harness boundary.
 
 2. **Self-Improving Agents & Learning Loops**
    - Assess how agents capture mistakes and refine behavior over time.
-   - Evaluate mechanisms for auto-updating Knowledge Items (KIs), custom skills (`.agents/skills/`), `/learn` patterns, and trajectory feedback loops without bloating context windows.
+   - Evaluate current learning records and custom skills; treat Knowledge Items, `/learn`, and trajectory loops as candidates only if repository or host evidence supports them.
 
 3. **Agent Memory Architecture (Short & Long-Term)**
-   - Assess cross-session memory and continuity (`.agents/session-handoff.md`, `task.md`, `current-state.md`).
-   - Determine optimal, token-efficient memory structures (file-based indexing, semantic/episodic memory adapters, context window compaction).
+   - Assess generated-project continuity (`templates/project/.agents/session-handoff.md.tmpl`, `task.md.tmpl`, `docs/agents/current-state.md.tmpl`) and this repository's work-state.
+   - Prefer existing filesystem layers; propose semantic or episodic adapters only with a measured gap.
 
 4. **Proactive & Autonomous Execution**
-   - Evaluate proactive capabilities: background timers (`schedule` / cron), file-watch event hooks, proactive linting/verification before error cascade.
-   - Evaluate long-horizon autonomous execution (`/goal` patterns), subagent delegation limits (`spawn-budget.json`), and fail-safe recovery.
+   - Evaluate deterministic gates, supported lifecycle hooks, and native host automation.
+   - Evaluate long-horizon execution, spawn-budget limits, and recovery. Do not add timers, watchers, or loop wrappers without a concrete unmet need and verified host support.
 
-5. **Solo Analyst Specialization & Cost Efficiency**
+5. **Solo Analyst Fit & Cost Efficiency**
    - Stress-test YAGNI ("You Aren't Gonna Need It") and Ponytail lazy dev principles (boring > clever, stdlib/CLI over extra dependencies, shortest working diff).
-   - Ensure specific optimization for data/AI analyst workflows (Python script validation, SQL/data checks, notebook cleanups, artifact generation).
+   - Determine whether analyst workflows expose a measured gap; do not add stack defaults or special tooling from persona assumptions alone.
 
 ---
 
 ## 3. Required Execution Steps for the Frontier Agent
 
 ### Step 1: Read Project Baseline
-Execute code exploration and inspect:
-1. `AGENTS.md` (managed rules, ponytail ladder, verification gates)
+Inspect:
+1. `AGENTS.md` (managed rules, verification gates) and `templates/global/AGENTS.md` (Ponytail source)
 2. `docs/REVAMP-SPEC.md` (canonical v4 specification)
 3. `ROADMAP.md` & `docs/agents/current-state.md` (completed vs active vs parked features)
-4. `lib/*.sh` (azg CLI commands) and `templates/project/` (harness templates)
+4. `lib/*.sh`, `templates/`, `tests/`, `evals/`, and accepted ADRs
 
 ### Step 2: Grilling & Gap Analysis
-Stress-test current project features against frontier LLM capabilities (2026 era extended reasoning, background tasks, proactive timers, structured tool use):
+Stress-test current features against capabilities verified in repository or current host documentation:
 - What existing components are redundant or over-engineered?
 - What missing capabilities block reliable, autonomous shipping for solo analysts?
 - How can memory and self-improvement be added without increasing base context token cost?
+- Which ideas belong to IDE vendors rather than this outer harness?
+- Which files are truly obsolete after tracing all inbound references and generation paths?
 
 ### Step 3: Deliverables Output
-Produce a Markdown document titled `docs/FRONTIER-REVAMP-REPORT.md` (or print structured response if in interactive session) containing:
+Return a structured Markdown response. Create `docs/FRONTIER-REVAMP-REPORT.md` only when explicitly requested. Include:
 
 1. **Executive Summary & Verdict:** Is a revamp required, or minor incremental polish?
 2. **Pillar-by-Pillar Gap Analysis:** Concrete findings for Baseline, Self-Improvement, Memory, Proactivity/Autonomy, Analyst Workflows.
 3. **YAGNI & Deletion Candidates:** Features or code paths to prune or simplify.
 4. **Actionable Revamp Action Plan:** Step-by-step phased tasks with verification commands.
-5. **Proposed ADRs:** Any structural architectural decision records needed for approval.
+5. **Proposed ADRs:** Hard-to-reverse structural decisions only; otherwise state none.
+
+Before recommending deletion, trace references, tests, generators, and historical intent. Separate safe deletion candidates from archives, vendored sources, generated templates, and retained reference material.
 
 ---
 
 ## 4. Response Rules & Style
 
 - **Style:** Telegraphic (concise fragments, drop articles/filler, exact commands and file paths).
-- **Format:** Standard GitHub Markdown with file links (`file:///path/to/file`).
+- **Evidence:** Separate implemented facts, measured gaps, and speculative options. Cite repository-relative paths and line numbers.
+- **Format:** Portable GitHub Markdown with repository-relative links; no machine-specific `file:///` URLs.
 - **Principles:** Prefer deletion over addition, deterministic repo gates over prompt hints, budget-friendly over high-token-cost wrappers.
+- **Verification:** Distinguish local gate (may skip missing tools) from `AZG_STRICT=1 bash tests/run-all.sh` and CI. On Windows, run Bash commands in Git Bash.
 </TASK_INSTRUCTIONS>
 ```

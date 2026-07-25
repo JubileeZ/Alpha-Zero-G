@@ -6,8 +6,8 @@ Google and OpenAI publish guidelines for agent trustworthiness. The principles m
 
 Principle | What it means | How this harness satisfies it  
 ---|---|---  
-**Human control** | Meaningful human override at every decision point | Hooks gate tool calls; PreCompact blocking; Auto Mode classifier as check-layer  
-**Value alignment** | Agent actions track user intent, not adjacent goals | `GEMINI.md` as explicit intent specification; skills as capability scoping  
+**Human control** | Meaningful human override at every decision point | Hooks gate tool calls; Stop checkpoint; PreCompact observability
+**Value alignment** | Agent actions track user intent, not adjacent goals | `AGENTS.md` as explicit intent specification; skills as capability scoping
 **Security** | Resistance to adversarial inputs and prompt injection | Sandbox + deny-rules + input validation at the hook layer  
 **Transparency** | Auditable records of decisions and actions | Hook logging; session transcripts; skill-invocation traces  
 **Privacy** | Appropriate data handling and governance | Credential env-var scrubbing; secret detection at hook layer  

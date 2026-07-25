@@ -2,7 +2,7 @@
 
 CONTEXT.md: finish across **forced fresh-context** sessions, a **clean-device clone**, and a **Cursor↔Antigravity** handoff before acceptance.
 
-Automation: `bash evals/run-long-horizon.sh <fixture-id> [core|baseline]`
+Automation: `bash evals/run-long-horizon.sh <fixture-id> [core|baseline|core+fable]`
 
 ## Operator day-of flow
 
