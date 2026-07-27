@@ -1,21 +1,22 @@
-# Active Task: Initial retrofit task
+# Active Task: Device vendor sync + setup
 
-- **Status:** In Progress
-- **Objective:** Focused goal of this chunk
-- **Acceptance:** Measurable done criteria for this chunk
-- **Issue/Ticket:** [Link or ID]
+- **Status:** Done
+- **Objective:** Refresh Alpha-Zero-G repo, re-vendor upstream skills, and reinstall global config on this device
+- **Acceptance:** `azg update`, `azg update --vendor`, and `azg setup --force` succeed; VENDOR.lock dates current; 28 skills in `~/.gemini/antigravity-cli`
+- **Issue/Ticket:** —
 
 ## Work Packet (SFDBN)
 
-- **Status:** [Current status]
-- **Files:** [Key files touched]
-- **Decisions:** [Decisions made]
-- **Blocked:** [Blockers, if any]
-- **Next:** [Exact next action]
+- **Status:** Done — repo pulled, vendor synced, device setup forced
+- **Files:** `templates/global/skills/vendor/mattpocock-skills/VENDOR.lock`, `templates/global/skills/vendor/ponytail-skills/VENDOR.lock`
+- **Decisions:** Ran full maintenance sequence (`update` → `update --vendor` → `setup --force`); skill trees unchanged (commits pinned); only `date_vendored` refreshed to 2026-07-27
+- **Blocked:** None
+- **Next:** None — maintenance complete; discard or commit VENDOR.lock if keeping checkpoint
 
 ## Todo
-- [ ] Subtask 1
-- [ ] Subtask 2
+- [x] `azg update` (repo → `a615f79`)
+- [x] `azg update --vendor` (mattpocock `ed37663`, ponytail `16f2980`)
+- [x] `azg setup --force` (28 skills → `~/.gemini/antigravity-cli`)
 
 ## Blockers / Notes
-- None
+- Device global install is live; repo has unstaged VENDOR.lock date bumps until Checkpoint
