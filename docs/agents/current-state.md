@@ -62,3 +62,5 @@
 4. Spawn-budget enforce is PreToolUse (ADR 0006), not SubagentStart.
 5. Harness counters do not cross Bash subshells.
 6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
+7. macOS `/bin/bash` 3.2 — `azg setup` needs Bash ≥4 (`mapfile`); use Homebrew bash (`PATH="/opt/homebrew/bin:$PATH"`).
+8. Smart sync skips skill copy when `VENDOR.lock` stamp unchanged — empty `~/.cursor/skills` still needs `./azg setup --force`.
