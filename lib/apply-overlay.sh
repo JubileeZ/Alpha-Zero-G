@@ -90,6 +90,45 @@ apply_overlay() {
   ok "Overlay applied: ${skill_name}"
 }
 
+# install_cursor_skill SKILL_NAME VENDOR_CATEGORY_DIR DEST_DIR
+# Plain copy into Cursor user skills (no Antigravity tool-map). Writes AZG-OWNED.md.
+# Never targets skills-cursor — caller must pass AZG_CURSOR_SKILLS_DIR.
+install_cursor_skill() {
+  local skill_name="${1}"
+  local vendor_category_dir="${2}"
+  local dest_dir="${3}"
+
+  local skill_src="${vendor_category_dir}/${skill_name}"
+  local skill_dest="${dest_dir}/${skill_name}"
+
+  if [ -z "${skill_name}" ]; then
+    die "install_cursor_skill: SKILL_NAME is required"
+  fi
+  if [ ! -d "${skill_src}" ]; then
+    die "install_cursor_skill: skill source not found: ${skill_src}"
+  fi
+  if [ ! -f "${skill_src}/SKILL.md" ]; then
+    die "install_cursor_skill: SKILL.md missing in ${skill_src}"
+  fi
+
+  # Guard: refuse skills-cursor path (Cursor built-ins)
+  case "${dest_dir}" in
+    */skills-cursor|*/skills-cursor/)
+      die "install_cursor_skill: refusing to write into skills-cursor"
+      ;;
+  esac
+
+  # DESTRUCTIVE: replace owned Cursor skill copy on refresh
+  rm -rf "${skill_dest}"
+  cp -R "${skill_src}" "${skill_dest}"
+  printf '%s\n' \
+    '# AZG-owned' \
+    '' \
+    'Installed by `azg setup`. Do not edit by hand; removed by `azg uninstall`.' \
+    > "${skill_dest}/AZG-OWNED.md"
+  ok "Installed Cursor skill: ${skill_name}"
+}
+
 # ---------------------------------------------------------------------------
 # _remap_skill_frontmatter SKILL_MD TOOL_MAP_JSON
 #

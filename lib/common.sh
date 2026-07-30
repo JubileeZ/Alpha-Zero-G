@@ -134,6 +134,9 @@ AZG_GLOBAL_DIR="${HOME}/.gemini/antigravity-cli"
 AZG_GLOBAL_SKILLS_DIR="${HOME}/.gemini/config/skills"
 AZG_GLOBAL_MCP_CONFIG="${HOME}/.gemini/config/mcp_config.json"
 AZG_GLOBAL_AGENTS="${HOME}/.gemini/config/AGENTS.md"
+# Cursor Device Setup roots (map #56 / #57 — never skills-cursor)
+AZG_CURSOR_SKILLS_DIR="${HOME}/.cursor/skills"
+AZG_CURSOR_RULES_DIR="${HOME}/.cursor/rules"
 
 # ---------------------------------------------------------------------------
 # Atomic file write helpers
@@ -301,7 +304,7 @@ azg_ownership_init() {
   path="$(azg_ownership_path)"
   ensure_dir "${AZG_GLOBAL_DIR}"
   if [ ! -f "${path}" ]; then
-    printf '%s\n' '{"version":1,"mcp":false,"agents":false,"statusline":false,"skills":[]}' > "${path}"
+    printf '%s\n' '{"version":1,"mcp":false,"agents":false,"statusline":false,"skills":[],"cursor_skills":[],"cursor_rules":[]}' > "${path}"
   fi
 }
 
@@ -342,10 +345,52 @@ azg_ownership_owns_skill() {
   jq -e --arg s "${skill}" '(.skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
 }
 
+azg_ownership_add_cursor_skill() {
+  local skill="${1}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg s "${skill}" '.cursor_skills = ((.cursor_skills // []) + [$s] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_owns_cursor_skill() {
+  local skill="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 1
+  jq -e --arg s "${skill}" '(.cursor_skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
+}
+
+azg_ownership_add_cursor_rule() {
+  local rule="${1}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg r "${rule}" '.cursor_rules = ((.cursor_rules // []) + [$r] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_owns_cursor_rule() {
+  local rule="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 1
+  jq -e --arg r "${rule}" '(.cursor_rules // []) | index($r) != null' "${path}" >/dev/null 2>&1
+}
+
 # True if dest skill is foreign custom (exists, no vendor sentinel, not force).
 azg_skill_is_foreign() {
   local dest="${1}"
   [ -d "${dest}" ] || return 1
   [ -f "${dest}/ANTIGRAVITY-NOTE.md" ] && return 1
+  return 0
+}
+
+# True if Cursor skill dir is foreign (exists, no AZG-OWNED.md).
+azg_cursor_skill_is_foreign() {
+  local dest="${1}"
+  [ -d "${dest}" ] || return 1
+  [ -f "${dest}/AZG-OWNED.md" ] && return 1
   return 0
 }

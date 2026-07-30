@@ -60,8 +60,11 @@ cmd_setup() {
     step "azg setup --dry-run: showing planned actions (no files will be written)"
     info "  create dir : ${AZG_GLOBAL_DIR}"
     info "  create dir : ${AZG_GLOBAL_SKILLS_DIR}"
+    info "  create dir : ${AZG_CURSOR_SKILLS_DIR}"
+    info "  create dir : ${AZG_CURSOR_RULES_DIR}"
     info "  copy file  : ${template_mcp} → ${AZG_GLOBAL_MCP_CONFIG}"
     info "  copy file  : ${template_agents} → ${AZG_GLOBAL_AGENTS}"
+    info "  copy file  : cursor rules → ${AZG_CURSOR_RULES_DIR}/azg-*.mdc"
 
     if [ "${skip_sync}" -eq 1 ]; then
       info "  [SMART SYNC] skills are up-to-date (VENDOR.lock unchanged); would skip skill copying"
@@ -76,6 +79,7 @@ cmd_setup() {
               local skill_name
               skill_name="$(basename "${skill_dir}")"
               info "  copy skill : ${skill_dir} → ${AZG_GLOBAL_SKILLS_DIR}/${skill_name}/"
+              info "  copy skill : ${skill_dir} → ${AZG_CURSOR_SKILLS_DIR}/${skill_name}/"
             done
           done
         done
@@ -201,6 +205,10 @@ cmd_setup() {
 
   local skills_copied=0
   local skills_pruned=0
+  local cursor_skills_copied=0
+
+  ensure_dir "${AZG_CURSOR_SKILLS_DIR}"
+  ensure_dir "${AZG_CURSOR_RULES_DIR}"
 
   if [ "${skip_sync}" -eq 1 ]; then
     info "Smart Sync: VENDOR.lock commits unchanged. Skipping global skill sync."
@@ -220,12 +228,20 @@ cmd_setup() {
           local skill_dest="${AZG_GLOBAL_SKILLS_DIR}/${skill_name}"
           if [ "${force}" -eq 0 ] && azg_skill_is_foreign "${skill_dest}"; then
             warn "Foreign skill '${skill_name}' (no ANTIGRAVITY-NOTE) — skipping (use --force to overwrite)"
-            continue
+          else
+            apply_overlay "${skill_name}" "${category_dir}" "${template_global}/skills/overlay/${vendor_name}" "${AZG_GLOBAL_SKILLS_DIR}"
+            azg_ownership_add_skill "${skill_name}"
+            skills_copied=$((skills_copied + 1))
           fi
 
-          apply_overlay "${skill_name}" "${category_dir}" "${template_global}/skills/overlay/${vendor_name}" "${AZG_GLOBAL_SKILLS_DIR}"
-          azg_ownership_add_skill "${skill_name}"
-          skills_copied=$((skills_copied + 1))
+          local cursor_dest="${AZG_CURSOR_SKILLS_DIR}/${skill_name}"
+          if [ "${force}" -eq 0 ] && azg_cursor_skill_is_foreign "${cursor_dest}"; then
+            warn "Foreign Cursor skill '${skill_name}' (no AZG-OWNED.md) — skipping (use --force to overwrite)"
+          else
+            install_cursor_skill "${skill_name}" "${category_dir}" "${AZG_CURSOR_SKILLS_DIR}"
+            azg_ownership_add_cursor_skill "${skill_name}"
+            cursor_skills_copied=$((cursor_skills_copied + 1))
+          fi
         done
       done
 
@@ -243,16 +259,41 @@ cmd_setup() {
     info "Tip: run 'azg update --vendor' to vendor skills"
   fi
 
+  # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)
+  local cursor_rules_tmpl_dir="${template_global}/cursor/rules"
+  local cursor_rules_installed=0
+  if [ -d "${cursor_rules_tmpl_dir}" ]; then
+    local rule_src rule_base rule_dest
+    for rule_src in "${cursor_rules_tmpl_dir}"/azg-*.mdc; do
+      [ -f "${rule_src}" ] || continue
+      rule_base="$(basename "${rule_src}")"
+      rule_dest="${AZG_CURSOR_RULES_DIR}/${rule_base}"
+      if [ -f "${rule_dest}" ] && [ "${force}" -eq 0 ] && ! azg_ownership_owns_cursor_rule "${rule_base}"; then
+        warn "Foreign Cursor rule '${rule_base}' — skipping (use --force to overwrite)"
+        continue
+      fi
+      atomic_copy "${rule_src}" "${rule_dest}"
+      azg_ownership_add_cursor_rule "${rule_base}"
+      cursor_rules_installed=$((cursor_rules_installed + 1))
+      ok "Installed Cursor rule: ${rule_base}"
+    done
+  else
+    warn "Cursor rules template dir missing: ${cursor_rules_tmpl_dir}"
+  fi
+
   local _sum_skills=""
   if [ "${skip_sync}" -eq 1 ]; then
     _sum_skills="skills up-to-date (smart sync)"
-  elif [ "${skills_copied}" -gt 0 ]; then
-    _sum_skills="${skills_copied} skill(s) installed"
+  elif [ "${skills_copied}" -gt 0 ] || [ "${cursor_skills_copied}" -gt 0 ]; then
+    _sum_skills="${skills_copied} Gemini skill(s), ${cursor_skills_copied} Cursor skill(s) installed"
   else
     _sum_skills="no skills to install (run 'azg update --vendor' to vendor skills)"
   fi
   [ "${skills_pruned}" -gt 0 ] && _sum_skills="${_sum_skills}, ${skills_pruned} removed (deleted upstream)"
+  [ "${cursor_rules_installed}" -gt 0 ] && _sum_skills="${_sum_skills}, ${cursor_rules_installed} Cursor rule(s)"
 
   ok "Setup complete. ${_sum_skills}."
   info "Global config: ${AZG_GLOBAL_DIR}"
+  info "Cursor skills: ${AZG_CURSOR_SKILLS_DIR}"
+  info "Cursor rules: ${AZG_CURSOR_RULES_DIR}"
 }

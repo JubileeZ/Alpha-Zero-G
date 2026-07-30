@@ -33,8 +33,12 @@ Task completed across forced fresh-context sessions and a clean-device clone bef
 _Avoid_: Long chat, large task
 
 **Minimal Setup**:
-One device command and one project command, with at most one required confirmation of project validation command.
+One device command and one project command, with at most one required confirmation of project validation command. Device command installs shared vendor skills for every supported IDE, azg-owned Cursor global rules (`azg-*.mdc`), Gemini/Antigravity global AGENTS.md, and MCP; project command installs repo-local hooks, thin IDE adapters, and project AGENTS.md (Cursor has no user-global AGENTS.md).
 _Avoid_: Zero configuration, setup wizard
+
+**Device Setup**:
+The one-per-machine install (`azg setup`): shared vendor skill packs into each IDE's user/global skills directory (`~/.cursor/skills` for Cursor; never `skills-cursor`), azg-owned Cursor global rules as `~/.cursor/rules/azg-*.mdc` (foreign rules untouched unless `--force`), Gemini/Antigravity global AGENTS.md, and MCP. Not a substitute for project apply; does not require per-repo skill or rules import.
+_Avoid_: Manual skill import, Cursor-only ritual, Antigravity-only setup, skills-cursor, wiping ~/.cursor/rules
 
 **Work Packet**:
 Canonical Git-synced state for one active task: objective, acceptance criteria, status, files, decisions, blockers, and next action.

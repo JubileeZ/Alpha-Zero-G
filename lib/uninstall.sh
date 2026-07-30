@@ -32,6 +32,40 @@ cmd_uninstall() {
     fi
   fi
 
+  # Cursor skills: AZG-OWNED.md or listed in cursor_skills — never skills-cursor
+  if [ -d "${AZG_CURSOR_SKILLS_DIR}" ]; then
+    local cskill_dir cskill_name
+    for cskill_dir in "${AZG_CURSOR_SKILLS_DIR}"/*/; do
+      [ -d "${cskill_dir}" ] || continue
+      cskill_name="$(basename "${cskill_dir}")"
+      if [ -f "${cskill_dir}/AZG-OWNED.md" ] || azg_ownership_owns_cursor_skill "${cskill_name}"; then
+        # DESTRUCTIVE: remove azg-owned Cursor skill only
+        rm -rf "${cskill_dir}"
+        ok "Removed Cursor skill: ${cskill_name}"
+        removed=1
+      else
+        info "Leaving foreign Cursor skill: ${cskill_name}"
+      fi
+    done
+  fi
+
+  # Cursor rules: only owned azg-*.mdc entries — never wipe rules dir
+  if [ -d "${AZG_CURSOR_RULES_DIR}" ]; then
+    local rule_file rule_base
+    for rule_file in "${AZG_CURSOR_RULES_DIR}"/azg-*.mdc; do
+      [ -f "${rule_file}" ] || continue
+      rule_base="$(basename "${rule_file}")"
+      if azg_ownership_owns_cursor_rule "${rule_base}"; then
+        # DESTRUCTIVE: remove azg-owned Cursor rule only
+        rm -f "${rule_file}"
+        ok "Removed Cursor rule: ${rule_base}"
+        removed=1
+      else
+        info "Leaving Cursor rule (not in ownership): ${rule_base}"
+      fi
+    done
+  fi
+
   # MCP: only if we own it
   if [ -f "${AZG_GLOBAL_MCP_CONFIG}" ]; then
     if [ "$(azg_ownership_get mcp)" = "true" ]; then

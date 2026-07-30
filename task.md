@@ -1,24 +1,23 @@
-# Active Task: Windows-safe Cursor hook launcher
+# Active Task: Cursor Device Setup
 
-- **Status:** Re-applied (prior uncommitted fix was discarded)
-- **Objective:** Stop intermittent IDE open of stop-checkpoint.sh on agent stop
-- **Acceptance:** hooks.json commands use run-hook.cmd + basename only (no .sh token); stop never ShellExecutes .sh
-- **Issue/Ticket:** local / Cursor Windows .sh association
+- **Status:** Done (pending merge)
+- **Objective:** Device Setup installs Cursor skills + azg-owned global rules without clobbering foreign assets
+- **Acceptance:** tests/test-cursor-device-setup.sh green; phase8 green; checklist in docs/agents/device-handoff-cursor-setup.md
+- **Issue/Ticket:** https://github.com/JubileeZ/alpha-zero-g/issues/56
 
 ## Work Packet (SFDBN)
 
-- **Status:** Committed; apply from this tree installs run-hook.cmd
-- **Files:** `.cursor/hooks/run-hook.cmd`, `.cursor/hooks.json`, `templates/project/.cursor/hooks/*`, `lib/scaffold.sh`, `lib/apply.sh`, `tests/host-contract-smoke.sh`, `tests/test-phase2.sh`, `tests/test-phase10.sh`
-- **Decisions:** Bare `.sh` in hooks.json → Windows opens file. Basename-only via run-hook.cmd. `azg apply` refreshes from template — commit required so reinstall does not regress.
+- **Status:** Implemented on feature/cursor-device-setup; verified
+- **Files:** lib/setup.sh, lib/uninstall.sh, lib/common.sh, lib/apply-overlay.sh, templates/global/cursor/, tests/test-cursor-device-setup.sh, docs/adr/0008, docs/agents/device-handoff-cursor-setup.md, CONTEXT.md
+- **Decisions:** Copy skills to ~/.cursor/skills; azg-*.mdc rules; cursor_skills/cursor_rules ownership; AZG-OWNED.md sentinel
 - **Blocked:** None
-- **Next:** Reload Window; confirm stop no longer opens stop-checkpoint.sh
+- **Next:** Merge PR; run azg setup on devices; close map #56
 
 ## Todo
-- [x] Recreate run-hook.cmd after discard
-- [x] hooks.json without .sh path tokens
-- [x] Scaffold/apply + tests
-- [x] Commit so fix cannot vanish again
-- [ ] User reload + verify
+- [x] Cursor Device Setup implementation
+- [x] Ownership/uninstall
+- [x] Tests + handoff checklist
+- [ ] Merge to main
 
 ## Blockers / Notes
-- Prior intermittent open: uncommitted fix discarded / apply from HEAD restored bare `.sh`.
+- Full run-all slow on Windows (~64s per setup × many suites); targeted suites used for gate
