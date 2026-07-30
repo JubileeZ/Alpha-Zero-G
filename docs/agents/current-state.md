@@ -14,7 +14,7 @@
 | Ownership | `azg-ownership.json` under global dir | ADR 0008 |
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; hooks.json cites basename only (no `.sh` token) |
-| Cursor device setup | `azg setup` → `~/.cursor/skills` + `azg-*.mdc` | ADR 0008; foreign-safe; handoff checklist |
+| Cursor device setup | `azg setup` → `~/.cursor/skills` + `azg-ponytail.mdc` + `azg-agent-instructions.mdc` | ADR 0008; agent-instruction blocks mirrored from global AGENTS.md; foreign-safe |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite N=10 · 3-arm promote (ADR 0007) |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |

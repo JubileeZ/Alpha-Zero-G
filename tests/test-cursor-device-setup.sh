@@ -44,11 +44,19 @@ assert_file_exists "Cursor skill has AZG-OWNED.md sentinel" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/AZG-OWNED.md"
 assert_file_exists "azg-owned global rule installed" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
+assert_file_exists "azg-owned agent-instructions rule installed" \
+  "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"
 
 if grep -q 'alwaysApply:\s*true' "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc" 2>/dev/null; then
   pass "azg-ponytail.mdc is alwaysApply"
 else
   fail "azg-ponytail.mdc missing alwaysApply: true"
+fi
+
+if grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" 2>/dev/null; then
+  pass "azg-agent-instructions.mdc mirrors global AGENTS.md agent instructions"
+else
+  fail "azg-agent-instructions.mdc missing telegraphic section"
 fi
 
 if [ -f "${TEMP_HOME}/.cursor/rules/user-preference.mdc" ] && grep -q 'foreign user rule' "${TEMP_HOME}/.cursor/rules/user-preference.mdc"; then
@@ -81,6 +89,11 @@ if [ -f "${OWN}" ] && jq -e '(.cursor_rules // []) | index("azg-ponytail.mdc") !
 else
   fail "ownership missing cursor_rules azg-ponytail.mdc"
 fi
+if [ -f "${OWN}" ] && jq -e '(.cursor_rules // []) | index("azg-agent-instructions.mdc") != null' "${OWN}" >/dev/null; then
+  pass "ownership lists cursor_rules azg-agent-instructions.mdc"
+else
+  fail "ownership missing cursor_rules azg-agent-instructions.mdc"
+fi
 
 section "2. uninstall removes owned Cursor assets only"
 
@@ -91,6 +104,8 @@ assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
 assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
+assert_file_not_exists "uninstall removed azg-agent-instructions.mdc" \
+  "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"
 
 if [ -f "${TEMP_HOME}/.cursor/rules/user-preference.mdc" ]; then
   pass "uninstall left foreign Cursor rule"

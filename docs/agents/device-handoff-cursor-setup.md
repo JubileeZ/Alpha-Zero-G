@@ -14,7 +14,7 @@ Operator drill after `azg setup` on a fresh machine (or clean `HOME`). Complemen
 | 1 | `./azg setup` exits 0 | Skills + rules reported in summary |
 | 2 | Cursor skills present | `~/.cursor/skills/<vendored-name>/SKILL.md` and `AZG-OWNED.md` exist |
 | 3 | Built-ins untouched | `~/.cursor/skills-cursor/` unchanged (no azg writes) |
-| 4 | Azg global rule | `~/.cursor/rules/azg-ponytail.mdc` exists with `alwaysApply: true` |
+| 4 | Azg global rules | `~/.cursor/rules/azg-ponytail.mdc` + `azg-agent-instructions.mdc` exist with `alwaysApply: true` |
 | 5 | Foreign rules safe | Pre-existing non-`azg-*.mdc` under `~/.cursor/rules/` still present |
 | 6 | Gemini still works | `~/.gemini/config/skills/` has vendored skills; global `AGENTS.md` present |
 | 7 | Open harnessed project in Cursor | Project `AGENTS.md` + `.cursor/rules` from apply still load; no manual skill import |
