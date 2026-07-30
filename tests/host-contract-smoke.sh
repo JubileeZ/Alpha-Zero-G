@@ -133,6 +133,17 @@ if grep -q '"failClosed"[[:space:]]*:[[:space:]]*true' "${HOOKS_JSON}"; then
 else
   fail "Cursor commit hook must set failClosed: true"
 fi
+if grep -q 'run-hook\.cmd' "${HOOKS_JSON}" && [ -f "${ROOT}/templates/project/.cursor/hooks/run-hook.cmd" ]; then
+  pass "Cursor hooks use run-hook.cmd launcher (Windows-safe)"
+else
+  fail "Cursor hooks must invoke via run-hook.cmd (bare .sh opens on Windows)"
+fi
+# Windows ShellExecutes path tokens ending in .sh inside the command string
+if grep -E '"command"[[:space:]]*:[[:space:]]*"[^"]*\.sh"' "${HOOKS_JSON}"; then
+  fail "Cursor hooks.json must not put .sh paths in command (causes editor open on Windows)"
+else
+  pass "Cursor hooks.json commands contain no .sh paths"
+fi
 
 section "5b. Spawn-budget PreToolUse wiring (ADR 0006)"
 

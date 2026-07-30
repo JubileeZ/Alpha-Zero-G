@@ -51,6 +51,7 @@ assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/re
 assert_file_exists "work-state-continuity.mdc rule exists" "${APP_DIR}/.cursor/rules/work-state-continuity.mdc"
 assert_file_exists "Cursor hooks.json exists" "${APP_DIR}/.cursor/hooks.json"
 assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/commit-verify.sh"
+assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
 
 # Executable checks
 for h in block-destructive-ops.sh commit-gate.sh checkpoint.sh spawn-budget.sh pre-compact.sh; do

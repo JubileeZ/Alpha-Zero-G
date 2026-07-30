@@ -95,6 +95,7 @@ assert_exit "azg new cursor-app succeeds" 0 "${AZG}" new cursor-app --no-git
 CUR_DIR="${TEMP_WORKSPACE}/cursor-app"
 assert_file_exists "Cursor .mdc rule exists" "${CUR_DIR}/.cursor/rules/read-agents-md.mdc"
 assert_file_exists "Cursor hooks.json exists" "${CUR_DIR}/.cursor/hooks.json"
+assert_file_exists "Cursor run-hook.cmd exists" "${CUR_DIR}/.cursor/hooks/run-hook.cmd"
 assert_executable "commit-verify.sh executable" "${CUR_DIR}/.cursor/hooks/commit-verify.sh"
 
 # Adapter denies when verify would fail
