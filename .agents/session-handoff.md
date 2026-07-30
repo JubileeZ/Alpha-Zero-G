@@ -1,7 +1,7 @@
 # Session handoff
 
 **When:** 2026-07-30
-**Branch:** main (uncommitted implementation; checkpoint pending)
+**Branch:** main (`37d7217` — committed and pushed)
 
 ## Done this session
 
@@ -14,7 +14,7 @@
 
 ## Verify
 
-- `bash tests/test-cursor-device-setup.sh` → 33/33
+- `bash tests/test-cursor-device-setup.sh` → 34/34
 - IDE diagnostics clean for changed files
 - Shellcheck unavailable: `shellcheck: command not found`
 - Device: `./azg setup` migrated AGENTS markers and rendered both Cursor rules
@@ -25,5 +25,5 @@
 
 ## Next
 
-- Final code review
-- Update Work Packet, commit checkpoint
+- Delete merged `feature/cursor-device-setup` (local + remote)
+- Operator: `./azg setup` on device to refresh rendered Cursor rules
