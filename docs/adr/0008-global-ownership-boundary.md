@@ -14,3 +14,7 @@ Same manifest (`azg-ownership.json`) also tracks:
 Never write into `~/.cursor/skills-cursor/`. Never delete the whole `~/.cursor/rules/` directory — remove only owned `azg-*.mdc` entries. Foreign Cursor skills (no `AZG-OWNED.md`) and foreign rules (non-owned / non-azg names) require `--force` to overwrite.
 
 Gemini skills keep `ANTIGRAVITY-NOTE.md`. Cursor skills use `AZG-OWNED.md` (neutral sentinel).
+
+## Cursor Rule Source of Truth
+
+`templates/global/AGENTS.md` is canonical for shared rule prose. `azg setup` extracts marked blocks (`PONYTAIL:MANAGED` and `AZG:AGENT-INSTRUCTIONS`) and composes them with Cursor-only frontmatter stubs into `~/.cursor/rules/azg-*.mdc`. Missing, duplicated, reversed, or empty marker blocks fail setup instead of installing stale rules.

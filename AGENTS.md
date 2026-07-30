@@ -39,7 +39,9 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 | Command | What it does |
 |---------|-------------|
 | `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint Bash scripts |
-| `bash tests/run-all.sh` | Aggregate gate (shellcheck + verifiers + all suites) |
+| `bash tests/verify.sh` | Portable delivery gate (fast; harness integrity) |
+| `bash tests/run-all.sh` | Full aggregate gate (slow; shellcheck + verifiers + all suites) |
+| `bash tests/run-all.sh --list` | Print suite order without running |
 | `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare SWE-bench Lite arm workdir |
 | `bash tests/test-lite.sh` | Lite Evaluation Suite structural tests |
 | `bash tests/test-azg.sh` | Run general integration tests |
@@ -48,6 +50,33 @@ VERSION                      # File indicating the current Alpha-Zero-G release 
 | `docs/AGENT-ONBOARDING.md` | Zero-context entry for new agents |
 
 **Pre-commit gate:** agents must run test and lint commands and confirm both pass before proposing any commit.
+
+## Testing approach
+
+Two gates — pick by scope, not habit:
+
+| Gate | When | Expect |
+|------|------|--------|
+| `bash tests/verify.sh` | Default during iteration; checkpoint | Seconds |
+| `bash tests/run-all.sh` | Pre-PR; CI parity; touched `templates/` or `lib/` broadly | Minutes (normal) |
+
+`run-all` is intentionally slow: 16+ sequential suites, each with isolated temp `HOME`/workspace. Overlap (`azg setup`, `azg new`, `azg apply`, `verify.sh`) is by design — phase tests must run alone. Not a bug.
+
+**During work** — run the smallest set that covers your diff:
+
+| Touched area | Run |
+|--------------|-----|
+| `lib/setup.sh`, `lib/common.sh`, Cursor device / global rules | `bash tests/test-cursor-device-setup.sh` |
+| `lib/scaffold.sh`, `lib/apply.sh`, `azg new` / `apply` | `bash tests/test-azg.sh` + relevant `test-phase*.sh` |
+| `templates/project/` harness | `bash tests/test-phase10.sh` + `bash tests/test-mutation-verify.sh` |
+| `evals/lite/` | `bash tests/test-lite.sh` |
+| Hooks / host contract | `bash tests/host-contract-smoke.sh` + `bash tests/test-phase5.sh` |
+| Docs only | `python3 tests/verify_docs.py` |
+| Unsure which phase | `bash tests/run-all.sh --list` then run matching `test-phase<N>.sh` |
+
+After `templates/` or `lib/` changes: run affected phase tests **and** `shellcheck` on edited scripts. Full `run-all` before proposing merge-level commits.
+
+**CI parity:** `AZG_STRICT=1 bash tests/run-all.sh` (fails if shellcheck/python3 missing). Windows: Git Bash only; expect slower I/O than Linux — phase3/8/9 full-repo `tar` copies are the main cost.
 
 ---
 

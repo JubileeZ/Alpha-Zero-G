@@ -9,7 +9,112 @@
 #   azg setup --force      — re-install even if files are already present
 
 # shellcheck source=lib/common.sh
-# common.sh is already sourced by the dispatcher before this file is sourced.
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
+
+_cursor_rule_markers() {
+  local rule_base="${1}"
+
+  case "${rule_base}" in
+    azg-ponytail.mdc)
+      printf '%s\n' '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->'
+      ;;
+    azg-agent-instructions.mdc)
+      printf '%s\n' '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
+      ;;
+    *)
+      die "No AGENTS.md marker mapping for Cursor rule: ${rule_base}"
+      ;;
+  esac
+}
+
+_validate_cursor_rule_templates() {
+  local cursor_rules_tmpl_dir="${1}"
+  local template_agents="${2}"
+  local rule_src rule_base marker_start marker_end
+  local -a markers
+
+  [ -d "${cursor_rules_tmpl_dir}" ] || die "Cursor rules template dir missing: ${cursor_rules_tmpl_dir}"
+  for rule_src in "${cursor_rules_tmpl_dir}"/azg-*.mdc; do
+    [ -f "${rule_src}" ] || continue
+    rule_base="$(basename "${rule_src}")"
+    mapfile -t markers < <(_cursor_rule_markers "${rule_base}")
+    marker_start="${markers[0]}"
+    marker_end="${markers[1]}"
+    if ! extract_managed_block "${template_agents}" "${marker_start}" "${marker_end}" > /dev/null; then
+      die "AGENTS.md marker block missing or empty for Cursor rule: ${rule_base}"
+    fi
+  done
+}
+
+_render_cursor_rule() {
+  local rule_src="${1}"
+  local rule_dest="${2}"
+  local template_agents="${3}"
+  local rule_base marker_start marker_end body
+  local -a markers
+
+  rule_base="$(basename "${rule_src}")"
+  mapfile -t markers < <(_cursor_rule_markers "${rule_base}")
+  marker_start="${markers[0]}"
+  marker_end="${markers[1]}"
+  body="$(extract_managed_block "${template_agents}" "${marker_start}" "${marker_end}")" || \
+    die "AGENTS.md marker block missing or empty for Cursor rule: ${rule_base}"
+
+  local render_tmp="${rule_dest}.azg.render.tmp"
+  if ! awk '{ sub(/\r$/, ""); print }' "${rule_src}" > "${render_tmp}" ||
+    ! printf '%s\n' "${body}" >> "${render_tmp}"; then
+    # DESTRUCTIVE: remove failed Cursor rule render temporary
+    rm -f "${render_tmp}"
+    die "Failed to render Cursor rule: ${rule_dest}"
+  fi
+  if ! atomic_copy "${render_tmp}" "${rule_dest}"; then
+    # DESTRUCTIVE: remove failed Cursor rule render temporary
+    rm -f "${render_tmp}"
+    die "Failed to install Cursor rule: ${rule_dest}"
+  fi
+  # DESTRUCTIVE: remove completed Cursor rule render temporary
+  rm -f "${render_tmp}"
+}
+
+_migrate_agent_instruction_markers() {
+  local target="${1}"
+  local tmp="${target}.azg.migrate.tmp"
+  local start_heading="# AGENT INSTRUCTIONS: Project AGENTS.md Placeholder Rule"
+  local end_line="Write all system/project doc updates or additions in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact."
+
+  if awk -v start="${start_heading}" -v end="${end_line}" '
+    {
+      line = $0
+      sub(/\r$/, "", line)
+      if (line == start) {
+        starts += 1
+        if (starts != 1 || state != 0) bad = 1
+        print "<!-- AZG:AGENT-INSTRUCTIONS:START -->"
+        state = 1
+      }
+      print line
+      if (line == end) {
+        ends += 1
+        if (ends != 1 || state != 1) bad = 1
+        print "<!-- AZG:AGENT-INSTRUCTIONS:END -->"
+        state = 2
+      }
+    }
+    END { exit !(starts == 1 && ends == 1 && state == 2 && bad != 1) }
+  ' "${target}" > "${tmp}"; then
+    # DESTRUCTIVE: replace owned AGENTS.md with marker-preserving migration
+    if mv "${tmp}" "${target}"; then
+      return 0
+    fi
+    # DESTRUCTIVE: remove failed marker migration temporary
+    rm -f "${tmp}"
+    return 1
+  fi
+
+  # DESTRUCTIVE: remove failed temporary marker migration
+  rm -f "${tmp}"
+  return 1
+}
 
 cmd_setup() {
   local dry_run=0
@@ -38,6 +143,14 @@ cmd_setup() {
   local template_mcp="${template_global}/mcp_config.json"
   local template_agents="${template_global}/AGENTS.md"
   local vendor_base_dir="${template_global}/skills/vendor"
+  local cursor_rules_tmpl_dir="${template_global}/cursor/rules"
+
+  if [ ! -f "${template_agents}" ]; then
+    die "Template AGENTS.md not found: ${template_agents}"
+  fi
+  if [ -d "${cursor_rules_tmpl_dir}" ]; then
+    _validate_cursor_rule_templates "${cursor_rules_tmpl_dir}" "${template_agents}"
+  fi
 
   local skip_sync=0
   local current_stamp_file="${AZG_GLOBAL_DIR}/setup_stamp"
@@ -64,7 +177,7 @@ cmd_setup() {
     info "  create dir : ${AZG_CURSOR_RULES_DIR}"
     info "  copy file  : ${template_mcp} → ${AZG_GLOBAL_MCP_CONFIG}"
     info "  copy file  : ${template_agents} → ${AZG_GLOBAL_AGENTS}"
-    info "  copy file  : cursor rules → ${AZG_CURSOR_RULES_DIR}/azg-*.mdc"
+    info "  render file : Cursor rules from ${template_agents} → ${AZG_CURSOR_RULES_DIR}/azg-*.mdc"
 
     if [ "${skip_sync}" -eq 1 ]; then
       info "  [SMART SYNC] skills are up-to-date (VENDOR.lock unchanged); would skip skill copying"
@@ -126,10 +239,6 @@ cmd_setup() {
     ok "Installed: mcp_config.json"
   fi
 
-  if [ ! -f "${template_agents}" ]; then
-    die "Template AGENTS.md not found: ${template_agents}"
-  fi
-
   if [ ! -f "${AZG_GLOBAL_AGENTS}" ]; then
     ensure_dir "$(dirname "${AZG_GLOBAL_AGENTS}")"
     atomic_copy "${template_agents}" "${AZG_GLOBAL_AGENTS}"
@@ -144,16 +253,61 @@ cmd_setup() {
     info "AGENTS.md already up-to-date, skipping"
     azg_ownership_set_flag agents true
   else
-    if grep -q '<!-- PONYTAIL:MANAGED:START -->' "${AZG_GLOBAL_AGENTS}"; then
-      local new_ponytail
-      new_ponytail="$(awk '/<!-- PONYTAIL:MANAGED:START -->/{f=1; next} /<!-- PONYTAIL:MANAGED:END -->/{f=0} f' "${template_agents}")"
-      if replace_managed_block "${AZG_GLOBAL_AGENTS}" "<!-- PONYTAIL:MANAGED:START -->" "<!-- PONYTAIL:MANAGED:END -->" "${new_ponytail}"; then
-        azg_ownership_set_flag agents true
-        ok "Updated: AGENTS.md ponytail block (global)"
-      else
-        die "Failed to update managed block in ${AZG_GLOBAL_AGENTS}"
+    if extract_managed_block "${AZG_GLOBAL_AGENTS}" \
+      '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->' > /dev/null 2>&1; then
+      local agents_sync_tmp="${AZG_GLOBAL_AGENTS}.azg.sync.tmp"
+      if ! cp "${AZG_GLOBAL_AGENTS}" "${agents_sync_tmp}"; then
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to prepare AGENTS.md sync temporary"
       fi
+      if ! extract_managed_block "${agents_sync_tmp}" \
+        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' \
+        '<!-- AZG:AGENT-INSTRUCTIONS:END -->' > /dev/null 2>&1; then
+        _migrate_agent_instruction_markers "${agents_sync_tmp}" || {
+          # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+          rm -f "${agents_sync_tmp}"
+          die "Owned AGENTS.md lacks migratable agent-instruction markers; use --force to refresh"
+        }
+      fi
+      local new_ponytail
+      new_ponytail="$(extract_managed_block "${template_agents}" \
+        '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->')" || {
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to extract AGENTS.md ponytail block"
+      }
+      local new_agent_instructions
+      new_agent_instructions="$(extract_managed_block "${template_agents}" \
+        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->')" || {
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to extract AGENTS.md agent-instruction block"
+      }
+      if ! replace_managed_block "${agents_sync_tmp}" \
+        "<!-- PONYTAIL:MANAGED:START -->" "<!-- PONYTAIL:MANAGED:END -->" "${new_ponytail}" ||
+        ! replace_managed_block "${agents_sync_tmp}" \
+          "<!-- AZG:AGENT-INSTRUCTIONS:START -->" \
+          "<!-- AZG:AGENT-INSTRUCTIONS:END -->" "${new_agent_instructions}"; then
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to update AGENTS.md managed blocks"
+      fi
+      # DESTRUCTIVE: replace owned global AGENTS.md with synchronized blocks
+      if ! atomic_copy "${agents_sync_tmp}" "${AZG_GLOBAL_AGENTS}"; then
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to install synchronized AGENTS.md"
+      fi
+      # DESTRUCTIVE: remove completed AGENTS.md sync temporary
+      rm -f "${agents_sync_tmp}"
+      azg_ownership_set_flag agents true
+      ok "Updated: AGENTS.md managed blocks (global)"
     elif [ "$(azg_ownership_get agents)" = "true" ]; then
+      if grep -q '<!-- PONYTAIL:MANAGED:' "${AZG_GLOBAL_AGENTS}" ||
+        grep -q '<!-- AZG:AGENT-INSTRUCTIONS:' "${AZG_GLOBAL_AGENTS}"; then
+        die "Owned AGENTS.md has malformed managed markers; use --force to refresh"
+      fi
       cp "${AZG_GLOBAL_AGENTS}" "${AZG_GLOBAL_AGENTS}.bak"
       atomic_copy "${template_agents}" "${AZG_GLOBAL_AGENTS}"
       ok "Installed: AGENTS.md (global, owned file refreshed; backup .bak)"
@@ -260,7 +414,6 @@ cmd_setup() {
   fi
 
   # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)
-  local cursor_rules_tmpl_dir="${template_global}/cursor/rules"
   local cursor_rules_installed=0
   if [ -d "${cursor_rules_tmpl_dir}" ]; then
     local rule_src rule_base rule_dest
@@ -272,7 +425,7 @@ cmd_setup() {
         warn "Foreign Cursor rule '${rule_base}' — skipping (use --force to overwrite)"
         continue
       fi
-      atomic_copy "${rule_src}" "${rule_dest}"
+      _render_cursor_rule "${rule_src}" "${rule_dest}" "${template_agents}"
       azg_ownership_add_cursor_rule "${rule_base}"
       cursor_rules_installed=$((cursor_rules_installed + 1))
       ok "Installed Cursor rule: ${rule_base}"

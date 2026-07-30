@@ -33,6 +33,7 @@ Not lazy about: understanding the problem (read it fully and trace the real flow
 (Yes, this file also applies to agents working on the ponytail repo itself. Especially to them.)
 <!-- PONYTAIL:MANAGED:END -->
 
+<!-- AZG:AGENT-INSTRUCTIONS:START -->
 # AGENT INSTRUCTIONS: Project AGENTS.md Placeholder Rule
 
 If project-level `AGENTS.md` has `<!-- AGENT: ... -->` placeholders:
@@ -59,3 +60,4 @@ If project tracking (`ROADMAP.md`, `progress.md`, `current-state.md`) has `<!-- 
 # AGENT INSTRUCTIONS: Telegraphic Writing Style
 
 Write all system/project doc updates or additions in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact.
+<!-- AZG:AGENT-INSTRUCTIONS:END -->

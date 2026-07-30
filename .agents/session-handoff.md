@@ -1,21 +1,29 @@
 # Session handoff
 
 **When:** 2026-07-30
-**Branch:** main (local uncommitted → Checkpoint)
+**Branch:** main (uncommitted implementation; checkpoint pending)
 
 ## Done this session
 
-1. Removed npx-installed `mattpocock/skills` from `~/.agents/skills`; left `find-skills`.
-2. Ran `./azg setup` — vendored skills → Gemini + Cursor; `azg-ponytail.mdc`.
-3. Gap: AGENTS.md lines 36–61 (placeholders / cleanup / telegraphic) only in Gemini global AGENTS; Cursor needed `.mdc`.
-4. Added `templates/global/cursor/rules/azg-agent-instructions.mdc`; tests + handoff updated; re-ran `azg setup` (rule on device).
+1. Agreed sync-by-design model: `templates/global/AGENTS.md` canonical; Cursor prose derived at setup.
+2. Added `PONYTAIL:MANAGED` and `AZG:AGENT-INSTRUCTIONS` extraction markers.
+3. Reduced `templates/global/cursor/rules/azg-*.mdc` to Cursor frontmatter stubs.
+4. Added strict extraction/rendering in `lib/common.sh` + `lib/setup.sh`.
+5. Added equality, ownership, foreign-safety, uninstall, malformed-marker, and legacy AGENTS migration tests.
+6. Updated CONTEXT, ADR 0008, current-state, and device handoff docs.
 
 ## Verify
 
-- `bash tests/test-cursor-device-setup.sh` → 20/20
-- Device: `~/.cursor/rules/azg-agent-instructions.mdc` present
+- `bash tests/test-cursor-device-setup.sh` → 33/33
+- IDE diagnostics clean for changed files
+- Shellcheck unavailable: `shellcheck: command not found`
+- Device: `./azg setup` migrated AGENTS markers and rendered both Cursor rules
+
+- Full `bash tests/run-all.sh` gate passed: 16 suites, 2 skipped
+- Portable `bash tests/verify.sh` passed: 32/32
+- Device refreshed with `./azg setup`
 
 ## Next
 
-- Checkpoint commit of rule + tests + continuity
-- New Cursor agent session to load new alwaysApply rule
+- Final code review
+- Update Work Packet, commit checkpoint

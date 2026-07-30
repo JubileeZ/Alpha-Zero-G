@@ -148,11 +148,23 @@ atomic_write() {
   local tmp
   tmp="${dest}.azg.tmp"
   if [ $# -ge 2 ]; then
-    printf '%s' "${2}" > "${tmp}"
+    if ! printf '%s' "${2}" > "${tmp}"; then
+      # DESTRUCTIVE: remove failed atomic-write temporary
+      rm -f "${tmp}"
+      return 1
+    fi
   else
-    cat > "${tmp}"
+    if ! cat > "${tmp}"; then
+      # DESTRUCTIVE: remove failed atomic-write temporary
+      rm -f "${tmp}"
+      return 1
+    fi
   fi
-  mv "${tmp}" "${dest}"
+  if ! mv "${tmp}" "${dest}"; then
+    # DESTRUCTIVE: remove failed atomic-write temporary
+    rm -f "${tmp}"
+    return 1
+  fi
 }
 
 # atomic_copy SRC DEST
@@ -162,8 +174,16 @@ atomic_copy() {
   local dest="${2}"
   local tmp
   tmp="${dest}.azg.tmp"
-  cp "${src}" "${tmp}"
-  mv "${tmp}" "${dest}"
+  if ! cp "${src}" "${tmp}"; then
+    # DESTRUCTIVE: remove failed atomic-copy temporary
+    rm -f "${tmp}"
+    return 1
+  fi
+  if ! mv "${tmp}" "${dest}"; then
+    # DESTRUCTIVE: remove failed atomic-copy temporary
+    rm -f "${tmp}"
+    return 1
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -252,8 +272,12 @@ replace_managed_block() {
   # Fail closed: exactly one ordered start/end pair required before rewrite.
   local marker_state
   marker_state="$(awk -v start="${start_marker}" -v end="${end_marker}" '
-    index($0, start) { starts += 1; if (ends == 0) order_ok = 1 }
-    index($0, end) { ends += 1 }
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == start { starts += 1; if (ends == 0) order_ok = 1 }
+    line == end { ends += 1 }
     END {
       if (starts == 1 && ends == 1 && order_ok == 1) print "ok"
       else print "bad"
@@ -267,25 +291,81 @@ replace_managed_block() {
   export _RMB_START="${start_marker}"
   export _RMB_END="${end_marker}"
 
-  # Replace using awk and atomic_write
-  awk '
+  # Replace using a complete temporary, then atomic_copy.
+  local replace_tmp="${target}.azg.replace.tmp"
+  if ! awk '
   BEGIN { in_block = 0 }
-  index($0, ENVIRON["_RMB_START"]) {
+  {
+      line = $0
+      sub(/\r$/, "", line)
+  }
+  line == ENVIRON["_RMB_START"] {
       print ENVIRON["_RMB_START"]
       print ENVIRON["_RMB_CONTENT"]
       print ENVIRON["_RMB_END"]
       in_block = 1
       next
   }
-  index($0, ENVIRON["_RMB_END"]) {
+  line == ENVIRON["_RMB_END"] {
       in_block = 0
       next
   }
-  !in_block { print }
-  ' "${target}" | atomic_write "${target}"
+  !in_block { print line }
+  ' "${target}" > "${replace_tmp}"; then
+    # DESTRUCTIVE: remove failed managed-block replacement temporary
+    rm -f "${replace_tmp}"
+    unset _RMB_CONTENT _RMB_START _RMB_END
+    return 1
+  fi
+  if ! atomic_copy "${replace_tmp}" "${target}"; then
+    # DESTRUCTIVE: remove failed managed-block replacement temporary
+    rm -f "${replace_tmp}"
+    unset _RMB_CONTENT _RMB_START _RMB_END
+    return 1
+  fi
+  # DESTRUCTIVE: remove completed managed-block replacement temporary
+  rm -f "${replace_tmp}"
 
   unset _RMB_CONTENT _RMB_START _RMB_END
   return 0
+}
+
+# extract_managed_block SOURCE_FILE START_MARKER END_MARKER
+# Prints non-empty content between one ordered marker pair.
+# Fails closed when markers are missing, duplicated, reversed, or empty.
+extract_managed_block() {
+  local source="${1}"
+  local start_marker="${2}"
+  local end_marker="${3}"
+
+  [ -f "${source}" ] || return 1
+
+  awk -v start="${start_marker}" -v end="${end_marker}" '
+    BEGIN { state = 0; starts = 0; ends = 0; content = 0; bad = 0 }
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == start {
+      starts += 1
+      if (starts != 1 || state != 0) bad = 1
+      state = 1
+      next
+    }
+    line == end {
+      ends += 1
+      if (ends != 1 || state != 1) bad = 1
+      state = 2
+      next
+    }
+    state == 1 {
+      print line
+      if (line ~ /[^[:space:]]/) content = 1
+    }
+    END {
+      if (starts != 1 || ends != 1 || state != 2 || content != 1 || bad == 1) exit 1
+    }
+  ' "${source}"
 }
 
 # ---------------------------------------------------------------------------
