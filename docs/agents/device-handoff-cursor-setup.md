@@ -4,7 +4,7 @@ Operator drill after `azg setup` on a fresh machine (or clean `HOME`). Complemen
 
 ## Prep
 
-1. Install Git Bash (Windows), `jq`, clone this repo.
+1. Install Git Bash (Windows), `jq`, clone this repo. macOS: system `/bin/bash` 3.2 is enough for `azg` (`lib/` stays Bash-3.2-safe); Homebrew bash optional.
 2. Prefer a throwaway user / temp `HOME` for the first dry run: `HOME=/tmp/azg-handoff bash -c './azg setup'`.
 
 ## Checks (one sitting)

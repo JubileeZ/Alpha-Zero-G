@@ -62,5 +62,5 @@
 4. Spawn-budget enforce is PreToolUse (ADR 0006), not SubagentStart.
 5. Harness counters do not cross Bash subshells.
 6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
-7. macOS `/bin/bash` 3.2 — `azg setup` needs Bash ≥4 (`mapfile`); use Homebrew bash (`PATH="/opt/homebrew/bin:$PATH"`).
+7. **CI macOS bash 3.2:** GHA `macos-latest` default `bash` is `/bin/bash` 3.2. Do **not** add Bash 4-only builtins in `lib/` (`mapfile`/`readarray`, `declare -A`, `${var,,}`). Recurring main-branch red was `mapfile` in `setup.sh` → exit 127 → phase3/8/9 cascade. Prefer Homebrew bash locally if desired; CI intentionally stays on system bash so regressions surface.
 8. Smart sync skips skill copy when `VENDOR.lock` stamp unchanged — empty `~/.cursor/skills` still needs `./azg setup --force`.

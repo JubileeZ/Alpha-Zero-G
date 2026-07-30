@@ -6,7 +6,7 @@
 
 Outer agent harness installer: templates + `azg` CLI for Cursor and/or Antigravity (`agy`). v4 complete. Spec: `docs/REVAMP-SPEC.md`.
 
-**Stack:** Bash (>= 4.0) · jq · Python 3.x · Git · agy
+**Stack:** Bash (3.2-safe `lib/`; prefer ≥4.0 locally) · jq · Python 3.x · Git · agy
 
 **Monorepo:** no
 

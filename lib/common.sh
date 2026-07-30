@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # lib/common.sh — shared helpers for all azg subcommands
 # Source this file: source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
-# POSIX-safe: no sed -i, no ((VAR++)) with set -e, no bashisms beyond arrays
+# POSIX-safe: no sed -i, no ((VAR++)) with set -e, no bashisms beyond arrays.
+# GHA macos-latest default bash is 3.2 — keep lib/ free of Bash 4-only builtins
+# (array-load builtins, associative declare, case-modifying parameter expansion).
 
 set -euo pipefail
 

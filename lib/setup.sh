@@ -31,15 +31,16 @@ _validate_cursor_rule_templates() {
   local cursor_rules_tmpl_dir="${1}"
   local template_agents="${2}"
   local rule_src rule_base marker_start marker_end
-  local -a markers
 
   [ -d "${cursor_rules_tmpl_dir}" ] || die "Cursor rules template dir missing: ${cursor_rules_tmpl_dir}"
   for rule_src in "${cursor_rules_tmpl_dir}"/azg-*.mdc; do
     [ -f "${rule_src}" ] || continue
     rule_base="$(basename "${rule_src}")"
-    mapfile -t markers < <(_cursor_rule_markers "${rule_base}")
-    marker_start="${markers[0]}"
-    marker_end="${markers[1]}"
+    # Bash 3.2-safe (macOS / GHA macos-latest): two reads, not Bash-4 array-load
+    {
+      IFS= read -r marker_start
+      IFS= read -r marker_end
+    } < <(_cursor_rule_markers "${rule_base}")
     if ! extract_managed_block "${template_agents}" "${marker_start}" "${marker_end}" > /dev/null; then
       die "AGENTS.md marker block missing or empty for Cursor rule: ${rule_base}"
     fi
@@ -51,12 +52,13 @@ _render_cursor_rule() {
   local rule_dest="${2}"
   local template_agents="${3}"
   local rule_base marker_start marker_end body
-  local -a markers
 
   rule_base="$(basename "${rule_src}")"
-  mapfile -t markers < <(_cursor_rule_markers "${rule_base}")
-  marker_start="${markers[0]}"
-  marker_end="${markers[1]}"
+  # Bash 3.2-safe (macOS / GHA macos-latest): two reads, not Bash-4 array-load
+  {
+    IFS= read -r marker_start
+    IFS= read -r marker_end
+  } < <(_cursor_rule_markers "${rule_base}")
   body="$(extract_managed_block "${template_agents}" "${marker_start}" "${marker_end}")" || \
     die "AGENTS.md marker block missing or empty for Cursor rule: ${rule_base}"
 

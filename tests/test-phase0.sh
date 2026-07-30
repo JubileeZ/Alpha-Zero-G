@@ -264,6 +264,21 @@ else
   fail "common.sh shebang is wrong" "got: '${_shebang_common}'"
 fi
 
+# GHA macos-latest PATH bash is 3.2 — these builtins exit 127 there (ignore comments)
+_bash4_hits=""
+for _f in "${REPO_ROOT}"/lib/*.sh; do
+  _hit="$(grep -nE '(^|[[:space:]])(mapfile|readarray)([[:space:]]|$)|declare[[:space:]]+-A' "${_f}" 2>/dev/null \
+    | grep -vE '^[[:digit:]]+:[[:space:]]*#' || true)"
+  [ -n "${_hit}" ] && _bash4_hits="${_bash4_hits}${_f}:
+${_hit}
+"
+done
+if [ -z "${_bash4_hits}" ]; then
+  pass "lib/*.sh has no Bash 4-only mapfile/readarray/declare -A"
+else
+  fail "lib/*.sh must stay Bash 3.2-safe (GHA macos-latest)" "${_bash4_hits}"
+fi
+
 section "9. Aggregate runner (Phase 8)"
 
 assert_file_exists "tests/run-all.sh exists" "${REPO_ROOT}/tests/run-all.sh"

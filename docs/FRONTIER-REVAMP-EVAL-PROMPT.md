@@ -14,7 +14,7 @@ Alpha-Zero-G is an **outer agent harness installer and template system** for sol
 
 - **Core Vision:** Enable AI agents (Cursor / Antigravity) to reliably ship products with high task success per token/cost budget, without context bloat or fragile over-engineering.
 - **Candidate Workload to Validate:** Analytic projects (data pipelines, Python/SQL workflows, notebooks, automated reports).
-- **Constraints:** Budget-conscious use, multi-IDE compatibility (Cursor + Antigravity), cross-platform shell foundation (Bash >= 4.0, jq, Python 3).
+- **Constraints:** Budget-conscious use, multi-IDE compatibility (Cursor + Antigravity), cross-platform shell foundation (Bash 3.2-safe `lib/` for GHA macOS; prefer ≥4.0 locally, jq, Python 3).
 
 ### Audit Safety & Evidence
 

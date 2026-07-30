@@ -39,6 +39,9 @@ jobs:
         run: |
           command -v jq >/dev/null || brew install jq
           command -v shellcheck >/dev/null || brew install shellcheck
+          # Do NOT brew-install bash for CI: GHA macos-latest PATH bash is 3.2.
+          # lib/ must stay free of Bash 4-only builtins (mapfile, declare -A, ${var,,})
+          # so aggregate gate matches real macOS /bin/bash users.
 
       - name: Install deps (Windows)
         if: runner.os == 'Windows'
@@ -50,6 +53,8 @@ jobs:
 
       - name: Sanity (jq / shellcheck / python)
         run: |
+          command -v bash
+          bash --version | head -1
           command -v jq
           command -v shellcheck
           command -v python3
@@ -59,6 +64,12 @@ jobs:
           # Guard: working tree must be LF for shell scripts (Windows autocrlf regressions)
           if tr -cd '\r' < azg | grep -q .; then
             echo "::error::azg has CR — .gitattributes / autocrlf misconfigured"
+            exit 1
+          fi
+          # Guard: no Bash 4-only builtins in lib/ (GHA macos-latest = bash 3.2; ignore comments)
+          if grep -nE '(^|[[:space:]])(mapfile|readarray)([[:space:]]|$)|declare[[:space:]]+-A' lib/*.sh \
+            | grep -vE '^[^:]+:[[:digit:]]+:[[:space:]]*#'; then
+            echo "::error::Bash 4-only builtin in lib/ — breaks macos-latest CI (bash 3.2)"
             exit 1
           fi
 

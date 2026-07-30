@@ -24,6 +24,7 @@ Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with 
 1. Read `current-state.md` — do not rebuild what exists.
 2. If phase active, pick **first unchecked** `ROADMAP.md` item; do not resume parked work without approval.
 3. Run verify commands from `AGENTS.md` before proposing commits.
+4. **macOS CI trap:** GHA `macos-latest` runs Bash 3.2. Never add `mapfile`/`readarray`/`declare -A` to `lib/` — that pattern red-gated main repeatedly (ubuntu/windows green, macos red).
 
 ## What NOT to read for orientation
 
