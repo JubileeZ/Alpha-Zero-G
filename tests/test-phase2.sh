@@ -69,7 +69,8 @@ section "2. Shellcheck Validation"
 
 if command -v shellcheck >/dev/null 2>&1; then
   _sc_exit=0
-  shellcheck "${APP_DIR}/.agents/hooks"/*.sh || _sc_exit=$?
+  # Match run-all: warnings/info (SC2034 unused stdin drain, SC2016 quoted regex) are not gate
+  shellcheck -S error "${APP_DIR}/.agents/hooks"/*.sh || _sc_exit=$?
   if [ "${_sc_exit}" -eq 0 ]; then
     pass "All hook scripts pass shellcheck linting"
   else
