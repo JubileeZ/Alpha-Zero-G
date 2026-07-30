@@ -11,7 +11,7 @@
 - **Files:** `lib/setup.sh`, `lib/common.sh`, `.github/workflows/ci.yml`, `tests/test-phase0.sh`, `docs/agents/current-state.md`, `docs/AGENT-ONBOARDING.md`, `docs/agents/device-handoff-cursor-setup.md`, `AGENTS.md`, `docs/FRONTIER-REVAMP-EVAL-PROMPT.md`, `task.md`
 - **Decisions:** Keep `lib/` Bash 3.2-safe (match GHA macos-latest); do not brew-install bash in CI (would hide regressions); ubuntu/windows were already green
 - **Blocked:** None
-- **Next:** Confirm macos-latest green on Actions after push
+- **Next:** Watch Actions run 30568500528 for macos-latest green
 
 ## Todo
 - [x] Diagnose macos-only aggregate failures across recent main runs
