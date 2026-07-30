@@ -1,28 +1,24 @@
-# Active Task: Canonical AGENTS.md → Cursor rule rendering
+# Active Task: Pull upstream + device sync
 
-- **Status:** Complete; checkpoint `37d7217` on `main`
-- **Objective:** Derive Cursor global rule prose from marked blocks in canonical `templates/global/AGENTS.md`
-- **Acceptance:** Frontmatter-only Cursor stubs; `azg setup` renders matching bodies; malformed/empty markers fail; affected tests green
-- **Issue/Ticket:** Follow-on to https://github.com/JubileeZ/alpha-zero-g/issues/56
+- **Status:** Done
+- **Objective:** Pull latest `origin/main`; integrate local vendor-lock maintenance; restore Unix hook execute bit
+- **Acceptance:** Merge complete; conflicts resolved; `run-hook.cmd` executable; continuity docs updated
+- **Issue/Ticket:** —
 
 ## Work Packet (SFDBN)
 
-- **Status:** Complete; targeted suite green (34/34); full gate + portable gate passed; committed `37d7217`
-- **Files:** `templates/global/AGENTS.md`, `templates/global/cursor/rules/`, `lib/common.sh`, `lib/setup.sh`, `tests/test-cursor-device-setup.sh`, `CONTEXT.md`, `docs/adr/0008-global-ownership-boundary.md`, `docs/agents/current-state.md`, `docs/agents/device-handoff-cursor-setup.md`, `task.md`, `.agents/session-handoff.md`
-- **Decisions:** `templates/global/AGENTS.md` canonical; `PONYTAIL:MANAGED` + `AZG:AGENT-INSTRUCTIONS` markers; Cursor stubs frontmatter-only; setup renders bodies; installed owned AGENTS.md migrates markers transactionally; missing/duplicate/reversed/empty markers hard-fail
-- **Blocked:** Shellcheck unavailable in Git Bash (`shellcheck: command not found`); Python verifier unavailable; IDE lints clean
-- **Next:** Delete merged `feature/cursor-device-setup`; operator `azg setup` on device
+- **Status:** Done — pulled 7 upstream commits; merge `4ead327`; hook mode fixed; checkpoint committed
+- **Files:** `task.md`, `.agents/session-handoff.md`, `docs/agents/current-state.md`, `.cursor/hooks/run-hook.cmd`, `templates/project/.cursor/hooks/run-hook.cmd`
+- **Decisions:** Conflict resolution favored upstream work packet (Cursor rule rendering complete); local `1749bfc` vendor-lock dates retained in merge
+- **Blocked:** None
+- **Next:** `./azg setup` on device; push local commits when ready
 
 ## Todo
-- [x] Add explicit AGENTS.md marker pair
-- [x] Reduce Cursor rule templates to frontmatter stubs
-- [x] Add setup extraction, validation, and rendering
-- [x] Add body equality and malformed-marker tests
-- [x] Update architecture and handoff docs
-- [x] Run full gate
-- [x] Code review
-- [x] Checkpoint commit (`37d7217`)
+- [x] `git pull` / merge `origin/main`
+- [x] Resolve `task.md` + session-handoff conflicts
+- [x] `chmod +x` `run-hook.cmd` (repo + template)
+- [x] Update continuity docs
+- [x] Checkpoint
 
 ## Blockers / Notes
-- Operator device requires `azg setup` after commit to refresh rendered rules
-- No new dependencies
+- Branch ahead of `origin/main` until push (`1749bfc`, merge, checkpoint)
