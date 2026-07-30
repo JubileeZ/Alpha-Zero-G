@@ -4,9 +4,9 @@
 
 ## Project Identity
 
-Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for solo/small teams using Cursor and/or Antigravity (`agy`). v4 complete. Canonical spec: `docs/REVAMP-SPEC.md`.
+Outer agent harness installer: templates + `azg` CLI for Cursor and/or Antigravity (`agy`). v4 complete. Spec: `docs/REVAMP-SPEC.md`.
 
-**Stack:** Bash (>= 4.0) · jq · Python (3.x) · Git · agy (Antigravity CLI)
+**Stack:** Bash (>= 4.0) · jq · Python 3.x · Git · agy
 
 **Monorepo:** no
 
@@ -15,69 +15,63 @@ Alpha-Zero-G is an **outer agent harness** installer: templates + `azg` CLI for 
 ## Repo Structure
 
 ```
-.agents/                     # Local agent configuration, hooks, and skills
-  hooks/                     # Local lifecycle hooks (e.g. block-destructive-ops)
-  skills/                    # Custom skill definitions for the agent
-docs/                        # Architectural plans, design docs (ADRs), and agent guides
-  adr/                       # Architectural Decision Records (ADRs)
-  agents/                    # Guides for issue-tracking, triage labels, and domain docs
-  antigravity-agent-architect/ # Source files for the Agent Architecture Guide
-lib/                         # CLI implementation shell scripts (common, setup, scaffold, etc.)
-templates/                   # Standard scaffolding templates for new files and projects
-  global/                    # Global configurations copied during setup
-  project/                   # Project-level templates copied during apply/new
-tests/                       # TDD test suites (test-phase0 through test-phase10) and harness
-azg                          # Main CLI entrypoint script
-CONTEXT.md                   # Domain terms and vocabulary definition context
-VERSION                      # File indicating the current Alpha-Zero-G release version
+.agents/          # hooks, skills
+docs/             # ADR, agent guides, architect refs
+lib/              # azg CLI scripts
+templates/        # global/ + project/ scaffolds
+tests/            # verify, run-all, phase suites
+azg               # CLI entrypoint
+CONTEXT.md        # glossary
+VERSION           # release version
 ```
 
 ---
 
-## Key Commands
+## Commands & testing
 
-| Command | What it does |
-|---------|-------------|
-| `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint Bash scripts |
-| `bash tests/run-all.sh` | Aggregate gate (shellcheck + verifiers + all suites) |
-| `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare SWE-bench Lite arm workdir |
-| `bash tests/test-lite.sh` | Lite Evaluation Suite structural tests |
-| `bash tests/test-azg.sh` | Run general integration tests |
-| `bash tests/test-phase<0-10>.sh` | Run phase-specific integration/TDD tests |
-| `python3 tests/verify_docs.py` | Verify markdown documentation links |
-| `docs/AGENT-ONBOARDING.md` | Zero-context entry for new agents |
+| Command | When |
+|---------|------|
+| `bash tests/verify.sh` | Iteration / checkpoint (seconds) |
+| `bash tests/run-all.sh` | Pre-PR; CI parity; broad `templates/`/`lib/` (minutes) |
+| `AZG_STRICT=1 bash tests/run-all.sh` | Strict CI parity (fails if shellcheck/python3 missing) |
+| `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint edited Bash |
+| `bash tests/run-all.sh --list` | Suite order when unsure |
+| `python3 tests/verify_docs.py` | Docs-only |
 
-**Pre-commit gate:** agents must run test and lint commands and confirm both pass before proposing any commit.
+**Diff → suite:** setup/common/Cursor device → `test-cursor-device-setup.sh` · scaffold/apply → `test-azg.sh` + `test-phase*.sh` · `templates/project/` → `test-phase10.sh` + `test-mutation-verify.sh` · `evals/lite/` → `test-lite.sh` · hooks → `host-contract-smoke.sh` + `test-phase5.sh`
 
----
-
-## Off-Limits: Never Touch Without Explicit Instruction
-
-- `.env` and any file containing secrets or credentials
-- Database migrations — always flag, never auto-apply or auto-run
-- Production configuration files
-- Any file marked `# DO NOT EDIT` or `# GENERATED`
+Pre-commit: lint + affected tests green. `run-all` slow by design (isolated suites; overlap OK). Windows: Git Bash only. Onboarding: `docs/AGENT-ONBOARDING.md`. Lite arm: `bash evals/run-lite-arm.sh <id> baseline|current|candidate`.
 
 ---
 
-## Project-Specific Safety Rules
+## Off-Limits
 
-- Never modify files in `templates/` or `lib/` without running the corresponding phase tests afterwards to ensure no regressions.
-- Do not commit changes that break backward compatibility of retrofitted client workspaces.
+- Secrets / `.env` / credentials
+- DB migrations (flag only; never auto-apply)
+- Production config
+- `# DO NOT EDIT` / `# GENERATED` files
+
+---
+
+## Project-Specific Safety
+
+- `templates/` / `lib/` edits → run matching phase tests after
+- No breaking backward compat of retrofitted client workspaces
 
 ---
 
 ## Code Conventions
 
-- All CLI implementation scripts in `lib/` must source `lib/common.sh` to reuse shared logging helpers (`info`, `warn`, `die`) and cross-platform helpers rather than implementing custom ones.
-- Shell scripts should pass Shellcheck validation. Avoid global shellcheck disable directives; use inline bypasses only when technically necessary.
+- `lib/*.sh` sources `lib/common.sh` (`info`/`warn`/`die`, cross-platform helpers)
+- Shellcheck clean; inline disables only when necessary
 
 ---
 
 ## Agent Behavior Overrides
-- Keep project documentation edits (AGENTS.md, ROADMAP.md, current-state.md, etc.) telegraphic: no articles, no filler, concise fragments.
-- If working on a project that integrates with or generates downstream client repositories, ensure that the downstream `AGENTS.md` files also follow this hybrid layout (customizable Agent/Users zone above the markers, managed zone between the markers).
-- Keep project-specific context lightweight in `AGENTS.md` and direct agents to `docs/agents/` or modular files rather than inlining detailed instructions.
+
+- Docs telegraphic: fragments, no filler
+- Downstream client `AGENTS.md`: hybrid layout (user zone above markers; managed between)
+- Keep `AGENTS.md` light; detail → `docs/agents/`
 
 ---
 

@@ -92,6 +92,7 @@ run_suite "tests/test-azg.sh" bash tests/test-azg.sh
 run_suite "tests/host-contract-smoke.sh" bash tests/host-contract-smoke.sh
 run_suite "tests/test-mutation-verify.sh" bash tests/test-mutation-verify.sh
 run_suite "tests/test-lite.sh" bash tests/test-lite.sh
+run_suite "tests/test-cursor-device-setup.sh" bash tests/test-cursor-device-setup.sh
 
 shopt -s nullglob
 phase_tests=(tests/test-phase*.sh)

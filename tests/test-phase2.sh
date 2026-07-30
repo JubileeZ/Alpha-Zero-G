@@ -51,6 +51,7 @@ assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/re
 assert_file_exists "work-state-continuity.mdc rule exists" "${APP_DIR}/.cursor/rules/work-state-continuity.mdc"
 assert_file_exists "Cursor hooks.json exists" "${APP_DIR}/.cursor/hooks.json"
 assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/commit-verify.sh"
+assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
 
 # Executable checks
 for h in block-destructive-ops.sh commit-gate.sh checkpoint.sh spawn-budget.sh pre-compact.sh; do
@@ -68,7 +69,8 @@ section "2. Shellcheck Validation"
 
 if command -v shellcheck >/dev/null 2>&1; then
   _sc_exit=0
-  shellcheck "${APP_DIR}/.agents/hooks"/*.sh || _sc_exit=$?
+  # Match run-all: warnings/info (SC2034 unused stdin drain, SC2016 quoted regex) are not gate
+  shellcheck -S error "${APP_DIR}/.agents/hooks"/*.sh || _sc_exit=$?
   if [ "${_sc_exit}" -eq 0 ]; then
     pass "All hook scripts pass shellcheck linting"
   else

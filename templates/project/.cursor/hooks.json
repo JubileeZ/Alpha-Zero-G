@@ -3,19 +3,19 @@
   "hooks": {
     "beforeShellExecution": [
       {
-        "command": ".cursor/hooks/commit-verify.sh",
+        "command": ".cursor/hooks/run-hook.cmd commit-verify",
         "matcher": "git\\s+commit",
         "failClosed": true
       }
     ],
     "stop": [
       {
-        "command": ".cursor/hooks/stop-checkpoint.sh"
+        "command": ".cursor/hooks/run-hook.cmd stop-checkpoint"
       }
     ],
     "preCompact": [
       {
-        "command": ".cursor/hooks/pre-compact.sh"
+        "command": ".cursor/hooks/run-hook.cmd pre-compact"
       }
     ]
   }

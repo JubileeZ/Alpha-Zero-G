@@ -134,6 +134,9 @@ AZG_GLOBAL_DIR="${HOME}/.gemini/antigravity-cli"
 AZG_GLOBAL_SKILLS_DIR="${HOME}/.gemini/config/skills"
 AZG_GLOBAL_MCP_CONFIG="${HOME}/.gemini/config/mcp_config.json"
 AZG_GLOBAL_AGENTS="${HOME}/.gemini/config/AGENTS.md"
+# Cursor Device Setup roots (map #56 / #57 — never skills-cursor)
+AZG_CURSOR_SKILLS_DIR="${HOME}/.cursor/skills"
+AZG_CURSOR_RULES_DIR="${HOME}/.cursor/rules"
 
 # ---------------------------------------------------------------------------
 # Atomic file write helpers
@@ -145,11 +148,23 @@ atomic_write() {
   local tmp
   tmp="${dest}.azg.tmp"
   if [ $# -ge 2 ]; then
-    printf '%s' "${2}" > "${tmp}"
+    if ! printf '%s' "${2}" > "${tmp}"; then
+      # DESTRUCTIVE: remove failed atomic-write temporary
+      rm -f "${tmp}"
+      return 1
+    fi
   else
-    cat > "${tmp}"
+    if ! cat > "${tmp}"; then
+      # DESTRUCTIVE: remove failed atomic-write temporary
+      rm -f "${tmp}"
+      return 1
+    fi
   fi
-  mv "${tmp}" "${dest}"
+  if ! mv "${tmp}" "${dest}"; then
+    # DESTRUCTIVE: remove failed atomic-write temporary
+    rm -f "${tmp}"
+    return 1
+  fi
 }
 
 # atomic_copy SRC DEST
@@ -159,8 +174,16 @@ atomic_copy() {
   local dest="${2}"
   local tmp
   tmp="${dest}.azg.tmp"
-  cp "${src}" "${tmp}"
-  mv "${tmp}" "${dest}"
+  if ! cp "${src}" "${tmp}"; then
+    # DESTRUCTIVE: remove failed atomic-copy temporary
+    rm -f "${tmp}"
+    return 1
+  fi
+  if ! mv "${tmp}" "${dest}"; then
+    # DESTRUCTIVE: remove failed atomic-copy temporary
+    rm -f "${tmp}"
+    return 1
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -249,8 +272,12 @@ replace_managed_block() {
   # Fail closed: exactly one ordered start/end pair required before rewrite.
   local marker_state
   marker_state="$(awk -v start="${start_marker}" -v end="${end_marker}" '
-    index($0, start) { starts += 1; if (ends == 0) order_ok = 1 }
-    index($0, end) { ends += 1 }
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == start { starts += 1; if (ends == 0) order_ok = 1 }
+    line == end { ends += 1 }
     END {
       if (starts == 1 && ends == 1 && order_ok == 1) print "ok"
       else print "bad"
@@ -264,25 +291,81 @@ replace_managed_block() {
   export _RMB_START="${start_marker}"
   export _RMB_END="${end_marker}"
 
-  # Replace using awk and atomic_write
-  awk '
+  # Replace using a complete temporary, then atomic_copy.
+  local replace_tmp="${target}.azg.replace.tmp"
+  if ! awk '
   BEGIN { in_block = 0 }
-  index($0, ENVIRON["_RMB_START"]) {
+  {
+      line = $0
+      sub(/\r$/, "", line)
+  }
+  line == ENVIRON["_RMB_START"] {
       print ENVIRON["_RMB_START"]
       print ENVIRON["_RMB_CONTENT"]
       print ENVIRON["_RMB_END"]
       in_block = 1
       next
   }
-  index($0, ENVIRON["_RMB_END"]) {
+  line == ENVIRON["_RMB_END"] {
       in_block = 0
       next
   }
-  !in_block { print }
-  ' "${target}" | atomic_write "${target}"
+  !in_block { print line }
+  ' "${target}" > "${replace_tmp}"; then
+    # DESTRUCTIVE: remove failed managed-block replacement temporary
+    rm -f "${replace_tmp}"
+    unset _RMB_CONTENT _RMB_START _RMB_END
+    return 1
+  fi
+  if ! atomic_copy "${replace_tmp}" "${target}"; then
+    # DESTRUCTIVE: remove failed managed-block replacement temporary
+    rm -f "${replace_tmp}"
+    unset _RMB_CONTENT _RMB_START _RMB_END
+    return 1
+  fi
+  # DESTRUCTIVE: remove completed managed-block replacement temporary
+  rm -f "${replace_tmp}"
 
   unset _RMB_CONTENT _RMB_START _RMB_END
   return 0
+}
+
+# extract_managed_block SOURCE_FILE START_MARKER END_MARKER
+# Prints non-empty content between one ordered marker pair.
+# Fails closed when markers are missing, duplicated, reversed, or empty.
+extract_managed_block() {
+  local source="${1}"
+  local start_marker="${2}"
+  local end_marker="${3}"
+
+  [ -f "${source}" ] || return 1
+
+  awk -v start="${start_marker}" -v end="${end_marker}" '
+    BEGIN { state = 0; starts = 0; ends = 0; content = 0; bad = 0 }
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == start {
+      starts += 1
+      if (starts != 1 || state != 0) bad = 1
+      state = 1
+      next
+    }
+    line == end {
+      ends += 1
+      if (ends != 1 || state != 1) bad = 1
+      state = 2
+      next
+    }
+    state == 1 {
+      print line
+      if (line ~ /[^[:space:]]/) content = 1
+    }
+    END {
+      if (starts != 1 || ends != 1 || state != 2 || content != 1 || bad == 1) exit 1
+    }
+  ' "${source}"
 }
 
 # ---------------------------------------------------------------------------
@@ -301,7 +384,7 @@ azg_ownership_init() {
   path="$(azg_ownership_path)"
   ensure_dir "${AZG_GLOBAL_DIR}"
   if [ ! -f "${path}" ]; then
-    printf '%s\n' '{"version":1,"mcp":false,"agents":false,"statusline":false,"skills":[]}' > "${path}"
+    printf '%s\n' '{"version":1,"mcp":false,"agents":false,"statusline":false,"skills":[],"cursor_skills":[],"cursor_rules":[]}' > "${path}"
   fi
 }
 
@@ -342,10 +425,52 @@ azg_ownership_owns_skill() {
   jq -e --arg s "${skill}" '(.skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
 }
 
+azg_ownership_add_cursor_skill() {
+  local skill="${1}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg s "${skill}" '.cursor_skills = ((.cursor_skills // []) + [$s] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_owns_cursor_skill() {
+  local skill="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 1
+  jq -e --arg s "${skill}" '(.cursor_skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
+}
+
+azg_ownership_add_cursor_rule() {
+  local rule="${1}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  azg_ownership_init
+  tmp="${path}.azg.tmp"
+  jq --arg r "${rule}" '.cursor_rules = ((.cursor_rules // []) + [$r] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_owns_cursor_rule() {
+  local rule="${1}"
+  local path
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 1
+  jq -e --arg r "${rule}" '(.cursor_rules // []) | index($r) != null' "${path}" >/dev/null 2>&1
+}
+
 # True if dest skill is foreign custom (exists, no vendor sentinel, not force).
 azg_skill_is_foreign() {
   local dest="${1}"
   [ -d "${dest}" ] || return 1
   [ -f "${dest}/ANTIGRAVITY-NOTE.md" ] && return 1
+  return 0
+}
+
+# True if Cursor skill dir is foreign (exists, no AZG-OWNED.md).
+azg_cursor_skill_is_foreign() {
+  local dest="${1}"
+  [ -d "${dest}" ] || return 1
+  [ -f "${dest}/AZG-OWNED.md" ] && return 1
   return 0
 }

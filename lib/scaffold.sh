@@ -139,9 +139,11 @@ cmd_new() {
     copy_template "$tmpl_proj/.cursor/rules/read-agents-md.mdc" "$target_dir/.cursor/rules/read-agents-md.mdc"
     copy_template "$tmpl_proj/.cursor/rules/work-state-continuity.mdc" "$target_dir/.cursor/rules/work-state-continuity.mdc"
 
-    # Copy Cursor hook adapters
+    # Copy Cursor hook adapters (run-hook.cmd = Windows-safe; hooks.json must not cite .sh)
     mkdir -p "$target_dir/.cursor/hooks"
     copy_template "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json"
+    copy_template "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd"
+    chmod +x "$target_dir/.cursor/hooks/run-hook.cmd"
     for chook in commit-verify.sh stop-checkpoint.sh pre-compact.sh; do
         copy_template "$tmpl_proj/.cursor/hooks/$chook" "$target_dir/.cursor/hooks/$chook"
         chmod +x "$target_dir/.cursor/hooks/$chook"

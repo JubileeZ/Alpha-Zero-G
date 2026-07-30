@@ -93,7 +93,7 @@ cmd_apply() {
         fi
         ensure_dir "$(dirname "$dst")"
         copy_template "$src" "$dst"
-        if [[ "$dst" == *.sh ]]; then
+        if [[ "$dst" == *.sh || "$dst" == *.cmd ]]; then
             chmod +x "$dst"
         fi
         if [ "$existed" -eq 1 ]; then
@@ -251,6 +251,7 @@ cmd_apply() {
         fi
     done
     azg_owned_refresh "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json" ".cursor/hooks.json"
+    azg_owned_refresh "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd" ".cursor/hooks/run-hook.cmd"
     for chook in "$tmpl_proj/.cursor/hooks"/*.sh; do
         if [ -f "$chook" ]; then
             local base
