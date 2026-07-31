@@ -136,8 +136,19 @@ cmd_new() {
 
     # Copy .cursor/rules/ (.mdc — Cursor ignores plain .md rules)
     mkdir -p "$target_dir/.cursor/rules"
-    copy_template "$tmpl_proj/.cursor/rules/read-agents-md.mdc" "$target_dir/.cursor/rules/read-agents-md.mdc"
-    copy_template "$tmpl_proj/.cursor/rules/work-state-continuity.mdc" "$target_dir/.cursor/rules/work-state-continuity.mdc"
+    for rule in "$tmpl_proj/.cursor/rules"/*.mdc; do
+        if [ -f "$rule" ]; then
+            copy_template "$rule" "$target_dir/.cursor/rules/$(basename "$rule")"
+        fi
+    done
+
+    # Copy project skills (Antigravity / agent-requestable; skip .gitkeep-only placeholders)
+    mkdir -p "$target_dir/.agents/skills"
+    for item in "$tmpl_proj/.agents/skills"/*; do
+        if [ -d "$item" ] && [ -f "$item/SKILL.md" ]; then
+            cp -R "$item" "$target_dir/.agents/skills/"
+        fi
+    done
 
     # Copy Cursor hook adapters (run-hook.cmd = Windows-safe; hooks.json must not cite .sh)
     mkdir -p "$target_dir/.cursor/hooks"

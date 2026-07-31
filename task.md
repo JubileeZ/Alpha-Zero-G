@@ -1,25 +1,24 @@
 # Active Task: Wayfinder — relevant context as tracking docs grow
 
-- **Status:** #64 + #65 closed; ready for next frontier
+- **Status:** #64–#66 closed; next frontier #67
 - **Objective:** Ship A + light B (lean always-on + dual continuity skills + compaction/archive) into templates + this repo
 - **Acceptance:** Map tickets closed; implement per destination; `bash tests/verify.sh` green
 - **Issue/Ticket:** Map — [Relevant context as tracking docs grow](https://github.com/JubileeZ/alpha-zero-g/issues/63)
 
 ## Work Packet (SFDBN)
 
-- **Status:** Compaction/archive guide shipped in progress.md + templates; #65 resolved
-- **Files:** `docs/agents/progress.md`, `templates/project/docs/agents/progress.md.tmpl`, `templates/project/docs/agents/current-state.md.tmpl`, `AGENTS.md`, `templates/project/AGENTS.md.tmpl`, `docs/agents/current-state.md`, `task.md`
-- **Decisions:** Three in-place rules + lazy kebab archive layout; never archive live CONTEXT/CONTEXT-MAP; ADRs stay in docs/adr/
+- **Status:** progress-updates dual-packaged in templates; scaffold/apply ship it; #66 resolved
+- **Files:** `templates/project/.agents/skills/progress-updates/SKILL.md`, `templates/project/.cursor/rules/progress-updates.mdc`, `lib/scaffold.sh`, `lib/apply.sh`, `tests/test-phase2.sh`, `tests/test-azg.sh`, `task.md`
+- **Decisions:** Project skill (not global); alwaysApply false; points at progress.md
 - **Blocked:** None
-- **Next:** Claim [Author domain-vocabulary…](https://github.com/JubileeZ/alpha-zero-g/issues/67) or [Author progress-updates…](https://github.com/JubileeZ/alpha-zero-g/issues/66) (now unblocked)
+- **Next:** Claim [Author domain-vocabulary…](https://github.com/JubileeZ/alpha-zero-g/issues/67)
 
 ## Todo
-- [x] Destination grill + research
-- [x] Create wayfinder map #63 + children #64–#68 + blockers
-- [x] [Lean always-on ritual…](https://github.com/JubileeZ/alpha-zero-g/issues/64)
-- [x] [Compaction archive…](https://github.com/JubileeZ/alpha-zero-g/issues/65)
-- [ ] Remaining map tickets (one per session)
+- [x] #64 lean ritual
+- [x] #65 compaction/archive
+- [x] #66 progress-updates skill
+- [ ] #67 domain-vocabulary skill
+- [ ] #68 dogfood
 
 ## Blockers / Notes
-- Frontier: #66 progress-updates, #67 domain-vocabulary
-- Blocked: #68 dogfood (needs #66–#67; #64–#65 done)
+- Frontier: #67 only (unblocks #68 with #66 done)

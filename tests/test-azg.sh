@@ -121,10 +121,12 @@ fi
 
 if [ -f "my-new-app/.cursor/rules/read-agents-md.mdc" ] && \
    [ -f "my-new-app/.cursor/rules/work-state-continuity.mdc" ] && \
+   [ -f "my-new-app/.cursor/rules/progress-updates.mdc" ] && \
+   [ -f "my-new-app/.agents/skills/progress-updates/SKILL.md" ] && \
    [ -f "my-new-app/.cursor/hooks.json" ]; then
-  pass "Cursor rules and hooks generated correctly during new"
+  pass "Cursor rules, progress-updates skill, and hooks generated correctly during new"
 else
-  fail "Cursor rules/hooks missing or failed to generate during new"
+  fail "Cursor rules/hooks/skills missing or failed to generate during new"
 fi
 
 if [ -f "my-new-app/tests/test-harness.sh" ] && [ -x "my-new-app/tests/test-harness.sh" ]; then

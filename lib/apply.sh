@@ -115,12 +115,12 @@ cmd_apply() {
         fi
     done
 
-    # 2. Additive copy of skills
+    # 2. Additive copy of skills (dirs with SKILL.md only)
     if [ "$dry_run" != "yes" ]; then
         ensure_dir "$target_dir/.agents/skills"
     fi
     for item in "$tmpl_proj/.agents/skills"/*; do
-        if [ -e "$item" ]; then
+        if [ -d "$item" ] && [ -f "$item/SKILL.md" ]; then
             local base
             base="$(basename "$item")"
             if [ -e "$target_dir/.agents/skills/$base" ]; then

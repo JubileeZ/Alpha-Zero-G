@@ -49,6 +49,9 @@ assert_file_exists "pre-compact.sh exists" "${APP_DIR}/.agents/hooks/pre-compact
 
 assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/read-agents-md.mdc"
 assert_file_exists "work-state-continuity.mdc rule exists" "${APP_DIR}/.cursor/rules/work-state-continuity.mdc"
+assert_file_exists "progress-updates.mdc rule exists" "${APP_DIR}/.cursor/rules/progress-updates.mdc"
+assert_file_contains "progress-updates rule is agent-requestable" "${APP_DIR}/.cursor/rules/progress-updates.mdc" "alwaysApply: false"
+assert_file_exists "progress-updates skill exists" "${APP_DIR}/.agents/skills/progress-updates/SKILL.md"
 assert_file_exists "Cursor hooks.json exists" "${APP_DIR}/.cursor/hooks.json"
 assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/commit-verify.sh"
 assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
