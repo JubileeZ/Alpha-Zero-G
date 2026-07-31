@@ -1,25 +1,24 @@
-# Active Task: Fix macOS CI Bash 3.2 mapfile failure
+# Active Task: Wayfinder — relevant context as tracking docs grow
 
-- **Status:** Done — committing and pushing to re-run CI
-- **Objective:** Stop recurring main-branch macOS CI red; document trap so it does not recur
-- **Acceptance:** `azg setup` works under `/bin/bash` 3.2; phase0/3/8/9 + cursor-device-setup green; docs + CI guard for Bash 4-only builtins
-- **Issue/Ticket:** CI main macos-latest (run 30566753405 et al.)
+- **Status:** Working map — [Lean always-on ritual…](https://github.com/JubileeZ/alpha-zero-g/issues/64) closed this session
+- **Objective:** Ship A + light B (lean always-on + dual continuity skills + compaction/archive) into templates + this repo
+- **Acceptance:** Map tickets closed; implement per destination; `bash tests/verify.sh` green
+- **Issue/Ticket:** Map — [Relevant context as tracking docs grow](https://github.com/JubileeZ/alpha-zero-g/issues/63)
 
 ## Work Packet (SFDBN)
 
-- **Status:** Done — replaced `mapfile` with two `read`s; CI/docs/tests guard Bash 3.2 safety
-- **Files:** `lib/setup.sh`, `lib/common.sh`, `.github/workflows/ci.yml`, `tests/test-phase0.sh`, `docs/agents/current-state.md`, `docs/AGENT-ONBOARDING.md`, `docs/agents/device-handoff-cursor-setup.md`, `AGENTS.md`, `docs/FRONTIER-REVAMP-EVAL-PROMPT.md`, `task.md`
-- **Decisions:** Keep `lib/` Bash 3.2-safe (match GHA macos-latest); do not brew-install bash in CI (would hide regressions); ubuntu/windows were already green
+- **Status:** #64 resolved; lean ritual + continuity rule shipped in repo + templates
+- **Files:** `AGENTS.md`, `templates/project/AGENTS.md.tmpl`, `.cursor/rules/work-state-continuity.mdc`, `templates/project/.cursor/rules/work-state-continuity.mdc`, `task.md`
+- **Decisions:** Always-on = task.md (if present) → ROADMAP active/first unchecked → current-state when needed → git → AGENTS/rules as pointers; not always-on = CONTEXT, progress, issue-tracker, archived ROADMAP, research
 - **Blocked:** None
-- **Next:** Watch Actions run 30568500528 for macos-latest green
+- **Next:** Claim next frontier — [Compaction archive…](https://github.com/JubileeZ/alpha-zero-g/issues/65) or [Author domain-vocabulary…](https://github.com/JubileeZ/alpha-zero-g/issues/67)
 
 ## Todo
-- [x] Diagnose macos-only aggregate failures across recent main runs
-- [x] Replace `mapfile` in `lib/setup.sh`
-- [x] Add CI + phase0 regression guard
-- [x] Update docs / onboarding pitfall
-- [x] Re-verify under `/bin/bash` 3.2
+- [x] Destination grill + research
+- [x] Create wayfinder map #63 + children #64–#68 + blockers
+- [x] [Lean always-on ritual…](https://github.com/JubileeZ/alpha-zero-g/issues/64)
+- [ ] Work remaining map tickets (one per session)
 
 ## Blockers / Notes
-- Root cause: `lib/setup.sh` used Bash 4 `mapfile` → exit 127 on macOS 3.2 → phase3/8/9 cascade
-- Older all-OS reds (shellcheck warnings as errors) already fixed by `14a460a`
+- Frontier: #65 compaction/archive, #67 domain-vocabulary skill
+- Blocked: #66 progress-updates (needs #65); #68 dogfood (needs #64–#67; #64 done)
