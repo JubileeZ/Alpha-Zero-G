@@ -29,9 +29,7 @@ flowchart LR
 
 ### 1. Start
 
-1. Read `docs/agents/current-state.md` (what exists now).
-2. Read `ROADMAP.md` (first unchecked item only when phase active, not parked).
-3. Optional: list open issues or use a task runner to assign a chunk of work.
+Follow lean always-on ritual in `AGENTS.md` (`task.md` if present; ROADMAP active / first unchecked only; `current-state` when unfamiliar or existence may have changed). Then pick or create task/issue.
 
 ### 2. During work
 
@@ -65,6 +63,45 @@ flowchart LR
 
 ---
 
+## Compaction (in place)
+
+Keep live tracking docs small. Prefer rewrite in place over new machinery.
+
+1. **ROADMAP — Active-Phase Compaction.** When a phase completes, collapse its checklist to one header/summary line. Keep only the active phase expanded.
+2. **current-state = current truth only.** Tables describe what exists / gaps **today**. Drop stale "was planned" narrative; move historical dumps to archive (with a one-line pointer left behind).
+3. **CONTEXT = glossary only.** Domain terms + definitions. No implementation progress, no phase history, no design dumps.
+
+ADRs stay in `docs/adr/`. Supersede via status — do **not** move them into archive.
+
+---
+
+## Archive (`docs/archive/`)
+
+Historical detail that must leave the live always-on / JIT path, but should stay in git.
+
+**Layout**
+
+- Multi-file dump: `docs/archive/<kebab-slug>/` (optional `index.md`)
+- Single file: `docs/archive/<kebab-slug>.md`
+- Optional date when helpful: `docs/archive/<YYYY-MM-DD>-<kebab-slug>.md` or dated folder
+
+Create `docs/archive/` lazily on first dump. After moving detail, leave a pointer in the live file (one line + path).
+
+**When to archive**
+
+- Completed phase checklist too long for a one-line ROADMAP summary, and detail still useful
+- Superseded design / research dumps no longer part of current truth
+- Long narrative removed from `current-state` so the file stays a snapshot
+
+**Never archive (guardrails)**
+
+- Live `CONTEXT.md` / `CONTEXT-MAP.md` — glossary stays at root; trim in place
+- ADRs — keep under `docs/adr/`; mark superseded / accepted; do not relocate
+
+Archive is **not** always-on. Open only when the task needs historical detail.
+
+---
+
 ## Multi-device sync
 
 | Syncs via git | Does not sync via git |
@@ -78,9 +115,10 @@ Pull before starting on a new device. Read `current-state.md` after pull — not
 
 ## Checklist for agents (copy mentally)
 
-- [ ] Read `current-state.md` at session start
+- [ ] Lean always-on ritual followed (`AGENTS.md`)
 - [ ] Task/issue created or referenced
 - [ ] Tests + lint pass
 - [ ] `ROADMAP.md` checkbox(es) match **only** what this commit ships
 - [ ] `current-state.md` updated if existence table changed
+- [ ] Compaction / archive applied if phase advanced or live docs bloated
 - [ ] Task closed with a summary

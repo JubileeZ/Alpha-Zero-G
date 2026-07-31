@@ -1,6 +1,6 @@
 # Current Implementation State
 
-**Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**.
+**Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
 **Active phase:** post-v4 hardening — Lite gate live; remaining polish optional
 

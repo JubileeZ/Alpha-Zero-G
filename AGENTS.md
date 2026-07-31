@@ -116,6 +116,6 @@ Before Checkpoint (git commit of in-progress work): update Work Packet SFDBN fie
 
 - Progress workflow: read `docs/agents/progress.md`.
 - Issue tracker setup: read `docs/agents/issue-tracker.md`.
-- Compaction: collapse completed phase checklists in `ROADMAP.md` to a single header/summary line (Active-Phase Compaction).
+- Compaction / archive: see `docs/agents/progress.md` (Active-Phase Compaction; current-state = current truth; CONTEXT glossary-only; `docs/archive/` when-to-archive). Never archive live `CONTEXT.md` / `CONTEXT-MAP.md`; never relocate ADRs from `docs/adr/`.
 - Cleanup: delete transient session files (`task.md`, `implementation_plan.md`, `walkthrough.md`) once milestone/task is complete.
 <!-- AZG:MANAGED:END -->
