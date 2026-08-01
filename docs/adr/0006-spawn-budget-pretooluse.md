@@ -22,4 +22,5 @@ Subagent spawn appears as tool `invoke_subagent` (Antigravity SDK / CLI); `PreTo
 - Deny on budget exceed is host-enforceable where PreToolUse is honored.
 - Active concurrent tracking allows long-running batch sessions to process arbitrary sequential subagents without hitting artificial session cumulative caps.
 - Strict `max_depth: 1` prevents subagent nesting and recursive runaway fan-out loops.
-- Manual host-contract smoke includes spawn-over-budget and slot-release cases.
+- Host-contract smoke automates spawn-over-budget and slot-release (allow → deny → finish → reuse).
+- `--finish` releases a slot only when the stop payload includes `subagent_id` (or `subagent.session_id`); missing id is a no-op — SessionStart `--reset` is the stuck-cap backstop.

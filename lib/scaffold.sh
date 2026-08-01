@@ -133,6 +133,7 @@ cmd_new() {
     copy_template "$tmpl_proj/.agents/hooks.json" "$target_dir/.agents/hooks.json"
     copy_template "$tmpl_proj/.agents/spawn-budget.json" "$target_dir/.agents/spawn-budget.json"
     copy_template "$tmpl_proj/.agents/session-handoff.md.tmpl" "$target_dir/.agents/session-handoff.md"
+    copy_template "$tmpl_proj/.gitignore" "$target_dir/.gitignore"
 
     # Copy .cursor/rules/ (.mdc — Cursor ignores plain .md rules)
     mkdir -p "$target_dir/.cursor/rules"

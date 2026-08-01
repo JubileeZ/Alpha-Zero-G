@@ -1,6 +1,8 @@
 **/.DS_Store
 **/._*
 /tmp_azg*
+# Ephemeral spawn-budget counters (SessionStart --reset)
+.agents/spawn-state.json
 evals/pilot/gate-status.json
 evals/pilot/SESSION-LOCAL.md
 # Lite campaign scorecards (stubs + filled runs); keep helpers/docs tracked

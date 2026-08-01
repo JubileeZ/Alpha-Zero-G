@@ -154,6 +154,27 @@ else
   fail "spawn-budget must be on PreToolUse invoke_subagent (SubagentStart cannot block)"
 fi
 
+section "5c. Spawn-budget slot lifecycle (allow → deny → finish → reuse)"
+
+SPAWN_HOOK=".agents/hooks/spawn-budget.sh"
+bash "${SPAWN_HOOK}" --reset >/dev/null
+_spawn_ok=1
+for _i in 1 2 3 4 5; do
+  _out=$(printf '{"subagent_id":"s%s"}' "${_i}" | bash "${SPAWN_HOOK}")
+  echo "${_out}" | grep -q '"decision":"allow"' || _spawn_ok=0
+done
+_deny=$(printf '{"subagent_id":"s6"}' | bash "${SPAWN_HOOK}")
+echo "${_deny}" | grep -q '"decision":"deny"' || _spawn_ok=0
+printf '{"subagent_id":"s1"}' | bash "${SPAWN_HOOK}" --finish >/dev/null
+_reuse=$(printf '{"subagent_id":"s6"}' | bash "${SPAWN_HOOK}")
+echo "${_reuse}" | grep -q '"decision":"allow"' || _spawn_ok=0
+if [ "${_spawn_ok}" -eq 1 ]; then
+  pass "spawn-budget concurrent slots: 5 allow, 6th deny, finish frees reuse"
+else
+  fail "spawn-budget slot lifecycle broken" "deny=${_deny} reuse=${_reuse}"
+fi
+bash "${SPAWN_HOOK}" --reset >/dev/null
+
 section "6. Manual smoke doc present"
 
 assert_file_exists "host-contract-smoke.md exists" "${ROOT}/docs/agents/host-contract-smoke.md"

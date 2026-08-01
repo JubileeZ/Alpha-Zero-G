@@ -92,3 +92,7 @@ _Avoid_: Status bar theme, icon mode.
 An interceptor script run automatically before any agent tool call to validate command patterns and file targets, preventing unauthorized alterations or system damage.
 _Avoid_: Guardrail, safety command, block policy.
 
+**Spawn Budget**:
+Configured limits on concurrent, nested, and optional cumulative subagent fan-out for one session.
+_Avoid_: Spawn state, agent quota, subagent throttle
+

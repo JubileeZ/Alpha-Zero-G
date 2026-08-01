@@ -1,21 +1,20 @@
-# Active Task: none (Lite map #85 complete)
+# Active Task: spawn-budget residual risks (grill package)
 
-- **Status:** Idle — last milestone closed
-- **Objective:** —
-- **Acceptance:** —
-- **Issue/Ticket:** Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) closed via [#90](https://github.com/JubileeZ/alpha-zero-g/issues/90) adopt
+- **Status:** Implemented — awaiting commit if desired
+- **Objective:** Assert residual audit risks; fix gitignore + slot-lifecycle smoke; accept RMW race + finish-without-id with ADR/ponytail docs; glossary Spawn Budget
+- **Acceptance:** `bash tests/host-contract-smoke.sh` + `bash tests/verify.sh` green; `.agents/spawn-state.json` gitignored
+- **Issue/Ticket:** —
 
 ## Work Packet (SFDBN)
 
-- **Status:** Complete — Spawn budget hook fixed (PreToolUse invoke_subagent matcher added) and upgraded to active concurrent slot tracking (max_spawns: 5, max_depth: 1, mode: concurrent).
-- **Files:** `.agents/hooks.json` · `.agents/hooks/spawn-budget.sh` · `.agents/spawn-budget.json` · `AGENTS.md` · `docs/adr/0006-spawn-budget-pretooluse.md` · `templates/project/` equivalents · `tests/host-contract-smoke.sh`
-- **Decisions:** Enforce PreToolUse on invoke_subagent; active slot release on SubagentStop; default 5 concurrent, depth 1 flat, optional cumulative cap (e.g. 200).
-- **Blocked:** None.
-- **Next:** Commit changes and provide verification prompt for 3rd party agents.
+- **Status:** Done locally — not committed
+- **Files:** `.gitignore` · `templates/project/.gitignore` · `lib/scaffold.sh` · `.agents/hooks/spawn-budget.sh` · `templates/project/.agents/hooks/spawn-budget.sh` · `tests/host-contract-smoke.sh` · `docs/adr/0006-spawn-budget-pretooluse.md` · `CONTEXT.md`
+- **Decisions:** gitignore state; automate allow→deny→finish→reuse; ponytail no-flock; finish needs id (ADR); Spawn Budget glossary term
+- **Blocked:** None
+- **Next:** Commit on request
 
 ## Todo
-- [x] [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90) Lite map complete
-- [x] Docs + drivers + adopt
+- [x] Grill package implemented + verified
 
 ## Blockers / Notes
-- Campaign artifacts remain gitignored under `evals/lite/campaigns/adr0009-20260801-n5/` (local audit).
+- `azg apply` does not yet append spawn-state ignore to existing project `.gitignore` (scaffold/`azg new` only)

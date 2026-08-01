@@ -95,6 +95,7 @@ if [ "$child_depth" -gt "$max_depth" ]; then
   exit 0
 fi
 
+# ponytail: no flock on jq RMW — parallel PreToolUse can briefly overshoot max_spawns; add flock if hosts fire spawn hooks concurrently
 if command -v jq >/dev/null 2>&1; then
   new_active=$((active_spawns + 1))
   new_total=$((total_spawns + 1))
