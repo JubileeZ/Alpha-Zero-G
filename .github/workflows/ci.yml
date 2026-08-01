@@ -47,9 +47,39 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          choco install jq shellcheck -y --no-progress --skip-already-installed
-          # refreshenv does not update PATH for later steps; pin Chocolatey bin
-          "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          # Chocolatey CDN 503s have red-gated Windows Sanity (shellcheck). Keep jq on
+          # choco with retries; install shellcheck from GitHub releases instead.
+          $chocoBin = 'C:\ProgramData\chocolatey\bin'
+          $toolsBin = Join-Path $env:RUNNER_TEMP 'azg-tools'
+          New-Item -ItemType Directory -Force -Path $toolsBin | Out-Null
+          $chocoBin, $toolsBin | ForEach-Object {
+            $_ | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+          $env:Path = "$toolsBin;$chocoBin;$env:Path"
+
+          if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
+            $jqOk = $false
+            for ($i = 1; $i -le 3; $i++) {
+              choco install jq -y --no-progress --skip-already-installed
+              if (Get-Command jq -ErrorAction SilentlyContinue) { $jqOk = $true; break }
+              Start-Sleep -Seconds (5 * $i)
+            }
+            if (-not $jqOk) { throw 'jq install failed after choco retries' }
+          }
+
+          if (-not (Get-Command shellcheck -ErrorAction SilentlyContinue)) {
+            $ver = 'v0.11.0'
+            $zip = Join-Path $env:RUNNER_TEMP 'shellcheck.zip'
+            $url = "https://github.com/koalaman/shellcheck/releases/download/$ver/shellcheck-$ver.zip"
+            Invoke-WebRequest -Uri $url -OutFile $zip
+            Expand-Archive -Path $zip -DestinationPath $toolsBin -Force
+            $exe = Get-ChildItem -Path $toolsBin -Filter shellcheck.exe -Recurse |
+              Select-Object -First 1
+            if (-not $exe) { throw 'shellcheck.exe missing from GitHub release zip' }
+            Copy-Item $exe.FullName (Join-Path $toolsBin 'shellcheck.exe') -Force
+          }
+
+          Get-Command jq, shellcheck | Format-Table Name, Source
 
       - name: Sanity (jq / shellcheck / python)
         run: |
