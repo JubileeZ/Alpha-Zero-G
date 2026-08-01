@@ -1,6 +1,6 @@
 # SWE-bench Lite adoption gate (ADR 0007)
 
-Official Evaluation Suite. Automated Task Success only — no Blind Judge / humans.
+Official Evaluation Suite. Automated Task Success only — no Blind Judge / humans. Operator runbook: [`OPERATOR.md`](OPERATOR.md).
 
 ## Arms
 
