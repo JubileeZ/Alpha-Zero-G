@@ -17,7 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 distilled gates (precedence · triviality · INTENT/AUTH/TWINS/PENDING · expanded verify · sweep); setup smoke green |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
-| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh` |
+| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
@@ -71,5 +71,6 @@
 5. Harness counters do not cross Bash subshells.
 6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
 7. **CI macOS bash 3.2:** GHA `macos-latest` default `bash` is `/bin/bash` 3.2. Do **not** add Bash 4-only builtins in `lib/` (`mapfile`/`readarray`, `declare -A`, `${var,,}`). Recurring main-branch red was `mapfile` in `setup.sh` → exit 127 → phase3/8/9 cascade. Prefer Homebrew bash locally if desired; CI intentionally stays on system bash so regressions surface.
-8. Smart sync skips skill copy when `VENDOR.lock` stamp unchanged — empty `~/.cursor/skills` still needs `./azg setup --force`.
-9. **Windows `azg apply`:** may touch harness files with CRLF-only diffs (no content change). `git restore` those paths if working tree is clean aside from line endings.
+8. **CI Windows shellcheck:** Do not install shellcheck via Chocolatey in GHA (CDN 503 flakes). Workflow downloads `shellcheck-v*.zip` from GitHub Releases into `$RUNNER_TEMP/azg-tools`. Zip already contains `shellcheck.exe` at root — do not `Copy-Item` onto itself after `Expand-Archive`.
+9. Smart sync skips skill copy when `VENDOR.lock` stamp unchanged — empty `~/.cursor/skills` still needs `./azg setup --force`.
+10. **Windows `azg apply`:** may touch harness files with CRLF-only diffs (no content change). `git restore` those paths if working tree is clean aside from line endings.

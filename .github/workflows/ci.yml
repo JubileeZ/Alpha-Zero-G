@@ -73,10 +73,9 @@ jobs:
             $url = "https://github.com/koalaman/shellcheck/releases/download/$ver/shellcheck-$ver.zip"
             Invoke-WebRequest -Uri $url -OutFile $zip
             Expand-Archive -Path $zip -DestinationPath $toolsBin -Force
-            $exe = Get-ChildItem -Path $toolsBin -Filter shellcheck.exe -Recurse |
-              Select-Object -First 1
-            if (-not $exe) { throw 'shellcheck.exe missing from GitHub release zip' }
-            Copy-Item $exe.FullName (Join-Path $toolsBin 'shellcheck.exe') -Force
+            if (-not (Test-Path (Join-Path $toolsBin 'shellcheck.exe'))) {
+              throw 'shellcheck.exe missing from GitHub release zip'
+            }
           }
 
           Get-Command jq, shellcheck | Format-Table Name, Source
