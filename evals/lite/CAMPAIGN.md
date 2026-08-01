@@ -22,7 +22,7 @@ Between arms: re-run `azg setup` from the matching checkout.
 
 ## Campaign tree (this host)
 
-Older v1 stubs may exist under `evals/lite/campaigns/` (gitignored, e.g. `adr0009-20260801` from N=10). **Rebuild for v2:** `bash evals/prepare-lite-campaign.sh` → 15 null `task_success` scorecards (N=5 × 3).
+Prepared stubs (gitignored): `evals/lite/campaigns/adr0009-20260801-n5/` — **15** null `task_success` scorecards (ADR 0007 v2). Older `adr0009-20260801` was N=10 v1 — ignore. Rebuild anytime: `bash evals/prepare-lite-campaign.sh`.
 
 ## Frontier
 

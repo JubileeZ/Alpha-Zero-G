@@ -7,7 +7,7 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** Docs reshape done (grill). **ADR 0007 v2:** frozen slice **N=5** data-biased (astropy, matplotlib, seaborn, sklearn, sympy). Frontier still [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) — needs Docker/`swebench`. Rebuild stubs with `prepare-lite-campaign.sh` (15 null).
+- **Status:** Docs reshape done (grill). **ADR 0007 v2:** frozen slice **N=5** data-biased (astropy, matplotlib, seaborn, sklearn, sympy). Local stubs rebuilt: `evals/lite/campaigns/adr0009-20260801-n5/` (15 null). Frontier [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) — needs Docker/`swebench`.
 - **Files:** `evals/lite/instances.json` (N=5 v2) · `docs/adr/0007` (v2 note) · `evals/lite/README.md` (N=5 + Campaign cost envelope) · `evals/lite/CAMPAIGN.md` (Live Campaign) · `CONTEXT.md` · `evals/prepare-lite-campaign.sh` · `tests/test-lite.sh`
 - **Decisions:** **ADR 0007 v2:** N=5 data-biased frozen slice (caps agent spend; IDE/CLI agent runs OK; harness still Docker). Evaluation Suite how-to = README; Live Campaign = CAMPAIGN.md; OPERATOR deleted; Campaign cost envelope ≠ Delivery Cost.
 - **Blocked:** Full score fill needs host with Docker + `swebench` + agent budget for **N=5×3 (15 runs)**.
