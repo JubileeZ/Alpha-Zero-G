@@ -7,3 +7,5 @@ Device defaults will **not** vendor Sahir619/fable-method. Candidate change is a
 **Out:** four fable skills as packages · domain adapters · `references/` · upstream portable `AGENTS.md` · third vendor bundle.
 
 **Adopt iff** SWE-bench Lite 3-arm promote (ADR 0007 as amended): Candidate Task Success ≥ Current and ≥ Baseline. Fail → stay deferred (no opt-in). Costume / step-header leakage / sandbox → watch-notes only, not hard reject. Map: [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75).
+
+**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green; Lite 3-arm Task Success eval pending (operator Docker/`swebench`).

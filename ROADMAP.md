@@ -38,6 +38,8 @@ Stack wizard · full GitHub MCP default · blocking PreCompact
 
 - [ ] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — draft Candidate text, run Lite 3-arm, promote or stay deferred (Task Success only; map [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75))
 
+**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green (`test-cursor-device-setup` 34/34 · `verify` 24/24). Lite campaign stubs at `/tmp/azg-lite-adr0009-25690801T045252Z` (30 scorecards; `task_success` null — no Docker/`swebench`). External SWE-bench eval still required for promote decision.
+
 ---
 
 > **Pre-commit gate:** `bash tests/run-all.sh` (or `shellcheck` + `test-azg` + affected phase tests) must pass before proposing commits. Project clients: `bash tests/verify.sh`.

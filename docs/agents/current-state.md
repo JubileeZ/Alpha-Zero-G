@@ -15,10 +15,11 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 distilled gates (precedence · triviality · INTENT/AUTH/TWINS/PENDING · expanded verify · sweep); setup smoke green |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite N=10 · 3-arm promote on Task Success only (ADR 0007); cost informational |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates (pending Lite) |
+| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates (Candidate landed; Lite promote pending) |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
 | Lean continuity | `AGENTS.md` Session start · `.cursor/rules/work-state-continuity.mdc` | Always-on lean set; not CONTEXT/progress/archive |
 | Project skills | `.agents/skills/{progress-updates,domain-vocabulary}` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project |
@@ -33,7 +34,7 @@
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
 | Eval | Lite scaffolded; legacy Blind Judge / pilot claim **deleted** |
-| Intent-gates form | ADR 0009 — distill into `AZG:AGENT-INSTRUCTIONS`; no fable vendor; Lite decide |
+| Intent-gates form | ADR 0009 — Candidate in `AZG:AGENT-INSTRUCTIONS`; no fable vendor; Lite promote pending |
 
 ---
 
@@ -43,7 +44,7 @@
 |------|-------|
 | Full SWE-bench Docker wiring | Scaffold prepares arms; external `swebench` harness still operator-run |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; no IDE metering |
-| Intent-gates Candidate text + Lite campaign | ADR 0009 pending; draft prose + 3-arm run not done |
+| Intent-gates Lite 3-arm Task Success | ADR 0009 promote decision pending; stubs at `/tmp/azg-lite-adr0009-25690801T045252Z` (null `task_success`; Docker/`swebench` absent) |
 
 ---
 

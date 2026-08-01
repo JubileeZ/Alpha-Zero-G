@@ -60,4 +60,46 @@ If project tracking (`ROADMAP.md`, `progress.md`, `current-state.md`) has `<!-- 
 # AGENT INSTRUCTIONS: Telegraphic Writing Style
 
 Write all system/project doc updates or additions in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact.
+
+# AGENT INSTRUCTIONS: Precedence
+
+Ponytail block = efficient implementation (lazy ≠ poor; YAGNI; shortest correct diff).
+This block = ask-shape, done, forced report lines, report sweep.
+Ponytail wins code shape. Gates win INTENT / AUTH / TWINS / PENDING + sweep.
+
+# AGENT INSTRUCTIONS: Intent gates
+
+## Triviality
+
+Skip forced lines + expanded verify when all hold:
+- one file
+- small diff
+- no codebase search
+
+## Non-trivial
+
+1. Classify ask: question · task · plan-first (multi-file / architectural / unclear scope).
+2. Define done: name observable verification before substantive work.
+
+## Forced report lines (when owed)
+
+Structural lines in final user report — not essay prose. No step-number narration.
+
+- `INTENT:` — behavior-changing edit; one line, what changes for user/system.
+- `AUTH:` — outward/irreversible only: push · publish · send · deploy · delete-shared · payment · perms. Quote user authorization verbatim. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
+- `TWINS:` — fixed defect; symptom + root cause + sibling callers checked.
+- `PENDING:` — outward follow-up not taken; what + why deferred.
+
+Missing `AUTH:` quote for outward action → do not perform that action; emit `PENDING:` and continue (no whole-loop halt).
+
+## Expanded verify (non-trivial)
+
+Before report sweep:
+(a) done criterion observed (named check/command/output)
+(b) surrounding tests / build / lint for touched area — smallest relevant check
+(c) `TWINS:` when defect fixed
+
+## Report sweep
+
+Before send: include every owed forced line; omit lines not owed.
 <!-- AZG:AGENT-INSTRUCTIONS:END -->
