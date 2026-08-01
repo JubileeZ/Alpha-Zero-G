@@ -148,10 +148,10 @@ fi
 section "5b. Spawn-budget PreToolUse wiring (ADR 0006)"
 
 AGY_HOOKS="${ROOT}/templates/project/.agents/hooks.json"
-if grep -q 'START_SUBAGENT' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh' "${AGY_HOOKS}"; then
-  pass "hooks.json wires spawn-budget on PreToolUse START_SUBAGENT"
+if grep -q 'invoke_subagent' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh' "${AGY_HOOKS}"; then
+  pass "hooks.json wires spawn-budget on PreToolUse invoke_subagent"
 else
-  fail "spawn-budget must be on PreToolUse (SubagentStart cannot block)"
+  fail "spawn-budget must be on PreToolUse invoke_subagent (SubagentStart cannot block)"
 fi
 
 section "6. Manual smoke doc present"

@@ -7,11 +7,11 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** Idle — ADR 0009 adopted. **2026-08-01:** Windows prep host device refresh (`git pull` → `cefbdc9`, `azg setup`, `azg apply`, `verify.sh` green).
-- **Files:** `templates/global/AGENTS.md` (gates kept) · `docs/adr/0009-*.md` · `evals/lite/README.md` Proven automation · `evals/run-lite-composer-*.sh` · `.agents/session-handoff.md`
-- **Decisions:** Adopt (not revert). Composer 2.5 Lite recipe canonical. Device setup migrates via normal `azg setup` (no `--force` needed).
-- **Blocked:** None on repo; prep host lacks Docker/`swebench`.
-- **Next:** Pick new work from ROADMAP / issues when ready.
+- **Status:** Complete — Spawn budget hook fixed (PreToolUse invoke_subagent matcher added) and upgraded to active concurrent slot tracking (max_spawns: 5, max_depth: 1, mode: concurrent).
+- **Files:** `.agents/hooks.json` · `.agents/hooks/spawn-budget.sh` · `.agents/spawn-budget.json` · `AGENTS.md` · `docs/adr/0006-spawn-budget-pretooluse.md` · `templates/project/` equivalents · `tests/host-contract-smoke.sh`
+- **Decisions:** Enforce PreToolUse on invoke_subagent; active slot release on SubagentStop; default 5 concurrent, depth 1 flat, optional cumulative cap (e.g. 200).
+- **Blocked:** None.
+- **Next:** Commit changes and provide verification prompt for 3rd party agents.
 
 ## Todo
 - [x] [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90) Lite map complete

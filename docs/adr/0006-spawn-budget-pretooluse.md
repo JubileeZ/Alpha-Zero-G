@@ -8,16 +8,18 @@ Accepted
 
 Antigravity hook table: `SubagentStart` **cannot** block. Deny JSON on that event is observe-only. Template previously wired `spawn-budget.sh` only on `SubagentStart`, so budget limits could not prevent spawns on hosts that follow that table.
 
-Subagent spawn appears as tool `START_SUBAGENT` (Antigravity SDK); `PreToolUse` **can** deny.
+Subagent spawn appears as tool `invoke_subagent` (Antigravity SDK / CLI); `PreToolUse` **can** deny.
 
 ## Decision
 
-1. Enforce `spawn-budget.sh` on `PreToolUse` matcher `START_SUBAGENT` (and aliases `task|Task|spawn_subagent` for host variance).
-2. Keep `SubagentStart` hook as optional observe/compat — same script may run, but **blocking guarantee** is PreToolUse only.
-3. `SessionStart` still resets via `spawn-budget.sh --reset`.
+1. Enforce `spawn-budget.sh` on `PreToolUse` matcher `invoke_subagent` (and aliases `START_SUBAGENT|task|Task|spawn_subagent|subagent|agent` for host variance).
+2. Track active concurrent subagents dynamically (`mode: concurrent`, default `max_spawns: 5`, `max_depth: 1`). `max_cumulative` is omitted by default for interactive simplicity, but can be set (e.g., `max_cumulative: 200`) for overnight autonomous goal runs.
+3. `SubagentStop` fires `spawn-budget.sh --finish` to release active slots when subagents complete tasks.
+4. `SessionStart` resets via `spawn-budget.sh --reset`.
 
 ## Consequences
 
 - Deny on budget exceed is host-enforceable where PreToolUse is honored.
-- Double-fire (Start + PreToolUse) may increment twice on some hosts — accept for now; prefer PreToolUse-only increment if observed in smoke (`ponytail:` ceiling → single-event accounting).
-- Manual host-contract smoke should include a spawn-over-budget case when agy available.
+- Active concurrent tracking allows long-running batch sessions to process arbitrary sequential subagents without hitting artificial session cumulative caps.
+- Strict `max_depth: 1` prevents subagent nesting and recursive runaway fan-out loops.
+- Manual host-contract smoke includes spawn-over-budget and slot-release cases.
