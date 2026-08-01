@@ -67,7 +67,16 @@ evals/lite/campaigns/adr0009-<YYYYMMDD>/
 
 ## 1. Prepare
 
-For each `instance_id` × arm:
+Bulk (preferred):
+
+```bash
+bash evals/prepare-lite-campaign.sh   # → evals/lite/campaigns/adr0009-YYYYMMDD/
+# or: bash evals/prepare-lite-campaign.sh path/to/campaign
+```
+
+Builds all frozen IDs × three arms into the campaign tree; leaves `task_success` null. Strips Windows jq CRLF on IDs.
+
+Per arm (manual):
 
 ```bash
 bash evals/run-lite-arm.sh <instance_id> <baseline|current|candidate>
@@ -76,7 +85,7 @@ bash evals/run-lite-arm.sh <instance_id> <baseline|current|candidate>
 
 `run-lite-arm.sh` validates ID against frozen list, seeds `scorecard.json` (`task_success` null), writes `INSTANCE.txt` / `ARM.txt`. Harness/current/candidate arms also stub `project/` (real repo comes from SWE-bench checkout).
 
-Copy each scorecard into campaign tree:
+Copy each scorecard into campaign tree if not using `prepare-lite-campaign.sh`:
 
 ```bash
 CAMP=evals/lite/campaigns/adr0009-$(date -u +%Y%m%d)
@@ -168,7 +177,10 @@ Commit campaign results to repo, attach to map issue, or gist — pick one path 
 ## Quick reference
 
 ```bash
-# prepare
+# prepare (all 30 stubs)
+bash evals/prepare-lite-campaign.sh
+
+# prepare (single arm)
 bash evals/run-lite-arm.sh <id> baseline|current|candidate
 
 # after harness

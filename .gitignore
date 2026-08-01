@@ -3,3 +3,5 @@
 /tmp_azg*
 evals/pilot/gate-status.json
 evals/pilot/SESSION-LOCAL.md
+# Lite campaign scorecards (stubs + filled runs); keep helpers/docs tracked
+evals/lite/campaigns/

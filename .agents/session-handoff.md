@@ -1,23 +1,10 @@
-# Session handoff
+# Session handoff (SFDBN)
 
-**When:** 2026-07-31
-**Branch:** main (vendor locks dirty → checkpoint)
+**When:** 2026-08-01
+**Branch:** main
 
-## Done this session
-
-1. Verified merge `4ead327` was intentional pull of `origin/main` (7 upstream Cursor-device commits) + local `1749bfc` vendor maintenance — not a random branch merge.
-2. Installed Homebrew Bash 5.3 (macOS system bash 3.2 breaks `azg setup` via `mapfile`).
-3. `./azg update --vendor` — mattpocock `2ab9580`, ponytail unchanged commit; both `date_vendored: 2026-07-30` (UTC).
-4. `./azg setup --force` — 28 Gemini + 28 Cursor skills, 2 `azg-*.mdc` rules.
-
-## Verify
-
-- `VENDOR.lock` dates ≠ `2026-07-27`
-- `~/.cursor/skills/*/AZG-OWNED.md` count = 28
-- `~/.cursor/rules/azg-ponytail.mdc` + `azg-agent-instructions.mdc` present
-
-## Next
-
-- Push checkpoint when ready
-- Reload Cursor for global rules/skills
-- Optional: fix stale `azg-upgrade` alias in `~/.zshrc`
+- **Status:** Wayfinder map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) — closed [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86) + [#87](https://github.com/JubileeZ/alpha-zero-g/issues/87); frontier [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88).
+- **Files:** `evals/prepare-lite-campaign.sh` (new) · `evals/lite/OPERATOR.md` · `tests/test-lite.sh` · `.gitignore` (`evals/lite/campaigns/`) · `task.md` · `docs/agents/current-state.md` · `ROADMAP.md` Pending Lite status line.
+- **Decisions:** Campaign stubs live at `evals/lite/campaigns/adr0009-20260801/` (portable, gitignored); helper prepares all 30 with null `task_success`. No fake scores. Prep host lacked Docker/`swebench`.
+- **Blocked:** Cannot execute [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) on this machine without Docker + `swebench`.
+- **Next:** Claim [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) on a harness-capable clone; OPERATOR.md §2–3 → fill scorecards → [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89) analyze → [#90](https://github.com/JubileeZ/alpha-zero-g/issues/90) adopt/revert.

@@ -9,6 +9,7 @@ assert_file_exists "instances.json" "${REPO_ROOT}/evals/lite/instances.json"
 assert_file_exists "lite README" "${REPO_ROOT}/evals/lite/README.md"
 assert_file_exists "scorecard tmpl" "${REPO_ROOT}/evals/lite/scorecard.json.tmpl"
 assert_file_executable "run-lite-arm.sh" "${REPO_ROOT}/evals/run-lite-arm.sh"
+assert_file_executable "prepare-lite-campaign.sh" "${REPO_ROOT}/evals/prepare-lite-campaign.sh"
 assert_file_executable "record-lite-score.sh" "${REPO_ROOT}/evals/record-lite-score.sh"
 assert_file_executable "analyze-lite-promote.sh" "${REPO_ROOT}/evals/analyze-lite-promote.sh"
 

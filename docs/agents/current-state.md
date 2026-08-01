@@ -16,7 +16,7 @@
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 distilled gates (precedence · triviality · INTENT/AUTH/TWINS/PENDING · expanded verify · sweep); setup smoke green |
-| Evaluation Suite | `evals/lite/` | SWE-bench Lite N=10 · 3-arm promote on Task Success only (ADR 0007); cost informational |
+| Evaluation Suite | `evals/lite/` | SWE-bench Lite N=10 · 3-arm promote on Task Success only (ADR 0007); cost informational; operator runbook `OPERATOR.md`; bulk stub prep `evals/prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates (Candidate landed; Lite promote pending) |
@@ -44,7 +44,7 @@
 |------|-------|
 | Full SWE-bench Docker wiring | Scaffold prepares arms; external `swebench` harness still operator-run |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; no IDE metering |
-| Intent-gates Lite 3-arm Task Success | ADR 0009 promote decision pending; stubs at `/tmp/azg-lite-adr0009-25690801T045252Z` (null `task_success`; Docker/`swebench` absent) |
+| Intent-gates Lite 3-arm Task Success | ADR 0009 promote pending; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85). Portable stubs via `prepare-lite-campaign.sh` → `evals/lite/campaigns/adr0009-*` (gitignored; local `adr0009-20260801` = 30 null `task_success`). Docker/`swebench` still required for [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88). |
 
 ---
 
@@ -54,7 +54,8 @@
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
 | `bash tests/test-lite.sh` | Lite suite structural tests |
-| `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare Lite arm |
+| `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare one Lite arm workdir |
+| `bash evals/prepare-lite-campaign.sh [dir]` | Stub all N×3 scorecards into portable campaign dir |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
 
 ---
