@@ -24,9 +24,67 @@ No device lock-in — any clone with Docker + `swebench`. Campaign artifacts mus
 | Requirement | Notes |
 |-------------|-------|
 | Docker | Engine running; Linux post-install if needed. ARM Mac: add `--namespace ''` to harness (local image build). |
-| `swebench` | [SWE-bench/SWE-bench](https://github.com/SWE-bench/SWE-bench): `pip install swebench` (≥2.0). Entry: `python -m swebench.harness.run_evaluation`. |
+| `swebench` | [SWE-bench/SWE-bench](https://github.com/SWE-bench/SWE-bench): venv + `pip install 'swebench>=2.0'`. Entry: `python -m swebench.harness.run_evaluation`. |
+| Cursor Agent CLI | `curl https://cursor.com/install -fsS \| bash` → `agent login` (or `CURSOR_API_KEY`). Proven path for automation. |
 | `jq` | Scorecard + promote scripts. |
 | `azg` clone | Repo on the machine that runs agents + harness. |
+
+## Proven automation (preferred)
+
+**Locked for ADR 0009 N=5 campaign (2026-08-01):** model `composer-2.5`, Cursor Agent CLI, Docker scoring, parallel cells.
+
+### Isolation (do not mix arms)
+
+| Arm | Rule |
+|-----|------|
+| `baseline` | Worktree `evals/lite/worktrees/cells/<id>/baseline/` — **no** `azg apply`; fail if harness files appear |
+| `current` | Own worktree — `azg apply` from `azg@fef3e84` (or Live Campaign current ref) **into that tree only** |
+| `candidate` | Own worktree — `azg apply` from `azg@d2df37f` (or Live Campaign candidate ref) **into that tree only** |
+
+- One directory per `instance × arm` — never reuse another arm’s tree.
+- **No global `azg setup` while running arms in parallel** (avoids `~/.cursor` bleed). Treatment = project apply in the cell worktree.
+- Same model + budget for all 15 cells. Task Success = harness `resolved` only — never invent scores.
+
+### One-shot recipe
+
+```bash
+# 0) Host
+export PATH="$HOME/.local/bin:$PATH"
+agent login                                    # once
+python3 -m venv .venv-swebench && .venv-swebench/bin/pip install 'swebench>=2.0'
+# Docker engine up; user in docker group (or score path uses newgrp)
+
+# 1) Stubs
+bash evals/prepare-lite-campaign.sh evals/lite/campaigns/<campaign-id>
+
+# 2) Optional gold smoke (harness wiring)
+.venv-swebench/bin/python -m swebench.harness.run_evaluation \
+  --dataset_name princeton-nlp/SWE-bench_Lite \
+  --predictions_path gold --instance_ids sympy__sympy-20590 \
+  --max_workers 1 --run_id validate-gold
+
+# 3) All cells (parallel; skips already-scored scorecards)
+bash evals/run-lite-composer-campaign.sh --score --jobs 6
+# one cell: bash evals/run-lite-composer-cell.sh <instance_id> <arm> --score
+
+# 4) Promote
+bash evals/analyze-lite-promote.sh evals/lite/campaigns/<campaign-id>
+jq '{promote, pass_rate, success_pass}' evals/lite/campaigns/<campaign-id>/promote-result.json
+```
+
+Drivers: `evals/run-lite-composer-cell.sh` · `evals/run-lite-composer-campaign.sh`.  
+Env: `LITE_MODEL` (default `composer-2.5`), `LITE_CAMP`, `LITE_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`.
+
+### Cleanup after a run
+
+Keep: campaign scorecards, `predictions.jsonl`, `promote-result.json`, cell `harness-report.json`.  
+Safe to delete: `evals/lite/worktrees/` (mirrors/cells), root `*.azg-lite-*.json` / `gold.*.json`, `logs/run_evaluation/`, old `CAMPAIGN*.log` copies. Re-create worktrees on next run.
+
+---
+
+## Manual / alternate agent path
+
+Operator may still use IDE HITL instead of Agent CLI; keep model lock and isolation rules above. Steps below are the manual equivalent of what the drivers automate.
 
 ## Frozen slice
 
@@ -177,19 +235,22 @@ Unfilled `task_success: null` scorecards are stubs, not evidence.
 ## Quick reference
 
 ```bash
-# Live Campaign (Candidate + checkouts)
+# Live Campaign (Candidate + checkouts + last result)
 # → evals/lite/CAMPAIGN.md
 
-# prepare (all 30 stubs)
+# prepare (15 stubs)
 bash evals/prepare-lite-campaign.sh
 
-# prepare (single arm)
+# proven parallel Composer run + score
+bash evals/run-lite-composer-campaign.sh --score --jobs 6
+
+# prepare (single arm stub only)
 bash evals/run-lite-arm.sh <id> baseline|current|candidate
 
-# after harness
+# after harness (manual)
 bash evals/record-lite-score.sh <scorecard.json> --task-success 0|1 [--delivery-cost N]
 
-# after all 30 filled
+# after all 15 filled
 bash evals/analyze-lite-promote.sh <campaign_dir>
 
 # scaffold self-check (no Docker)

@@ -8,4 +8,4 @@ Device defaults will **not** vendor Sahir619/fable-method. Candidate change is a
 
 **Adopt iff** SWE-bench Lite 3-arm promote (ADR 0007 as amended): Candidate Task Success ≥ Current and ≥ Baseline. Fail → stay deferred (no opt-in). Costume / step-header leakage / sandbox → watch-notes only, not hard reject. Map: [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75).
 
-**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green; Lite 3-arm Task Success eval pending (operator Docker/`swebench`).
+**Status:** **Adopted** 2026-08-01 — Lite N=5×3 Composer 2.5 campaign `promote=true` (baseline=current=candidate pass_rate 1.0). Gates remain in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`. Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) · [#90](https://github.com/JubileeZ/alpha-zero-g/issues/90).

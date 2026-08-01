@@ -1,10 +1,10 @@
 # Session handoff (SFDBN)
 
 **When:** 2026-08-01
-**Branch:** main (push before switching device)
+**Branch:** main
 
-- **Status:** Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) → [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) **Device Handoff** to host with Docker + `swebench`. Prep Windows host: stubs recipe ready; **1/15** sympy baseline prediction local-only (gitignored).
-- **Files:** `evals/lite/README.md` · `CAMPAIGN.md` · ADR 0007 v2 · `prepare-lite-campaign.sh` · `task.md`
-- **Decisions:** N=5 data-biased Lite slice; IDE/CLI agents OK; never invent `task_success`.
-- **Blocked:** None on Docker host (assumed). Prep host: no Docker.
-- **Next:** On Docker device — pull main, rebuild/copy campaign `adr0009-20260801-n5`, run 15 cells per README + CAMPAIGN, fill scorecards, then [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89).
+- **Status:** Lite map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) complete — ADR 0009 **adopted**.
+- **Files:** Proven automation in `evals/lite/README.md`; drivers `evals/run-lite-composer-*.sh`; ADR/ROADMAP/current-state updated.
+- **Decisions:** promote=true → keep `AZG:AGENT-INSTRUCTIONS` gates.
+- **Blocked:** None.
+- **Next:** New work when operator picks it.

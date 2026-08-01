@@ -36,9 +36,9 @@ Stack wizard · full GitHub MCP default · blocking PreCompact
 
 ## Pending Lite (ADR 0009)
 
-- [ ] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — Lite 3-arm adopt or revert (Task Success only; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85); form decided in [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75))
+- [x] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — Lite 3-arm **adopted** (Task Success only; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85); form [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75); run [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90))
 
-**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green. Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85): stubs + how-to done ([#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#87](https://github.com/JubileeZ/alpha-zero-g/issues/87)); frontier [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) needs Docker/`swebench`. Docs: `evals/lite/README.md` (framework + Campaign cost envelope) · `CAMPAIGN.md` (Live Campaign). Prep: `evals/prepare-lite-campaign.sh` → gitignored `campaigns/adr0009-*`.
+**Status:** **Adopted** 2026-08-01 — `promote=true` (all arms 5/5 Composer 2.5). Gates stay in `templates/global/AGENTS.md`. How-to: `evals/lite/README.md` Proven automation · Live: `CAMPAIGN.md` · drivers `evals/run-lite-composer-*.sh`.
 
 ---
 

@@ -7,3 +7,14 @@ evals/pilot/SESSION-LOCAL.md
 evals/lite/campaigns/
 # Local SWE-bench checkouts for agent runs
 evals/lite/worktrees/
+# Local swebench Python env (operator machine)
+.venv-swebench/
+# SWE-bench harness local artifacts
+/logs/
+/*.validate-*.json
+/*azg-lite-*.json
+/gold.*.json
+/*-composer-*.azg-lite-*.json
+/baseline-composer-*.json
+/current-composer-*.json
+/candidate-composer-*.json

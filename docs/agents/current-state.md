@@ -16,10 +16,10 @@
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 distilled gates (precedence · triviality · INTENT/AUTH/TWINS/PENDING · expanded verify · sweep); setup smoke green |
-| Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** (v2 data-biased) · 3-arm promote on Task Success only (ADR 0007); how-to `README.md`; Live Campaign `CAMPAIGN.md`; bulk stub prep `evals/prepare-lite-campaign.sh`; Campaign cost envelope in README |
+| Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates (Candidate landed; Lite promote pending) |
+| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
 | Lean continuity | `AGENTS.md` Session start · `.cursor/rules/work-state-continuity.mdc` | Always-on lean set; not CONTEXT/progress/archive |
 | Project skills | `.agents/skills/{progress-updates,domain-vocabulary}` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project |
@@ -34,7 +34,7 @@
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
 | Eval | Lite scaffolded; legacy Blind Judge / pilot claim **deleted** |
-| Intent-gates form | ADR 0009 — Candidate in `AZG:AGENT-INSTRUCTIONS`; no fable vendor; Lite promote pending |
+| Intent-gates form | ADR 0009 — **adopted** 2026-08-01 (`promote=true`); gates in `AZG:AGENT-INSTRUCTIONS` |
 
 ---
 
@@ -42,9 +42,9 @@
 
 | Item | Notes |
 |------|-------|
-| Full SWE-bench Docker wiring | Scaffold prepares arms; external `swebench` harness still operator-run |
-| Delivery Cost auto-capture | Optional scorecard field; not a promote gate; no IDE metering |
-| Intent-gates Lite 3-arm Task Success | ADR 0009 promote pending; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85). **ADR 0007 v2** N=5. [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) **handed off** to Docker/`swebench` device (campaign gitignored — rebuild there). |
+| Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
+| Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
+| Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
 
 ---
 
@@ -56,6 +56,8 @@
 | `bash tests/test-lite.sh` | Lite suite structural tests |
 | `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare one Lite arm workdir |
 | `bash evals/prepare-lite-campaign.sh [dir]` | Stub all N×3 scorecards into portable campaign dir |
+| `bash evals/run-lite-composer-campaign.sh --score --jobs 6` | Proven parallel Composer Lite campaign (skips filled scorecards) |
+| `bash evals/analyze-lite-promote.sh <camp>` | Write `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
 
 ---
