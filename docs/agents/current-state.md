@@ -44,7 +44,7 @@
 |------|-------|
 | Full SWE-bench Docker wiring | Scaffold prepares arms; external `swebench` harness still operator-run |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; no IDE metering |
-| Intent-gates Lite 3-arm Task Success | ADR 0009 promote pending; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85). **ADR 0007 v2:** frozen slice **N=5** (data bias); stubs via `prepare-lite-campaign.sh` → `evals/lite/campaigns/adr0009-*` (gitignored). Docker/`swebench` still required for [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88). |
+| Intent-gates Lite 3-arm Task Success | ADR 0009 promote pending; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85). **ADR 0007 v2** N=5. [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) **handed off** to Docker/`swebench` device (campaign gitignored — rebuild there). |
 
 ---
 

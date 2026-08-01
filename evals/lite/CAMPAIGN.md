@@ -20,10 +20,18 @@ Overwrite this file when the Candidate under test changes. Procedure: [`README.m
 
 Between arms: re-run `azg setup` from the matching checkout.
 
-## Campaign tree (this host)
+## Campaign tree
 
-Prepared stubs (gitignored): `evals/lite/campaigns/adr0009-20260801-n5/` — **15** null `task_success` scorecards (ADR 0007 v2). Older `adr0009-20260801` was N=10 v1 — ignore. Rebuild anytime: `bash evals/prepare-lite-campaign.sh`.
+**Portable path:** `evals/lite/campaigns/adr0009-20260801-n5/` (gitignored — **rebuild on each host**):
 
-## Frontier
+```bash
+bash evals/prepare-lite-campaign.sh evals/lite/campaigns/adr0009-20260801-n5
+```
 
-[#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) Run Lite **N=5 × 3** (ADR 0007 v2 data-biased slice) and record Task Success — needs Docker + `swebench`.
+→ **15** null `task_success` scorecards (ADR 0007 v2). Ignore older `adr0009-20260801` (N=10 v1).
+
+Prep Windows host drafted `sympy__sympy-20590/baseline/predictions.jsonl` locally only — not in git; redo on Docker host or copy by hand.
+
+## Frontier / handoff
+
+[#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) — **continue on Docker + `swebench` device**. Agent: IDE/CLI. Score: harness `resolved` → `record-lite-score.sh`. Then [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89).

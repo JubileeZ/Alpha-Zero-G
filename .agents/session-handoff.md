@@ -1,10 +1,10 @@
 # Session handoff (SFDBN)
 
 **When:** 2026-08-01
-**Branch:** main
+**Branch:** main (push before switching device)
 
-- **Status:** Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) mid-flight; [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#87](https://github.com/JubileeZ/alpha-zero-g/issues/87) closed. **ADR 0007 v2:** Lite N=5 data-biased slice (15 agent runs). Lite docs: README = framework, CAMPAIGN.md = Live Campaign; OPERATOR deleted.
-- **Files:** `evals/lite/README.md` · `evals/lite/CAMPAIGN.md` · `CONTEXT.md` · `evals/prepare-lite-campaign.sh` · `task.md` · `docs/agents/current-state.md`
-- **Decisions:** Campaign cost envelope (operator disk/time/spend) ≠ Delivery Cost. Live Campaign file overwritten per Candidate.
-- **Blocked:** [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) needs Docker + `swebench`.
-- **Next:** Claim [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) on harness host; README + CAMPAIGN → fill **15** scorecards → [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89) → [#90](https://github.com/JubileeZ/alpha-zero-g/issues/90).
+- **Status:** Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) → [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) **Device Handoff** to host with Docker + `swebench`. Prep Windows host: stubs recipe ready; **1/15** sympy baseline prediction local-only (gitignored).
+- **Files:** `evals/lite/README.md` · `CAMPAIGN.md` · ADR 0007 v2 · `prepare-lite-campaign.sh` · `task.md`
+- **Decisions:** N=5 data-biased Lite slice; IDE/CLI agents OK; never invent `task_success`.
+- **Blocked:** None on Docker host (assumed). Prep host: no Docker.
+- **Next:** On Docker device — pull main, rebuild/copy campaign `adr0009-20260801-n5`, run 15 cells per README + CAMPAIGN, fill scorecards, then [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89).
