@@ -7,10 +7,10 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** ADR 0009 intent-gates **adopted** (`promote=true`, all arms 1.0). Pending Lite checked off.
-- **Files:** `templates/global/AGENTS.md` (gates kept) · `docs/adr/0009-*.md` · `evals/lite/README.md` Proven automation · `evals/run-lite-composer-*.sh`
-- **Decisions:** Adopt (not revert). Composer 2.5 Lite recipe is canonical for future campaigns.
-- **Blocked:** None.
+- **Status:** Idle — ADR 0009 adopted. **2026-08-01:** Windows prep host device refresh (`git pull` → `cefbdc9`, `azg setup`, `azg apply`, `verify.sh` green).
+- **Files:** `templates/global/AGENTS.md` (gates kept) · `docs/adr/0009-*.md` · `evals/lite/README.md` Proven automation · `evals/run-lite-composer-*.sh` · `.agents/session-handoff.md`
+- **Decisions:** Adopt (not revert). Composer 2.5 Lite recipe canonical. Device setup migrates via normal `azg setup` (no `--force` needed).
+- **Blocked:** None on repo; prep host lacks Docker/`swebench`.
 - **Next:** Pick new work from ROADMAP / issues when ready.
 
 ## Todo
