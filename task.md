@@ -7,19 +7,20 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** Frontier after closed [#87](https://github.com/JubileeZ/alpha-zero-g/issues/87) → open [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) (agent + harness). Prep host had no Docker/`swebench`.
-- **Files:** `evals/prepare-lite-campaign.sh` · `evals/lite/OPERATOR.md` · `evals/lite/campaigns/` (gitignored; local `adr0009-20260801` = 30 null stubs) · `tests/test-lite.sh` · `.gitignore`
-- **Decisions:** Portable campaign under `evals/lite/campaigns/adr0009-*` (not `/tmp`). Bulk prep via `prepare-lite-campaign.sh` (CRLF strip for Windows jq). Stubs never invent `task_success`.
+- **Status:** Docs reshape done (grill). Frontier still [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) — needs Docker/`swebench`. Prep stubs exist locally (gitignored).
+- **Files:** `evals/lite/README.md` (general how-to + Campaign cost envelope) · `evals/lite/CAMPAIGN.md` (Live Campaign) · deleted `OPERATOR.md` · `CONTEXT.md` (Live Campaign, Campaign cost envelope) · `evals/prepare-lite-campaign.sh`
+- **Decisions:** Evaluation Suite how-to = README; Live Campaign = CAMPAIGN.md (overwrite per Candidate); delete OPERATOR; Campaign cost envelope ≠ Delivery Cost.
 - **Blocked:** Full score fill needs host with Docker + `swebench` + agent budget for N=10×3.
-- **Next:** On harness host: claim [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88); follow `evals/lite/OPERATOR.md` §2–3 against `evals/lite/campaigns/adr0009-20260801/` (or re-run `prepare-lite-campaign.sh` there); record harness `resolved` only.
+- **Next:** On harness host: claim [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88); follow `evals/lite/README.md` + `CAMPAIGN.md` against campaign tree; record harness `resolved` only.
 
 ## Todo
-- [x] [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86) operator runbook
+- [x] [#86](https://github.com/JubileeZ/alpha-zero-g/issues/86) operator runbook → folded into README + CAMPAIGN
 - [x] [#87](https://github.com/JubileeZ/alpha-zero-g/issues/87) prepare campaign tree
+- [x] Grill: README framework / CAMPAIGN live / delete OPERATOR / cost envelope glossary
 - [ ] [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) run + record Task Success
 - [ ] [#89](https://github.com/JubileeZ/alpha-zero-g/issues/89) analyze promote
 - [ ] [#90](https://github.com/JubileeZ/alpha-zero-g/issues/90) adopt or revert
 
 ## Blockers / Notes
 - Local campaign tree gitignored; copy or rebuild on harness machine.
-- Current arm = `d2df37f^` (`fef3e84`); Candidate = `d2df37f`+.
+- Current arm = `d2df37f^` (`fef3e84`); Candidate = `d2df37f`+ (see CAMPAIGN.md).

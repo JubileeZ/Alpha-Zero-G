@@ -38,7 +38,7 @@ Stack wizard · full GitHub MCP default · blocking PreCompact
 
 - [ ] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — Lite 3-arm adopt or revert (Task Success only; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85); form decided in [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75))
 
-**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green. Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85): runbook + campaign stubs done ([#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#87](https://github.com/JubileeZ/alpha-zero-g/issues/87)); frontier [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) needs Docker/`swebench`. Portable stubs: `evals/prepare-lite-campaign.sh` → `evals/lite/campaigns/adr0009-*` (gitignored; null `task_success`).
+**Status:** Candidate text in `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS`; setup smoke green. Map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85): stubs + how-to done ([#86](https://github.com/JubileeZ/alpha-zero-g/issues/86)–[#87](https://github.com/JubileeZ/alpha-zero-g/issues/87)); frontier [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) needs Docker/`swebench`. Docs: `evals/lite/README.md` (framework + Campaign cost envelope) · `CAMPAIGN.md` (Live Campaign). Prep: `evals/prepare-lite-campaign.sh` → gitignored `campaigns/adr0009-*`.
 
 ---
 

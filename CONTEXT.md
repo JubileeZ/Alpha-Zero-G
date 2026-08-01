@@ -56,6 +56,14 @@ _Avoid_: Chat transfer, synchronized folder
 Frozen SWE-bench Lite instance list scored by automated tests; adoption runs three arms (No-Harness Baseline, Current Treatment, Candidate Treatment) and promotes only on hard quantitative rules.
 _Avoid_: Homemade fixtures as claim, blind-rubric suite, human-calibrated judge, full SWE-bench Verified by default
 
+**Live Campaign**:
+The Candidate Treatment (and arm checkouts) under test for the current Evaluation Suite run. Recorded in `evals/lite/CAMPAIGN.md`; procedure stays in `evals/lite/README.md`.
+_Avoid_: Operator runbook, map-only eval notes, OPERATOR.md as framework
+
+**Campaign cost envelope**:
+Order-of-magnitude operator resources to run a Lite campaign (disk, wall-clock, Docker compute, approximate agent spend). Informational planning only — not a promote input and not Delivery Cost.
+_Avoid_: Delivery Cost, promote budget, efficiency score
+
 **Statusline**:
 The terminal status bar displayed at the bottom of the Antigravity TUI to show real-time agent execution state and resource usage.
 _Avoid_: Status bar, info bar
