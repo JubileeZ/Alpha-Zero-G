@@ -29,7 +29,7 @@ bash evals/record-lite-score.sh <workdir>/scorecard.json --task-success 1 --deli
 bash evals/analyze-lite-promote.sh path/to/campaign/
 ```
 
-Promote (strict): Candidate pass rate ≥ Current **and** ≥ Baseline. If any arm has Delivery Cost (tokens) > 0 for all compared rows, also require Candidate median cost ≤ Current × 1.25; otherwise cost is omitted.
+Promote (strict): Candidate pass rate ≥ Current **and** ≥ Baseline. Delivery Cost is informational when present — **not** a promote gate (ADR 0007).
 
 ## Scaffold note
 

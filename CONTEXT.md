@@ -25,7 +25,7 @@ Evaluation arm with Current Treatment plus one proposed change under test for ad
 _Avoid_: Experimental profile, feature flag arm, core+addon
 
 **Delivery Cost**:
-Native model token usage or spend for a task run when available; if unavailable, cost is omitted and decisions use Task Success only. Wall time and human interventions are separate reported measures, not blended into this value.
+Native model token usage or spend for a task run when available. Reported on Lite scorecards when present; **never a 3-arm promote gate** (ADR 0007) — promote uses Task Success only. Wall time and human interventions are separate reported measures, not blended into this value.
 _Avoid_: Composite efficiency score, elapsed time as cost
 
 **Long-Horizon Task**:

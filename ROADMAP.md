@@ -10,7 +10,7 @@
 
 Reliable Delivery: higher Task Success per Delivery Cost than No-Harness Baseline, with Minimal Setup, across devices and Cursor/Antigravity. Repo-native gates own guarantees; IDE hooks are thin adapters.
 
-ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0007` Lite adoption gate](docs/adr/0007-swe-bench-lite-adoption-gate.md) · [`0008` ownership](docs/adr/0008-global-ownership-boundary.md)
+ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0007` Lite adoption gate](docs/adr/0007-swe-bench-lite-adoption-gate.md) · [`0008` ownership](docs/adr/0008-global-ownership-boundary.md) · [`0009` distilled intent-gates](docs/adr/0009-distilled-intent-gates.md)
 
 ---
 
@@ -32,7 +32,11 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot (t
 
 ## Explicitly deferred
 
-Stack wizard · full GitHub MCP default · blocking PreCompact · third-party skill-loop promotion methods
+Stack wizard · full GitHub MCP default · blocking PreCompact
+
+## Pending Lite (ADR 0009)
+
+- [ ] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — draft Candidate text, run Lite 3-arm, promote or stay deferred (Task Success only; map [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75))
 
 ---
 

@@ -9,4 +9,4 @@ bash evals/analyze-lite-promote.sh <campaign_dir>
 bash tests/test-lite.sh
 ```
 
-Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on hard pass rates (+ tokens when present).
+Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on Task Success only; Delivery Cost informational when present (ADR 0007).

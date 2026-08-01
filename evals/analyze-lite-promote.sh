@@ -51,15 +51,15 @@ result=$(jq -n --slurpfile rows "${arr_file}" '
   | ($rows | medcost("candidate")) as $kc
   | ($b != null and $c != null and $k != null) as $have_rates
   | ($have_rates and ($k >= $c) and ($k >= $b)) as $success_ok
-  | (if $cc == null or $kc == null then true else ($kc <= ($cc * 1.25)) end) as $cost_ok
   | {
       n_scorecards: ($rows|length),
       pass_rate: {baseline: $b, current: $c, candidate: $k},
       median_delivery_cost: {current: $cc, candidate: $kc},
       success_pass: $success_ok,
-      cost_pass: $cost_ok,
-      promote: ($success_ok and $cost_ok),
-      rule: "candidate_pass_rate >= current and >= baseline; cost omitted unless both medians present"
+      cost_pass: true,
+      cost_informational: true,
+      promote: $success_ok,
+      rule: "candidate_pass_rate >= current and >= baseline; delivery_cost informational only (ADR 0007)"
     }
 ')
 

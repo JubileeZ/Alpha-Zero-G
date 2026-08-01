@@ -1,0 +1,9 @@
+# Distilled intent-gates for device defaults
+
+Device defaults will **not** vendor Sahir619/fable-method. Candidate change is an **azg-owned** distillation of forced-artifact thinking gates into `AZG:AGENT-INSTRUCTIONS` (rendered to Cursor `azg-agent-instructions.mdc` + Gemini `AGENTS.md`). `PONYTAIL:MANAGED` stays a pure upstream mirror — never splice gates there (`azg update --vendor` would wipe them).
+
+**In scope for the Candidate text:** triviality gate · ask-classify · define-done · `INTENT:` / `AUTH:` / `TWINS:` / `PENDING:` · report sweep · **expanded verify** (done criterion observed + surrounding tests/build/lint for touched area + `TWINS:` when a defect was fixed). AUTH = outward/irreversible only; missing quote → `PENDING` and continue (no whole-loop halt). Ponytail wins on diff size / efficient laziness (lazy ≠ poor); gates win on ask-shape, done, and forced report lines. No “fable” product name on device; ADR cites fable-method MIT ~v1.4.0 as provenance only. Upstream: neither pin nor track.
+
+**Out:** four fable skills as packages · domain adapters · `references/` · upstream portable `AGENTS.md` · third vendor bundle.
+
+**Adopt iff** SWE-bench Lite 3-arm promote (ADR 0007 as amended): Candidate Task Success ≥ Current and ≥ Baseline. Fail → stay deferred (no opt-in). Costume / step-header leakage / sandbox → watch-notes only, not hard reject. Map: [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75).
