@@ -1,20 +1,21 @@
-# Active Task: spawn-budget residual risks (grill package)
+# Active Task: CI spawn-budget test pin
 
-- **Status:** Implemented — awaiting commit if desired
-- **Objective:** Assert residual audit risks; fix gitignore + slot-lifecycle smoke; accept RMW race + finish-without-id with ADR/ponytail docs; glossary Spawn Budget
-- **Acceptance:** `bash tests/host-contract-smoke.sh` + `bash tests/verify.sh` green; `.agents/spawn-state.json` gitignored
-- **Issue/Ticket:** —
+- **Status:** Committing
+- **Objective:** Stop phase2/phase5 asserting stale spawn-budget defaults; pin explicit test budgets
+- **Acceptance:** `bash tests/test-phase2.sh` + `bash tests/test-phase5.sh` + `bash tests/verify.sh` green
+- **Issue/Ticket:** CI run https://github.com/JubileeZ/alpha-zero-g/actions/runs/30694316936
 
 ## Work Packet (SFDBN)
 
-- **Status:** Done locally — not committed
-- **Files:** `.gitignore` · `templates/project/.gitignore` · `lib/scaffold.sh` · `.agents/hooks/spawn-budget.sh` · `templates/project/.agents/hooks/spawn-budget.sh` · `tests/host-contract-smoke.sh` · `docs/adr/0006-spawn-budget-pretooluse.md` · `CONTEXT.md`
-- **Decisions:** gitignore state; automate allow→deny→finish→reuse; ponytail no-flock; finish needs id (ADR); Spawn Budget glossary term
+- **Status:** Done
+- **Files:** `tests/test-phase2.sh` · `tests/test-phase5.sh`
+- **Decisions:** Mechanism tests write own `spawn-budget.json`; shipped defaults covered by host-contract-smoke (5 concurrent)
 - **Blocked:** None
-- **Next:** Commit on request
+- **Next:** None — pushed for CI re-run
 
 ## Todo
-- [x] Grill package implemented + verified
+- [x] Pin budgets in phase2/phase5
+- [x] Verify failing suites + verify.sh
 
 ## Blockers / Notes
-- `azg apply` does not yet append spawn-state ignore to existing project `.gitignore` (scaffold/`azg new` only)
+- Root cause: `cfa0a13` raised defaults to max_spawns=5 / max_depth=1; phase2/5 still expected 3/2

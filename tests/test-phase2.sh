@@ -264,24 +264,21 @@ else
   fail "Reset failed" "got: ${out_reset}"
 fi
 
-# Test 2: Spawn nesting depth (max_depth: 2)
-# Reset first
+# Test 2: Spawn nesting depth — pin budget so defaults cannot break CI
+printf '{"max_spawns": 10, "max_depth": 2, "mode": "concurrent"}\n' > .agents/spawn-budget.json
 "${SPAWN_BUDGET}" --reset <<< "{}" >/dev/null
 
-# Spawn 1 (Parent: root -> Child: c1)
-# Input represents spawning c1 from session root
+# Spawn 1 (Parent: root -> Child: c1) depth 1
 in1='{"session_id":"root","subagent_id":"c1"}'
 out1=$(echo "${in1}" | "${SPAWN_BUDGET}")
 dec1=$(echo "${out1}" | jq -r '.decision')
 
-# Spawn 2 (Parent: c1 -> Child: g1)
-# Nesting depth: c1 is depth 1, so g1 is depth 2
+# Spawn 2 (Parent: c1 -> Child: g1) depth 2
 in2='{"session_id":"c1","subagent_id":"g1"}'
 out2=$(echo "${in2}" | "${SPAWN_BUDGET}")
 dec2=$(echo "${out2}" | jq -r '.decision')
 
-# Spawn 3 (Parent: g1 -> Child: gg1)
-# Nesting depth: g1 is depth 2, so gg1 would be depth 3 (exceeds max_depth: 2)
+# Spawn 3 (Parent: g1 -> Child: gg1) depth 3 — exceeds max_depth 2
 in3='{"session_id":"g1","subagent_id":"gg1"}'
 out3=$(echo "${in3}" | "${SPAWN_BUDGET}")
 dec3=$(echo "${out3}" | jq -r '.decision')
@@ -292,23 +289,19 @@ else
   fail "Depth budget enforcement failed" "spawn1=${dec1} spawn2=${dec2} spawn3=${dec3}"
 fi
 
-# Test 3: Total Spawns count (max_spawns: 3)
-# Reset first
+# Test 3: Concurrent slot count — pin max_spawns=3 (independent of shipped defaults)
+printf '{"max_spawns": 3, "max_depth": 10, "mode": "concurrent"}\n' > .agents/spawn-budget.json
 "${SPAWN_BUDGET}" --reset <<< "{}" >/dev/null
 
-# Spawn 1 (allow)
 in1='{"session_id":"root","subagent_id":"agent1"}'
 dec1=$(echo "${in1}" | "${SPAWN_BUDGET}" | jq -r '.decision')
 
-# Spawn 2 (allow)
 in2='{"session_id":"root","subagent_id":"agent2"}'
 dec2=$(echo "${in2}" | "${SPAWN_BUDGET}" | jq -r '.decision')
 
-# Spawn 3 (allow)
 in3='{"session_id":"root","subagent_id":"agent3"}'
 dec3=$(echo "${in3}" | "${SPAWN_BUDGET}" | jq -r '.decision')
 
-# Spawn 4 (deny - exceeds max_spawns: 3)
 in4='{"session_id":"root","subagent_id":"agent4"}'
 dec4=$(echo "${in4}" | "${SPAWN_BUDGET}" | jq -r '.decision')
 

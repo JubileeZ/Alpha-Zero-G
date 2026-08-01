@@ -94,12 +94,12 @@ else
   fail "spawn-budget reset failed"
 fi
 
-# 2. Allow within spawns budget (max_spawns=3)
-# Spawn 1
+# 2. Concurrent slot count — pin max_spawns=3 (independent of shipped defaults)
+printf '{"max_spawns": 3, "max_depth": 10, "mode": "concurrent"}\n' > .agents/spawn-budget.json
+bash .agents/hooks/spawn-budget.sh --reset >/dev/null
+
 _res1=$(echo '{"session_id":"sess1","subagent_id":"sub1"}' | bash .agents/hooks/spawn-budget.sh)
-# Spawn 2
 _res2=$(echo '{"session_id":"sess1","subagent_id":"sub2"}' | bash .agents/hooks/spawn-budget.sh)
-# Spawn 3
 _res3=$(echo '{"session_id":"sess1","subagent_id":"sub3"}' | bash .agents/hooks/spawn-budget.sh)
 
 if echo "${_res1}" | grep -q '"decision":"allow"' && \
@@ -110,7 +110,6 @@ else
   fail "spawn-budget denied spawns within budget" "res1: ${_res1}, res2: ${_res2}, res3: ${_res3}"
 fi
 
-# Spawn 4 should be denied (max_spawns=3 exceeded)
 _res4=$(echo '{"session_id":"sess1","subagent_id":"sub4"}' | bash .agents/hooks/spawn-budget.sh)
 if echo "${_res4}" | grep -q '"decision":"deny"' && echo "${_res4}" | grep -q "Spawn budget exceeded"; then
   pass "spawn-budget denies spawn when max_spawns is exceeded"
@@ -118,11 +117,9 @@ else
   fail "spawn-budget failed to deny spawn on exceed limit" "got: ${_res4}"
 fi
 
-# 3. Spawn depth limit (max_depth=2)
-# Reset
+# 3. Spawn depth limit — pin max_depth=2
 bash .agents/hooks/spawn-budget.sh --reset >/dev/null
-# Write a budget json setting max_spawns=10, max_depth=2 for testing depth explicitly
-printf '{"max_spawns": 10, "max_depth": 2}' > .agents/spawn-budget.json
+printf '{"max_spawns": 10, "max_depth": 2, "mode": "concurrent"}\n' > .agents/spawn-budget.json
 
 # Session root depth is 0.
 # Spawn child at depth 1
