@@ -22,8 +22,8 @@ Between arms: re-run `azg setup` from the matching checkout.
 
 ## Campaign tree (this host)
 
-Example prepared stubs (gitignored): `evals/lite/campaigns/adr0009-20260801/` — 30 null `task_success` scorecards. Rebuild with `bash evals/prepare-lite-campaign.sh` on the harness host if needed.
+Older v1 stubs may exist under `evals/lite/campaigns/` (gitignored, e.g. `adr0009-20260801` from N=10). **Rebuild for v2:** `bash evals/prepare-lite-campaign.sh` → 15 null `task_success` scorecards (N=5 × 3).
 
 ## Frontier
 
-[#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) Run Lite N=10 × 3 arms and record Task Success — needs Docker + `swebench`.
+[#88](https://github.com/JubileeZ/alpha-zero-g/issues/88) Run Lite **N=5 × 3** (ADR 0007 v2 data-biased slice) and record Task Success — needs Docker + `swebench`.

@@ -1,19 +1,14 @@
 {
-  "version": 1,
+  "version": 2,
   "dataset": "princeton-nlp/SWE-bench_Lite",
   "split": "test",
-  "locked_at": "2026-07-25",
-  "n": 10,
-  "note": "Frozen adopt-gate slice (ADR 0007). Do not change IDs mid-campaign; bump version + locked_at to revise.",
+  "locked_at": "2026-08-01",
+  "n": 5,
+  "note": "Frozen adopt-gate slice (ADR 0007 v2): data/numerical-Python bias, N=5 × 3 arms to cap agent spend. Do not change IDs mid-campaign; bump version + locked_at only in a separate change.",
   "instance_ids": [
     "astropy__astropy-12907",
-    "django__django-11001",
-    "django__django-11099",
     "matplotlib__matplotlib-23299",
     "mwaskom__seaborn-2848",
-    "psf__requests-2317",
-    "pylint-dev__pylint-6528",
-    "pytest-dev__pytest-7490",
     "scikit-learn__scikit-learn-13439",
     "sympy__sympy-20590"
   ]

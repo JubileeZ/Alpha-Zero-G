@@ -16,19 +16,19 @@ assert_file_executable "analyze-lite-promote.sh" "${REPO_ROOT}/evals/analyze-lit
 
 n=$(jq -r '.n' "${REPO_ROOT}/evals/lite/instances.json")
 ids=$(jq -r '.instance_ids | length' "${REPO_ROOT}/evals/lite/instances.json")
-if [ "${n}" = "10" ] && [ "${ids}" = "10" ]; then
-  pass "frozen slice n=10"
+if [ "${n}" = "5" ] && [ "${ids}" = "5" ]; then
+  pass "frozen slice n=5"
 else
-  fail "expected n=10 instance_ids" "n=${n} ids=${ids}"
+  fail "expected n=5 instance_ids" "n=${n} ids=${ids}"
 fi
 
 section "2. run-lite-arm rejects unknown instance / arm"
 assert_exit "unknown instance fails" 1 bash "${REPO_ROOT}/evals/run-lite-arm.sh" not-a-real-id baseline
-assert_exit "bad arm fails" 1 bash "${REPO_ROOT}/evals/run-lite-arm.sh" django__django-11001 core
+assert_exit "bad arm fails" 1 bash "${REPO_ROOT}/evals/run-lite-arm.sh" sympy__sympy-20590 core
 
 section "3. prepare arms + promote"
 CAMP="$(azg_mktemp_d "tmp_azg_lite-XXXXXX")"
-ID="django__django-11001"
+ID="sympy__sympy-20590"
 
 for arm in baseline current candidate; do
   out=$(bash "${REPO_ROOT}/evals/run-lite-arm.sh" "${ID}" "${arm}" 2>&1) || true

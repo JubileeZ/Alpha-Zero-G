@@ -8,14 +8,14 @@ Parent index: [`evals/README.md`](../README.md). Glossary: Evaluation Suite · L
 
 ## Campaign cost envelope
 
-Order-of-magnitude **operator** cost to run a full Lite campaign (N=10 × 3 arms). Planning only — **not** a promote input and **not** Delivery Cost (per-task token/spend on scorecards).
+Order-of-magnitude **operator** cost to run a full Lite campaign (**N=5 × 3 arms = 15 runs**, ADR 0007 v2). Planning only — **not** a promote input and **not** Delivery Cost (per-task token/spend on scorecards).
 
 | Resource | Expect |
 |----------|--------|
 | Disk | SWE-bench harness env images ~**100 GB** cached; plus instance images, logs, campaign tree headroom |
-| Wall-clock | First harness pull/build: **hours**. Per instance × arm (agent + eval): **model-dependent**. Full N=10 × 3: **multi-day** wall clock typical |
+| Wall-clock | First harness pull/build: **hours**. Per instance × arm (agent + eval): **model-dependent**. Full N=5 × 3: **hours to days** wall clock (vs multi-day at N=10) |
 | Compute | Docker engine required for harness; agent host separate or same |
-| Agent spend | Roughly **30** agent runs (10 × 3) at your fixed model/budget — order-of-magnitude only; do not invent a dollar gate |
+| Agent spend | Roughly **15** agent runs (5 × 3) at your fixed model/budget — **half** the v1 N=10 envelope; IDE/CLI/subagent workflows allowed; order-of-magnitude only; do not invent a dollar gate |
 
 No device lock-in — any clone with Docker + `swebench`. Campaign artifacts must live outside `/tmp` (see layout).
 
@@ -30,7 +30,7 @@ No device lock-in — any clone with Docker + `swebench`. Campaign artifacts mus
 
 ## Frozen slice
 
-`instances.json` — N=10 Lite `instance_id`s, dataset `princeton-nlp/SWE-bench_Lite`, split `test`. Do not edit IDs mid-campaign; bump `version` + `locked_at` only in a separate change.
+`instances.json` — **N=5** Lite `instance_id`s (data/numerical-Python bias), dataset `princeton-nlp/SWE-bench_Lite`, split `test`. Do not edit IDs mid-campaign; bump `version` + `locked_at` only in a separate change.
 
 ```bash
 jq -r '.instance_ids[]' evals/lite/instances.json
@@ -65,7 +65,7 @@ evals/lite/campaigns/<campaign-id>/
   promote-result.json             # written by analyze-lite-promote.sh
 ```
 
-`/tmp/azg-lite-*` from `run-lite-arm.sh` is machine-local prep only — copy scorecards (+ predictions, harness logs) into the campaign dir before switching machines. Campaign trees under `evals/lite/campaigns/` are gitignored by default.
+**15 scorecards total (N=5 × 3).** `/tmp/azg-lite-*` from `run-lite-arm.sh` is machine-local prep only — copy scorecards (+ predictions, harness logs) into the campaign dir before switching machines. Campaign trees under `evals/lite/campaigns/` are gitignored by default.
 
 ## 1. Prepare
 
@@ -89,7 +89,7 @@ Copy into campaign tree if not using bulk prep:
 
 ```bash
 CAMP=evals/lite/campaigns/<campaign-id>
-INST=django__django-11001
+INST=sympy__sympy-20590
 ARM=current
 mkdir -p "${CAMP}/${INST}/${ARM}"
 cp "${WORKDIR}/scorecard.json" "${CAMP}/${INST}/${ARM}/"
@@ -148,7 +148,7 @@ python -m swebench.harness.run_evaluation \
 
 ## 4. Analyze (promote math)
 
-When all 30 scorecards filled (10 × 3):
+When all 15 scorecards filled (5 × 3):
 
 ```bash
 bash evals/analyze-lite-promote.sh "${CAMP}"
