@@ -15,11 +15,12 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 distilled gates (precedence · triviality · INTENT/AUTH/TWINS/PENDING · expanded verify · sweep); setup smoke green |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: distilled Think + Prove stance + domain/orchestrate router; setup smoke green |
+| Azg-owned skills | `templates/global/skills/azg/` | `azg-orchestrate` · `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs`; Device Setup always installs (not VENDOR.lock-gated) |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** |
+| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
 | Lean continuity | `AGENTS.md` Session start · `.cursor/rules/work-state-continuity.mdc` | Always-on lean set; not CONTEXT/progress/archive |
 | Project skills | `.agents/skills/{progress-updates,domain-vocabulary}` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project |
@@ -35,6 +36,7 @@
 | Skills | full vendor only; `--profile` removed |
 | Eval | Lite scaffolded; legacy Blind Judge / pilot claim **deleted** |
 | Intent-gates form | ADR 0009 — **adopted** 2026-08-01 (`promote=true`); gates in `AZG:AGENT-INSTRUCTIONS` |
+| Think+Prove + domains | ADR 0010 — Prove stance + fit/recall + `azg-orchestrate` + research/data domain skills + method-refs |
 
 ---
 

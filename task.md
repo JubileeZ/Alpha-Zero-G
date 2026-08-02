@@ -1,23 +1,24 @@
-# Active Task: Windows CI shellcheck install (self-copy fix)
+# Active Task: ADR 0010 Think+Prove + Orchestrate + domains
 
-- **Status:** Implemented — awaiting commit/push
-- **Objective:** Fix Windows install dying on Copy-Item of shellcheck.exe onto itself after Expand-Archive
-- **Acceptance:** Windows Install deps extracts shellcheck.exe and verifies path; no self-overwrite
-- **Issue/Ticket:** https://github.com/JubileeZ/alpha-zero-g/actions/runs/30702940431
+- **Status:** Done — committing
+- **Objective:** Distilled always-on Think+Prove; Device Setup skills `azg-orchestrate`, research/data domains, method-refs
+- **Acceptance:** cursor-device-setup + verify green; skills install even under vendor smart-sync
+- **Issue/Ticket:** ADR 0010
 
 ## Work Packet (SFDBN)
 
-- **Status:** Done locally — not committed
-- **Files:** `.github/workflows/ci.yml` · `docs/agents/current-state.md`
-- **Decisions:** Drop redundant Copy-Item; assert `shellcheck.exe` in toolsBin after expand; jq still choco+retry
+- **Status:** Done
+- **Files:** `templates/global/AGENTS.md` · `templates/global/skills/azg/**` · `lib/setup.sh` · `lib/apply-overlay.sh` · `docs/adr/0010-*.md` · `CONTEXT.md` · tests
+- **Decisions:** S always-on; Act=`azg-orchestrate`; G domains; no azg-domain maker
 - **Blocked:** None
-- **Next:** Commit + push to re-run Windows CI
+- **Next:** Commit; `azg setup` on devices; optional Lite promote
 
 ## Todo
-- [x] Diagnose 30702940431 Windows Install failure
-- [x] Remove self-copy; keep existence check
-- [x] Continuity (task.md + current-state)
+- [x] ADR + CONTEXT
+- [x] Expand AGENT-INSTRUCTIONS
+- [x] First-party skills + setup wire
+- [x] verify / cursor-device-setup (59) + test-azg (33)
+- [x] commit
 
 ## Blockers / Notes
-- Ubuntu/macOS green on 30702940431; only Windows Install failed
-- Spawn-budget pin run 30702810346 succeeded
+- Vendor smart-sync must not skip azg-owned skills; prune must not delete them — covered in setup/tests

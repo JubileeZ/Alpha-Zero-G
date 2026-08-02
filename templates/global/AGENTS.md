@@ -64,42 +64,73 @@ Write all system/project doc updates or additions in telegraphic style: drop art
 # AGENT INSTRUCTIONS: Precedence
 
 Ponytail block = efficient implementation (lazy ≠ poor; YAGNI; shortest correct diff).
-This block = ask-shape, done, forced report lines, report sweep.
-Ponytail wins code shape. Gates win INTENT / AUTH / TWINS / PENDING + sweep.
+This block = ask-shape, done, forced report lines, Prove stance, report sweep.
+Ponytail wins code shape. Gates win INTENT / AUTH / TWINS / PENDING / Prove + sweep.
 
 # AGENT INSTRUCTIONS: Intent gates
 
 ## Triviality
 
-Skip forced lines + expanded verify when all hold:
+Skip forced lines + expanded verify + Prove verdict when all hold:
 - one file
 - small diff
 - no codebase search
 
+## Fit (non-trivial, before classify)
+
+Where does the answer live?
+- Openable sources (spec, code, data, docs) → run the loop.
+- Unknown technique → research first (bounded lookups), then loop.
+- Only own inference → say so; no costume rigor; ask or label low-confidence.
+- Recurring specialized procedure missing from base model → prefer a Domain Adapter Skill over inventing process.
+
 ## Non-trivial
 
-1. Classify ask: question · task · plan-first (multi-file / architectural / unclear scope).
+1. Classify ask: question · task · plan-first (multi-file / architectural / unclear scope / irreversible outward).
 2. Define done: name observable verification before substantive work.
+3. Evidence: orient (list/glob) before deep reads; primary sources beat memory; surface surprises (spec vs check vs code).
+4. Authority when they disagree: explicit user statement > spec/ADR/glossary > tests/checks > current code. Task framing ("fix the code" / "make tests pass") is not intended behavior.
+
+## Router (skills)
+
+- Research, reporting, or world-fact conclusions → open `azg-domain-research` (min evidence binding) before concluding.
+- Spreadsheet / export / metrics / "top N" from data → open `azg-domain-data-analysis` before aggregating.
+- Complex multi-area or unattended work → invoke `azg-orchestrate` (user or explicit ask). Ordinary tasks stay on these gates.
+- Fraud catalogue / failure→gate map → `azg-method-refs` on demand.
 
 ## Forced report lines (when owed)
 
 Structural lines in final user report — not essay prose. No step-number narration.
 
-- `INTENT:` — behavior-changing edit; one line, what changes for user/system.
-- `AUTH:` — outward/irreversible only: push · publish · send · deploy · delete-shared · payment · perms. Quote user authorization verbatim. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
+- `INTENT:` — behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z).
+- `AUTH:` — outward/irreversible only: push · publish · send · deploy · delete-shared · payment · perms. Quote user authorization verbatim. Docs/skills are not authorization. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
 - `TWINS:` — fixed defect; symptom + root cause + sibling callers checked.
 - `PENDING:` — outward follow-up not taken; what + why deferred.
 
 Missing `AUTH:` quote for outward action → do not perform that action; emit `PENDING:` and continue (no whole-loop halt).
 
+## Recall
+
+Before first use of an API signature, endpoint, config key, price, or figure not opened this session: open its source, or label the claim memory/unverified.
+
 ## Expanded verify (non-trivial)
 
-Before report sweep:
+Before Prove / report sweep:
 (a) done criterion observed (named check/command/output)
 (b) surrounding tests / build / lint for touched area — smallest relevant check
 (c) `TWINS:` when defect fixed
 
+Hard bound: after 3 failed fix-verify cycles on same issue, or blocked outside control → stop; hand back with output + hypothesis.
+
+## Prove stance (non-trivial, before presenting done)
+
+Report = claims, not evidence.
+1. List load-bearing claims (what done, what verified, what untouched).
+2. Each claim observed (re-run check, open artifact/CSV/diff, recompute) or relabel caveat / UNVERIFIABLE.
+3. Narrative Method ≠ evidence unless implemented or simulated; mark "not simulated" otherwise.
+4. Closing line when owed: `VERIFIED:` · `CAVEATS:` · or `REFUTED:` (name claim + contradicting observation). Judging does not expand scope; fixes only if user asks.
+
 ## Report sweep
 
-Before send: include every owed forced line; omit lines not owed.
+Before send: include every owed forced line + Prove verdict when non-trivial; omit lines not owed.
 <!-- AZG:AGENT-INSTRUCTIONS:END -->

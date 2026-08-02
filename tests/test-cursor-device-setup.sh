@@ -142,6 +142,42 @@ else
   fail "ownership missing cursor_rules azg-agent-instructions.mdc"
 fi
 
+section "1b. first-party azg skills + Prove stance (ADR 0010)"
+
+for azg_skill in azg-orchestrate azg-domain-research azg-domain-data-analysis azg-method-refs; do
+  assert_file_exists "Cursor azg skill ${azg_skill}" \
+    "${TEMP_HOME}/.cursor/skills/${azg_skill}/SKILL.md"
+  assert_file_exists "Cursor ${azg_skill} AZG-OWNED.md" \
+    "${TEMP_HOME}/.cursor/skills/${azg_skill}/AZG-OWNED.md"
+  assert_file_exists "Gemini azg skill ${azg_skill}" \
+    "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/SKILL.md"
+  assert_file_exists "Gemini ${azg_skill} ANTIGRAVITY-NOTE" \
+    "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/ANTIGRAVITY-NOTE.md"
+  if [ -f "${OWN}" ] && jq -e --arg s "${azg_skill}" '(.cursor_skills // []) | index($s) != null' "${OWN}" >/dev/null; then
+    pass "ownership lists cursor_skills ${azg_skill}"
+  else
+    fail "ownership missing cursor_skills ${azg_skill}"
+  fi
+done
+
+assert_file_exists "method-refs failure-modes" \
+  "${TEMP_HOME}/.cursor/skills/azg-method-refs/references/failure-modes.md"
+
+if grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
+  grep -q 'azg-orchestrate' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
+  grep -q 'azg-domain-research' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
+  grep -q 'VERIFIED:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions include Prove stance + skill router"
+else
+  fail "agent-instructions missing Prove stance or skill router"
+fi
+
+# Smart-sync skip must still refresh azg-owned skills (VENDOR.lock unchanged)
+assert_exit "second setup (smart sync) exits 0" 0 \
+  env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
+assert_file_exists "azg-orchestrate survives smart sync" \
+  "${TEMP_HOME}/.cursor/skills/azg-orchestrate/SKILL.md"
+
 assert_marker_rejected() {
   local label="${1}"
   local malformed_agents="${2}"
@@ -207,6 +243,8 @@ assert_exit "azg uninstall exits 0" 0 \
 
 assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
+assert_file_not_exists "uninstall removed azg-orchestrate" \
+  "${TEMP_HOME}/.cursor/skills/azg-orchestrate/SKILL.md"
 assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 assert_file_not_exists "uninstall removed azg-agent-instructions.mdc" \

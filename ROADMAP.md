@@ -27,6 +27,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot (t
 - [x] Default setup = full vendor skills (no core allowlist)
 - [x] Scaffold SWE-bench Lite 3-arm harness
 - [x] Delete Blind Judge / old pilot claim suite
+- [x] Distilled Think+Prove + Orchestrate + analyst domains (ADR 0010) — Lite promote still recommended
 
 ---
 
