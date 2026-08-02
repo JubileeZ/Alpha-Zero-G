@@ -78,11 +78,11 @@ _render_cursor_rule() {
   rm -f "${render_tmp}"
 }
 
-_migrate_agent_instruction_markers() {
+_migrate_agent_instruction_try() {
   local target="${1}"
+  local start_heading="${2}"
+  local end_line="${3}"
   local tmp="${target}.azg.migrate.tmp"
-  local start_heading="# AGENT INSTRUCTIONS: Project AGENTS.md Placeholder Rule"
-  local end_line="Write all system/project doc updates or additions in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact."
 
   if awk -v start="${start_heading}" -v end="${end_line}" '
     {
@@ -112,10 +112,22 @@ _migrate_agent_instruction_markers() {
     rm -f "${tmp}"
     return 1
   fi
-
   # DESTRUCTIVE: remove failed temporary marker migration
   rm -f "${tmp}"
   return 1
+}
+
+_migrate_agent_instruction_markers() {
+  local target="${1}"
+  # Current template (Cleanup → last Report line), then legacy Placeholder → old telegraphic.
+  if _migrate_agent_instruction_try "${target}" \
+    "# AGENT INSTRUCTIONS: Temporary File Cleanup" \
+    "Before send: include every owed forced line (\`INTENT:\` / \`AUTH:\` / \`TWINS:\` / \`PENDING:\`) + Prove verdict when non-trivial; omit lines not owed. Repair missing owed lines, then send."; then
+    return 0
+  fi
+  _migrate_agent_instruction_try "${target}" \
+    "# AGENT INSTRUCTIONS: Project AGENTS.md Placeholder Rule" \
+    "Write all system/project doc updates or additions in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact."
 }
 
 # _install_skill_pair NAME SRC_PARENT OVERLAY_DIR FORCE GEMINI_COUNT_VAR CURSOR_COUNT_VAR

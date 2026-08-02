@@ -199,6 +199,11 @@ if [ -f "AGENTS.md" ] && grep -q "## Session start" "AGENTS.md"; then
 else
   fail "AGENTS.md Session start missing after reapply"
 fi
+if [ -f "AGENTS.md" ] && grep -q "## Placeholder fill" "AGENTS.md"; then
+  pass "Placeholder fill lives in project AGENTS managed block"
+else
+  fail "AGENTS.md missing Placeholder fill after apply"
+fi
 
 # 3a. Tracker validation
 assert_exit "azg apply with invalid tracker fails" 1 "${AZG}" apply . --tracker invalid

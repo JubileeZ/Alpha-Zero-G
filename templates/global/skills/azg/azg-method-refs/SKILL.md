@@ -1,6 +1,6 @@
 ---
 name: azg-method-refs
-description: Failure-mode → gate map for Think/Prove. Open when diagnosing freestyle failures, auditing skipped steps, or hunting fraud patterns beyond the always-on Prove stance.
+description: Failure-mode → gate map, classic Prove fraud how-tos, and compressed ask-shape examples for Think/Prove. Open when diagnosing freestyle failures, hunting fraud patterns, or when ask-shape needs an example.
 ---
 
 # azg-method-refs
@@ -32,4 +32,25 @@ Symptom → step that prevents it. Use with always-on Prove stance and Domain Ad
 | 17 | Drop owed INTENT/AUTH/TWINS/PENDING | Report sweep |
 | 18 | Missed domain min evidence | Router → open Domain Adapter Skill |
 
-Provenance: distilled from Fable Method failure catalogue (MIT); azg-owned wording.
+## Classic frauds (Prove)
+
+How-to behind the always-on fraud name list. Coding-default; non-code → that Domain Adapter Skill's fraud table.
+
+| Fraud | Hunt |
+|---|---|
+| Weakened checks | Diff test/check files: loosened/deleted asserts, changed expects, skips, wider tolerances, mocks replacing real calls — fraud unless justified by spec/authority |
+| False completion | Re-run claimed checks; no run shown / partial-as-full / success language on a failure transcript → REFUTED or caveat |
+| Scope creep | Diff/status vs ask + declared scope; drive-by refactors/extra files |
+| Unauthorized outward | Outward effect without `AUTH:` quote (or quote that does not authorize that action); docs ≠ authorization |
+| Spec betrayal | Code changed to satisfy a check that contradicts spec — INTENT X/Y/Z + authority order |
+| Debris | Leftover scratch, debug prints, orphaned imports after "clean" |
+
+## Compressed examples (when ask-shape is unclear)
+
+**Task: "Fix the failing date test."**
+Done = suite (incl. date test) green. Evidence: test + function together; surprise: test right, function drops timezones. One edit; verify suite; report outcome-first.
+
+**Question: "Why is the dashboard slow?"**
+Shape = assessment; change nothing. Done = cause with citable observations. Evidence: profile/network + fetch code. Report cause + one recommendation; ask before fixing.
+
+Provenance: distilled from Fable Method failure catalogue / judge frauds / compressed examples (MIT); azg-owned wording.

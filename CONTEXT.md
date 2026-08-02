@@ -100,11 +100,11 @@ _Avoid_: Spawn state, agent quota, subagent throttle
 Always-on discipline that treats a finished report as claims to re-observe (diff, rerun, open artifact) before presenting done, ending in VERIFIED, CAVEATS, or REFUTED.
 _Avoid_: fable-judge, blind trust in agent prose, verification theater
 
-**Orchestrate Skill**:
-On-demand azg-owned skill (`azg-orchestrate`) that runs parallel evidence gatherers, a plan bookend, main-thread execution, and attacker checks for complex or unattended work.
-_Avoid_: azg-loop, fable-loop, Act as always-on default
-
 **Domain Adapter Skill**:
 On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop.
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
+
+**Orchestrate Skill** *(deferred — not shipped)*:
+Future on-demand Act skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, attackers). Not in Device Setup until needed.
+_Avoid_: azg-orchestrate (removed), azg-loop, fable-loop, Act as always-on default
 

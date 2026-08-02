@@ -6,7 +6,7 @@ Device defaults will **not** vendor Sahir619/fable-method. Candidate change is a
 
 **Out (original):** four fable skills as packages · domain adapters · `references/` · upstream portable `AGENTS.md` · third vendor bundle.
 
-**Amended by ADR 0010:** Prove stance + fit/recall crumbs in always-on; Device Setup ships `azg-orchestrate` + research/data-analysis Domain Adapter Skills + method-refs. Still no full Fable vendor paste / domain maker.
+**Amended by ADR 0010:** Prove stance + fit/recall crumbs in always-on; Device Setup ships research/data-analysis Domain Adapter Skills + method-refs (Act/orchestrate skill deferred — not shipped). Still no full Fable vendor paste / domain maker.
 
 **Adopt iff** SWE-bench Lite 3-arm promote (ADR 0007 as amended): Candidate Task Success ≥ Current and ≥ Baseline. Fail → stay deferred (no opt-in). Costume / step-header leakage / sandbox → watch-notes only, not hard reject. Map: [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75).
 

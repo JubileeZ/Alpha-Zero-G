@@ -144,7 +144,7 @@ fi
 
 section "1b. first-party azg skills + Prove stance (ADR 0010)"
 
-for azg_skill in azg-orchestrate azg-domain-research azg-domain-data-analysis azg-method-refs; do
+for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; do
   assert_file_exists "Cursor azg skill ${azg_skill}" \
     "${TEMP_HOME}/.cursor/skills/${azg_skill}/SKILL.md"
   assert_file_exists "Cursor ${azg_skill} AZG-OWNED.md" \
@@ -161,26 +161,29 @@ for azg_skill in azg-orchestrate azg-domain-research azg-domain-data-analysis az
 done
 
 if grep -q 'Failure modes → gate' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
-  grep -q 'TWINS search' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"; then
-  pass "method-refs failure-mode map inlined in SKILL.md"
+  grep -q 'TWINS search' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
+  grep -q 'Classic frauds (Prove)' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
+  grep -q 'Compressed examples' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"; then
+  pass "method-refs failure-mode map + frauds + examples inlined in SKILL.md"
 else
-  fail "method-refs SKILL.md missing failure-mode → gate map"
+  fail "method-refs SKILL.md missing failure-mode / frauds / examples"
 fi
 
 if grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  grep -q 'azg-orchestrate' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
+  grep -q 'azg-method-refs' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
   grep -q 'azg-domain-research' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  grep -q 'VERIFIED:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions include Prove stance + skill router"
+  grep -q 'VERIFIED:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
+  ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions include Prove stance + skill router; placeholders not global"
 else
-  fail "agent-instructions missing Prove stance or skill router"
+  fail "agent-instructions missing Prove/router or still has global Placeholder Rule"
 fi
 
 # Smart-sync skip must still refresh azg-owned skills (VENDOR.lock unchanged)
 assert_exit "second setup (smart sync) exits 0" 0 \
   env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
-assert_file_exists "azg-orchestrate survives smart sync" \
-  "${TEMP_HOME}/.cursor/skills/azg-orchestrate/SKILL.md"
+assert_file_exists "azg-method-refs survives smart sync" \
+  "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 
 assert_marker_rejected() {
   local label="${1}"
@@ -247,8 +250,8 @@ assert_exit "azg uninstall exits 0" 0 \
 
 assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
-assert_file_not_exists "uninstall removed azg-orchestrate" \
-  "${TEMP_HOME}/.cursor/skills/azg-orchestrate/SKILL.md"
+assert_file_not_exists "uninstall removed azg-method-refs" \
+  "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 assert_file_not_exists "uninstall removed azg-agent-instructions.mdc" \
