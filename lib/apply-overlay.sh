@@ -293,9 +293,8 @@ _prune_vendor_skills() {
     # Not vendor-managed: no sentinel → skip (never prune custom skills)
     [ -f "${installed_dir}/ANTIGRAVITY-NOTE.md" ] || continue
 
-    # First-party azg skills (templates/global/skills/azg/) — never vendor-prune
-    if grep -q 'templates/global/skills/azg/' "${installed_dir}/ANTIGRAVITY-NOTE.md" ||
-      grep -q 'azg-owned' "${installed_dir}/ANTIGRAVITY-NOTE.md"; then
+    # First-party azg skills are owned by source, not vendored — never vendor-prune
+    if [ -d "${AZG_ROOT:-}/templates/global/skills/azg/${skill_name}" ]; then
       continue
     fi
 

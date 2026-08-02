@@ -108,6 +108,20 @@ assert_dir_exists \
   "tdd/ preserved (has ANTIGRAVITY-NOTE.md AND exists in vendor tree)" \
   "${SKILLS_DIR}/tdd"
 
+section "5b. First-party azg skill absent from vendor → NOT pruned"
+
+# Sentinel present, absent from vendor tree, and note text carries no azg wording:
+# survival must come from templates/global/skills/azg/<name>/ existing, not prose.
+mkdir -p "${SKILLS_DIR}/azg-orchestrate"
+printf 'vendored\n' > "${SKILLS_DIR}/azg-orchestrate/ANTIGRAVITY-NOTE.md"
+printf 'SKILL.md for azg-orchestrate\n' > "${SKILLS_DIR}/azg-orchestrate/SKILL.md"
+
+run_prune "${SKILLS_DIR}" "${VENDOR_DIR}" > /dev/null
+
+assert_dir_exists \
+  "azg-orchestrate/ preserved (first-party, owned by templates/global/skills/azg)" \
+  "${SKILLS_DIR}/azg-orchestrate"
+
 section "6. Prune counter is correct"
 
 # Reset fixtures for a clean count test

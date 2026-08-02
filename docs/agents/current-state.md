@@ -15,8 +15,8 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: distilled Think + Prove stance + domain/orchestrate router; setup smoke green |
-| Azg-owned skills | `templates/global/skills/azg/` | `azg-orchestrate` · `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs`; Device Setup always installs (not VENDOR.lock-gated) |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + one-line skill router (names domains/orchestrate/method-refs) |
+| Azg-owned skills | `templates/global/skills/azg/` | `azg-orchestrate` · `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -37,6 +37,7 @@
 | Eval | Lite scaffolded; legacy Blind Judge / pilot claim **deleted** |
 | Intent-gates form | ADR 0009 — **adopted** 2026-08-01 (`promote=true`); gates in `AZG:AGENT-INSTRUCTIONS` |
 | Think+Prove + domains | ADR 0010 — Prove stance + fit/recall + `azg-orchestrate` + research/data domain skills + method-refs |
+| Azg skill prune ownership | Source dir under `templates/global/skills/azg/` (not ANTIGRAVITY-NOTE prose); shared `_install_skill_pair` in setup |
 
 ---
 
@@ -74,5 +75,6 @@
 6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
 7. **CI macOS bash 3.2:** GHA `macos-latest` default `bash` is `/bin/bash` 3.2. Do **not** add Bash 4-only builtins in `lib/` (`mapfile`/`readarray`, `declare -A`, `${var,,}`). Recurring main-branch red was `mapfile` in `setup.sh` → exit 127 → phase3/8/9 cascade. Prefer Homebrew bash locally if desired; CI intentionally stays on system bash so regressions surface.
 8. **CI Windows shellcheck:** Do not install shellcheck via Chocolatey in GHA (CDN 503 flakes). Workflow downloads `shellcheck-v*.zip` from GitHub Releases into `$RUNNER_TEMP/azg-tools`. Zip already contains `shellcheck.exe` at root — do not `Copy-Item` onto itself after `Expand-Archive`.
-9. Smart sync skips skill copy when `VENDOR.lock` stamp unchanged — empty `~/.cursor/skills` still needs `./azg setup --force`.
+9. Smart sync skips **vendor** skill copy when `VENDOR.lock` stamp unchanged — azg-owned skills still refresh; empty `~/.cursor/skills` still needs `./azg setup --force`.
 10. **Windows `azg apply`:** may touch harness files with CRLF-only diffs (no content change). `git restore` those paths if working tree is clean aside from line endings.
+11. Vendor prune: first-party azg skills identified by `templates/global/skills/azg/<name>/` existing under `AZG_ROOT` — do not rely on note wording.

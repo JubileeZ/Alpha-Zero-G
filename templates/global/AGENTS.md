@@ -93,10 +93,7 @@ Where does the answer live?
 
 ## Router (skills)
 
-- Research, reporting, or world-fact conclusions → open `azg-domain-research` (min evidence binding) before concluding.
-- Spreadsheet / export / metrics / "top N" from data → open `azg-domain-data-analysis` before aggregating.
-- Complex multi-area or unattended work → invoke `azg-orchestrate` (user or explicit ask). Ordinary tasks stay on these gates.
-- Fraud catalogue / failure→gate map → `azg-method-refs` on demand.
+Binding before concluding: `azg-domain-research` (world-fact claims) · `azg-domain-data-analysis` (aggregates from data). On demand: `azg-orchestrate` (complex multi-area / unattended) · `azg-method-refs` (failure→gate map).
 
 ## Forced report lines (when owed)
 

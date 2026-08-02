@@ -118,6 +118,37 @@ _migrate_agent_instruction_markers() {
   return 1
 }
 
+# _install_skill_pair NAME SRC_PARENT OVERLAY_DIR FORCE GEMINI_COUNT_VAR CURSOR_COUNT_VAR
+#
+# Installs one skill into both targets: Gemini (overlay-processed) and Cursor
+# (plain copy). Foreign copies are left alone unless FORCE=1. Records ownership
+# and increments the named caller counters (same eval pattern as prune).
+_install_skill_pair() {
+  local skill_name="${1}"
+  local src_parent="${2}"
+  local overlay_dir="${3}"
+  local force="${4}"
+  local gemini_count_var="${5}"
+  local cursor_count_var="${6}"
+
+  if [ "${force}" -eq 0 ] && azg_skill_is_foreign "${AZG_GLOBAL_SKILLS_DIR}/${skill_name}"; then
+    warn "Foreign skill '${skill_name}' (no ANTIGRAVITY-NOTE) — skipping (use --force to overwrite)"
+  else
+    apply_overlay "${skill_name}" "${src_parent}" "${overlay_dir}" "${AZG_GLOBAL_SKILLS_DIR}"
+    azg_ownership_add_skill "${skill_name}"
+    # ponytail: indirect variable increment via eval (no ((VAR++)) with set -e)
+    eval "${gemini_count_var}=\$(( \${${gemini_count_var}} + 1 ))"
+  fi
+
+  if [ "${force}" -eq 0 ] && azg_cursor_skill_is_foreign "${AZG_CURSOR_SKILLS_DIR}/${skill_name}"; then
+    warn "Foreign Cursor skill '${skill_name}' (no AZG-OWNED.md) — skipping (use --force to overwrite)"
+  else
+    install_cursor_skill "${skill_name}" "${src_parent}" "${AZG_CURSOR_SKILLS_DIR}"
+    azg_ownership_add_cursor_skill "${skill_name}"
+    eval "${cursor_count_var}=\$(( \${${cursor_count_var}} + 1 ))"
+  fi
+}
+
 cmd_setup() {
   local dry_run=0
   local force=0
@@ -396,23 +427,9 @@ cmd_setup() {
           local skill_name
           skill_name="$(basename "${skill_dir}")"
 
-          local skill_dest="${AZG_GLOBAL_SKILLS_DIR}/${skill_name}"
-          if [ "${force}" -eq 0 ] && azg_skill_is_foreign "${skill_dest}"; then
-            warn "Foreign skill '${skill_name}' (no ANTIGRAVITY-NOTE) — skipping (use --force to overwrite)"
-          else
-            apply_overlay "${skill_name}" "${category_dir}" "${template_global}/skills/overlay/${vendor_name}" "${AZG_GLOBAL_SKILLS_DIR}"
-            azg_ownership_add_skill "${skill_name}"
-            skills_copied=$((skills_copied + 1))
-          fi
-
-          local cursor_dest="${AZG_CURSOR_SKILLS_DIR}/${skill_name}"
-          if [ "${force}" -eq 0 ] && azg_cursor_skill_is_foreign "${cursor_dest}"; then
-            warn "Foreign Cursor skill '${skill_name}' (no AZG-OWNED.md) — skipping (use --force to overwrite)"
-          else
-            install_cursor_skill "${skill_name}" "${category_dir}" "${AZG_CURSOR_SKILLS_DIR}"
-            azg_ownership_add_cursor_skill "${skill_name}"
-            cursor_skills_copied=$((cursor_skills_copied + 1))
-          fi
+          _install_skill_pair "${skill_name}" "${category_dir}" \
+            "${template_global}/skills/overlay/${vendor_name}" "${force}" \
+            skills_copied cursor_skills_copied
         done
       done
 
@@ -443,23 +460,9 @@ cmd_setup() {
       [ -f "${azg_skill_dir}/SKILL.md" ] || continue
       azg_skill_name="$(basename "${azg_skill_dir}")"
 
-      local azg_skill_dest="${AZG_GLOBAL_SKILLS_DIR}/${azg_skill_name}"
-      if [ "${force}" -eq 0 ] && azg_skill_is_foreign "${azg_skill_dest}"; then
-        warn "Foreign skill '${azg_skill_name}' (no ANTIGRAVITY-NOTE) — skipping (use --force to overwrite)"
-      else
-        apply_overlay "${azg_skill_name}" "${azg_skills_dir}" "${azg_overlay_dir}" "${AZG_GLOBAL_SKILLS_DIR}"
-        azg_ownership_add_skill "${azg_skill_name}"
-        azg_skills_copied=$((azg_skills_copied + 1))
-      fi
-
-      local azg_cursor_dest="${AZG_CURSOR_SKILLS_DIR}/${azg_skill_name}"
-      if [ "${force}" -eq 0 ] && azg_cursor_skill_is_foreign "${azg_cursor_dest}"; then
-        warn "Foreign Cursor skill '${azg_skill_name}' (no AZG-OWNED.md) — skipping (use --force to overwrite)"
-      else
-        install_cursor_skill "${azg_skill_name}" "${azg_skills_dir}" "${AZG_CURSOR_SKILLS_DIR}"
-        azg_ownership_add_cursor_skill "${azg_skill_name}"
-        azg_cursor_skills_copied=$((azg_cursor_skills_copied + 1))
-      fi
+      _install_skill_pair "${azg_skill_name}" "${azg_skills_dir}" \
+        "${azg_overlay_dir}" "${force}" \
+        azg_skills_copied azg_cursor_skills_copied
     done
   else
     warn "First-party azg skills dir missing: ${azg_skills_dir}"

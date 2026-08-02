@@ -160,8 +160,12 @@ for azg_skill in azg-orchestrate azg-domain-research azg-domain-data-analysis az
   fi
 done
 
-assert_file_exists "method-refs failure-modes" \
-  "${TEMP_HOME}/.cursor/skills/azg-method-refs/references/failure-modes.md"
+if grep -q 'Failure modes → gate' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
+  grep -q 'TWINS search' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"; then
+  pass "method-refs failure-mode map inlined in SKILL.md"
+else
+  fail "method-refs SKILL.md missing failure-mode → gate map"
+fi
 
 if grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
   grep -q 'azg-orchestrate' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
