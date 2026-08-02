@@ -48,7 +48,8 @@ assert_file_exists "spawn-budget.sh exists" "${APP_DIR}/.agents/hooks/spawn-budg
 assert_file_exists "pre-compact.sh exists" "${APP_DIR}/.agents/hooks/pre-compact.sh"
 
 assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/read-agents-md.mdc"
-assert_file_exists "work-state-continuity.mdc rule exists" "${APP_DIR}/.cursor/rules/work-state-continuity.mdc"
+assert_file_not_exists "work-state-continuity.mdc retired (Session start in AGENTS.md)" \
+  "${APP_DIR}/.cursor/rules/work-state-continuity.mdc"
 assert_file_exists "progress-updates.mdc rule exists" "${APP_DIR}/.cursor/rules/progress-updates.mdc"
 assert_file_contains "progress-updates rule is agent-requestable" "${APP_DIR}/.cursor/rules/progress-updates.mdc" "alwaysApply: false"
 assert_file_exists "progress-updates skill exists" "${APP_DIR}/.agents/skills/progress-updates/SKILL.md"

@@ -120,7 +120,7 @@ else
 fi
 
 if [ -f "my-new-app/.cursor/rules/read-agents-md.mdc" ] && \
-   [ -f "my-new-app/.cursor/rules/work-state-continuity.mdc" ] && \
+   [ ! -f "my-new-app/.cursor/rules/work-state-continuity.mdc" ] && \
    [ -f "my-new-app/.cursor/rules/progress-updates.mdc" ] && \
    [ -f "my-new-app/.cursor/rules/domain-vocabulary.mdc" ] && \
    [ -f "my-new-app/.agents/skills/progress-updates/SKILL.md" ] && \
@@ -186,6 +186,18 @@ if [ -f ".agents/spawn-budget.json" ] && [ -f ".agents/session-handoff.md" ] && 
   pass "Apply copied budget, handoff, vscode settings, and test harness"
 else
   fail "Apply failed to copy budget, handoff, vscode settings, or test harness"
+fi
+
+# Retired template Cursor rule must be removed on reapply
+mkdir -p .cursor/rules
+printf 'orphan\n' > .cursor/rules/work-state-continuity.mdc
+assert_exit "azg apply reapply exits 0" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "reapply removes retired work-state-continuity.mdc" \
+  ".cursor/rules/work-state-continuity.mdc"
+if [ -f "AGENTS.md" ] && grep -q "## Session start" "AGENTS.md"; then
+  pass "Session start remains in AGENTS.md after continuity rule retire"
+else
+  fail "AGENTS.md Session start missing after reapply"
 fi
 
 # 3a. Tracker validation

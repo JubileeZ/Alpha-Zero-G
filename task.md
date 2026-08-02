@@ -1,26 +1,24 @@
-# Active Task: ADR 0010 follow-up — prune/setup efficiency
+# Active Task: Retire work-state-continuity.mdc
 
 - **Status:** Done — Checkpoint
-- **Objective:** Harden azg skill prune ownership; compress always-on Router; share skill install helper; inline method-refs
-- **Acceptance:** phase9 + cursor-device-setup + run-all green; device re-setup applied
-- **Issue/Ticket:** ADR 0010 follow-up
+- **Objective:** Lean ritual only in AGENTS.md Session start; remove Cursor duplicate from template + clients; apply prune on reapply
+- **Acceptance:** phase2 + test-azg + verify green; alpha-zero-g + 3 downstreams without work-state rule; Session start present
+- **Issue/Ticket:** continuity cleanup
 
 ## Work Packet (SFDBN)
 
 - **Status:** Done
-- **Files:** `lib/apply-overlay.sh` · `lib/setup.sh` · `templates/global/AGENTS.md` · `templates/global/skills/azg/azg-method-refs/` · `tests/test-phase9.sh` · `tests/test-cursor-device-setup.sh` · `docs/adr/0010-*.md`
-- **Decisions:** Prune ownership = source dir under `templates/global/skills/azg/` (not note prose). Keep empty `overlay/azg/tool-map.json`. Leave `work-state-continuity.mdc` (repo + project template) for later. Router stays one line naming all four skills.
+- **Files:** `templates/project/.cursor/rules/` · `.cursor/rules/` · `lib/apply.sh` · `tests/test-phase2.sh` · `tests/test-azg.sh` · `docs/agents/current-state.md` · applied: career-agent · fpl-jubilee-ascent · jubilees-gambit
+- **Decisions:** Cross-tool source = project AGENTS.md Session start. Cursor duplicate retired (.mdc + legacy .md). Apply removes orphans so reapply cleans. Keep `read-agents-md.mdc`.
 - **Blocked:** None
-- **Next:** Optional: drop duplicate `work-state-continuity.mdc` (repo + `templates/project/`) once tests/docs updated; other devices run `azg setup`
+- **Next:** Checkpoint this repo; PENDING: commit/push three downstreams (ask); leftover `read-agents-md.md` beside `.mdc` on clients is separate optional cleanup
 
 ## Todo
-- [x] Prune guard → directory test + phase9 fixture
-- [x] Compress Router; keep skill names
-- [x] `_install_skill_pair` shared helper
-- [x] Inline method-refs table; delete `references/`
-- [x] run-all / device setup / re-setup this host
-- [x] Continuity docs + Checkpoint
+- [x] Delete template + this-repo rule
+- [x] apply.sh retire prune (.mdc + .md)
+- [x] Fix tests
+- [x] azg apply self + downstreams
+- [x] Gate + Checkpoint
 
 ## Blockers / Notes
-- Shellcheck not installed locally — aggregate skips lint; CI still runs it
-- Continuity delete (#2) deferred pending explicit choice (this-repo rule vs project template)
+- Downstream working trees dirty (rule deleted); commit/push not run (no AUTH quote)

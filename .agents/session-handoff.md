@@ -3,8 +3,8 @@
 **When:** 2026-08-02
 **Branch:** main (Checkpoint pending / just landed)
 
-- **Status:** ADR 0010 follow-up done — prune ownership hardened, Router compressed, `_install_skill_pair`, method-refs inlined. `run-all` 17 pass / 1 skip (shellcheck missing locally). This host re-`azg setup --force`.
-- **Files:** `lib/apply-overlay.sh` · `lib/setup.sh` · `templates/global/AGENTS.md` · `azg-method-refs/SKILL.md` (deleted `references/`) · phase9 + cursor-device-setup tests · continuity docs
-- **Decisions:** Keep empty azg `tool-map.json`. Defer deleting `work-state-continuity.mdc` (repo vs `templates/project/` choice).
+- **Status:** Retired Cursor `work-state-continuity` (.mdc/.md); lean ritual = AGENTS.md Session start only. `azg apply` prunes orphans. Applied to career-agent, fpl-jubilee-ascent, jubilees-gambit (local). verify 32/32; test-azg 36; phase2 41.
+- **Files:** `lib/apply.sh` · template + repo `.cursor/rules/` · tests · `current-state.md` · three downstream trees dirty
+- **Decisions:** Keep `read-agents-md.mdc`. Clients still have legacy `read-agents-md.md` beside `.mdc` (optional later).
 - **Blocked:** None
-- **Next:** Optional continuity dedupe; other devices `azg setup`; pick next ROADMAP polish
+- **Next:** Commit/push downstreams if user authorizes; optional clean `read-agents-md.md` orphans
