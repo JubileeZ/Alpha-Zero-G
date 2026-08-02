@@ -148,5 +148,5 @@ User report: readable if the user stepped away (enough context without watching 
 Report failures as failed, with the output; caveat what was skipped, weak, or unverified.
 Offer follow-ups only if they emerged from this task; otherwise end.
 Before send: check as a hostile reviewer — unverified claims, wrong ask-shape, or scope creep → fix (verify or caveat / correct shape / trim scope), then send.
-Before send: include every owed forced line (`INTENT:` / `AUTH:` / `TWINS:` / `PENDING:`) + Prove verdict when non-trivial; omit lines not owed. Repair missing owed lines, then send.
+Before send: non-trivial → layout: top owed `INTENT:`/`AUTH:` → main body → bottom owed `TWINS:`/`PENDING:` + Prove verdict; omit un-owed (no N/A). Repair missing lines, then send.
 <!-- AZG:AGENT-INSTRUCTIONS:END -->

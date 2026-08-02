@@ -122,7 +122,7 @@ _migrate_agent_instruction_markers() {
   # Current template (Cleanup → last Report line), then legacy Placeholder → old telegraphic.
   if _migrate_agent_instruction_try "${target}" \
     "# AGENT INSTRUCTIONS: Temporary File Cleanup" \
-    "Before send: include every owed forced line (\`INTENT:\` / \`AUTH:\` / \`TWINS:\` / \`PENDING:\`) + Prove verdict when non-trivial; omit lines not owed. Repair missing owed lines, then send."; then
+    "Before send: non-trivial → layout: top owed \`INTENT:\`/\`AUTH:\` → main body → bottom owed \`TWINS:\`/\`PENDING:\` + Prove verdict; omit un-owed (no N/A). Repair missing lines, then send."; then
     return 0
   fi
   _migrate_agent_instruction_try "${target}" \
