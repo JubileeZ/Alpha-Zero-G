@@ -183,15 +183,31 @@ else
   fail "Blocked Stop on clean repo" "got: ${out_stop}"
 fi
 
-# Test 2: If code changes exist but no workstate files modified, it should block
+# Test 2: If code changes exist but no workstate files modified, it should continue (Stop schema)
 mkdir -p src
 echo "print('hello')" > src/main.py
 out_stop_code=$(echo "${stop_json}" | "${CHECKPOINT}")
 dec_stop_code=$(echo "${out_stop_code}" | jq -r '.decision')
-if [ "${dec_stop_code}" = "deny" ]; then
-  pass "Blocks Stop when code changes exist without work-state documentation updates"
+if [ "${dec_stop_code}" = "continue" ]; then
+  pass "Continues Stop when code changes exist without work-state documentation updates"
 else
   fail "Allowed Stop with undocumented code changes" "got: ${out_stop_code}"
+fi
+
+# Test 2b: Cursor stop-checkpoint adapter (followup_message; same policy)
+STOP_CHECKPOINT="${APP_DIR}/.cursor/hooks/stop-checkpoint.sh"
+cursor_stop_json='{"status":"completed","loop_count":0}'
+out_cursor_stop=$(echo "${cursor_stop_json}" | "${STOP_CHECKPOINT}")
+if echo "${out_cursor_stop}" | jq -e '.followup_message | length > 0' >/dev/null 2>&1; then
+  pass "Cursor stop-checkpoint followup when code dirty without workstate"
+else
+  fail "Cursor stop-checkpoint should return followup_message" "got: ${out_cursor_stop}"
+fi
+out_cursor_cap=$(echo '{"status":"completed","loop_count":3}' | "${STOP_CHECKPOINT}")
+if [ "$(echo "${out_cursor_cap}" | tr -d '[:space:]')" = "{}" ]; then
+  pass "Cursor stop-checkpoint silent at loop cap"
+else
+  fail "Cursor stop-checkpoint should return {} at loop cap" "got: ${out_cursor_cap}"
 fi
 
 # Test 3: If code changes exist and current-state.md is updated, it should allow

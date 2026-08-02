@@ -1,10 +1,10 @@
 # Session handoff (SFDBN)
 
-**When:** 2026-08-02
-**Branch:** main (Checkpoint pending / just landed)
+**When:** 2026-08-03
+**Branch:** main
 
-- **Status:** Retired Cursor `work-state-continuity` (.mdc/.md); lean ritual = AGENTS.md Session start only. `azg apply` prunes orphans. Applied to career-agent, fpl-jubilee-ascent, jubilees-gambit (local). verify 32/32; test-azg 36; phase2 41.
-- **Files:** `lib/apply.sh` · template + repo `.cursor/rules/` · tests · `current-state.md` · three downstream trees dirty
-- **Decisions:** Keep `read-agents-md.mdc`. Clients still have legacy `read-agents-md.md` beside `.mdc` (optional later).
+- **Status:** Done — converged Stop checkpoint policy across agy + Cursor.
+- **Files:** `.agents/hooks/checkpoint.sh` · `.cursor/hooks/stop-checkpoint.sh` · `.cursor/hooks.json` · `templates/project/` mirrors · `tests/test-phase2.sh`
+- **Decisions:** agy Stop uses official `decision: continue` + `reason` (system message). Cursor Stop uses `followup_message` + `loop_limit: 3`. Same workstate accept set and reason text on both hosts.
 - **Blocked:** None
-- **Next:** Commit/push downstreams if user authorizes; optional clean `read-agents-md.md` orphans
+- **Next:** `azg apply` + commit/push career-agent · fpl-jubilee-ascent · jubilees-gambit
