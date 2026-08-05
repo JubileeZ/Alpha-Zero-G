@@ -12,7 +12,7 @@ Subagent spawn appears as tool `invoke_subagent` (Antigravity SDK / CLI); `PreTo
 
 ## Decision
 
-1. Enforce `spawn-budget.sh` on `PreToolUse` matcher `invoke_subagent` (and aliases `START_SUBAGENT|task|Task|spawn_subagent|subagent|agent` for host variance).
+1. Enforce `spawn-budget.sh` on `PreToolUse` matcher `invoke_subagent` (and aliases `START_SUBAGENT|task|Task|spawn_subagent|subagent|agent` for host variance). Do **not** also run it on `SubagentStart` (cannot block; would double-count vs one `--finish`).
 2. Track active concurrent subagents dynamically (default `max_spawns: 5`, `max_depth: 1`). No cumulative session cap or `mode` switch — sequential work uses slot release via `--finish`.
 3. `SubagentStop` fires `spawn-budget.sh --finish` to release active slots when subagents complete tasks.
 4. `SessionStart` resets via `spawn-budget.sh --reset`.

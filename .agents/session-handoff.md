@@ -3,8 +3,8 @@
 **When:** 2026-08-05
 **Branch:** main
 
-- **Status:** Done — project AGENTS telegraphic soft-dup removed; Checkpoint pending in same turn
-- **Files:** `templates/project/AGENTS.md.tmpl` · `AGENTS.md` · `task.md`
-- **Decisions:** Global habits sole telegraphic policy; project Placeholder fill keeps local how-to word; ponytail self-ref stay; secrets dual lines stay; no Swap A/B for `.mdc` primary
+- **Status:** Done — SubagentStart spawn-budget double-wire removed
+- **Files:** `.agents/hooks.json` · `templates/project/.agents/hooks.json` · `tests/host-contract-smoke.sh` · `docs/adr/0006-…` · `docs/agents/host-contract-smoke.md`
+- **Decisions:** Count once on PreToolUse only; SubagentStop `--finish` + SessionStart `--reset` remain. Cursor code-review Task aborts were user/UI interrupt — not budget deny
 - **Blocked:** None
-- **Next:** Optional: strip `SubagentStart` spawn-budget from `.agents/hooks.json` (+ template) — double-count risk; Cursor Task review: prefer `run_in_background: true`, no unsupported `model: "fast"`
+- **Next:** Clients need `azg apply` to merge hooks; push needs AUTH

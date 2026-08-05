@@ -40,4 +40,4 @@ Simulator: hook stdout `deny` / `permission:deny` → side-effect command is **n
 
 After a manual pass on each host, note date + Cursor/agy version in the PR or issue. Repo-native gate remains source of truth (ADR 0004); IDE smoke only proves adapters are wired.
 
-Spawn budget: deny is enforced on PreToolUse `START_SUBAGENT` (ADR 0006). `SubagentStart` may still fire the script but cannot block on Antigravity.
+Spawn budget: deny is enforced on PreToolUse `invoke_subagent` / aliases (ADR 0006). Do **not** also wire `spawn-budget.sh` on `SubagentStart` — that event cannot block on Antigravity and double-counts slots against a single `--finish`.

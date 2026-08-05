@@ -153,6 +153,17 @@ if grep -q 'invoke_subagent' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh' "${AGY_
 else
   fail "spawn-budget must be on PreToolUse invoke_subagent (SubagentStart cannot block)"
 fi
+# SubagentStart + PreToolUse both calling spawn-budget.sh double-counts slots (one --finish)
+if grep -q '"SubagentStart"' "${AGY_HOOKS}"; then
+  fail "hooks.json must not register SubagentStart (observe-only; double-counts with PreToolUse)"
+else
+  pass "hooks.json has no SubagentStart spawn-budget wire"
+fi
+if grep -q 'spawn-budget.sh --finish' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh --reset' "${AGY_HOOKS}"; then
+  pass "hooks.json keeps SubagentStop --finish and SessionStart --reset"
+else
+  fail "spawn-budget lifecycle hooks (--finish / --reset) missing"
+fi
 
 section "5c. Spawn-budget slot lifecycle (allow → deny → finish → reuse)"
 
