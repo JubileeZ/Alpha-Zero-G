@@ -69,7 +69,6 @@ Pre-commit: lint + affected tests green. `run-all` slow by design (isolated suit
 
 ## Agent Behavior Overrides
 
-- Docs telegraphic: fragments, no filler
 - Downstream client `AGENTS.md`: hybrid layout (user zone above markers; managed between)
 - Keep `AGENTS.md` light; detail → `docs/agents/`
 

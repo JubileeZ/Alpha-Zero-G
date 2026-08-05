@@ -1,10 +1,10 @@
 # Session handoff (SFDBN)
 
-**When:** 2026-08-03
+**When:** 2026-08-05
 **Branch:** main
 
-- **Status:** Done — converged Stop checkpoint policy across agy + Cursor.
-- **Files:** `.agents/hooks/checkpoint.sh` · `.cursor/hooks/stop-checkpoint.sh` · `.cursor/hooks.json` · `templates/project/` mirrors · `tests/test-phase2.sh`
-- **Decisions:** agy Stop uses official `decision: continue` + `reason` (system message). Cursor Stop uses `followup_message` + `loop_limit: 3`. Same workstate accept set and reason text on both hosts.
+- **Status:** Done — project AGENTS telegraphic soft-dup removed; Checkpoint pending in same turn
+- **Files:** `templates/project/AGENTS.md.tmpl` · `AGENTS.md` · `task.md`
+- **Decisions:** Global habits sole telegraphic policy; project Placeholder fill keeps local how-to word; ponytail self-ref stay; secrets dual lines stay; no Swap A/B for `.mdc` primary
 - **Blocked:** None
-- **Next:** `azg apply` + commit/push career-agent · fpl-jubilee-ascent · jubilees-gambit
+- **Next:** Optional: strip `SubagentStart` spawn-budget from `.agents/hooks.json` (+ template) — double-count risk; Cursor Task review: prefer `run_in_background: true`, no unsupported `model: "fast"`

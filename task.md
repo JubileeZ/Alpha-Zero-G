@@ -1,24 +1,25 @@
-# Active Task: Aggressive lean (ponytail-audit)
+# Active Task: Project AGENTS telegraphic soft-dup trim
 
-- **Status:** Done — Checkpoint pending
-- **Objective:** Land grill-approved cuts: Unicode-only statusline, shared checkpoint scan, spawn concurrent-only, full hygiene, archive delete
-- **Acceptance:** `verify.sh` + phase0/3/5/9 + test-azg + host-contract green; CONTEXT + ADR 0001/0006 updated
-- **Issue/Ticket:** ponytail-audit follow-up
+- **Status:** Done — Checkpoint now
+- **Objective:** Drop redundant project telegraphic bullet; rely on global AZG:AGENT-INSTRUCTIONS
+- **Acceptance:** `test-azg.sh` green; Placeholder fill step 2 still mentions telegraphic; global AGENTS untouched
+- **Issue/Ticket:** grill-with-docs AGENTS layering cleanup
 
 ## Work Packet (SFDBN)
 
 - **Status:** Done
-- **Files:** statusline · checkpoint hooks · spawn-budget · `lib/common.sh` · overlay · apply/scaffold · archive delete · ADRs · CONTEXT · AGENTS
-- **Decisions:** Aggressive lean bar per `implementation_plan.md` (grill session)
+- **Files:** `templates/project/AGENTS.md.tmpl` · `AGENTS.md` (dogfood)
+- **Decisions:** Global=habits · project=repo ritual; delete Overrides telegraphic bullet; leave ponytail sync/self-ref; keep both secrets lines; no `.mdc` primary swap
 - **Blocked:** None
-- **Next:** Commit; downstream apply out of scope (no AUTH)
+- **Next:** Optional follow-up: remove duplicate `SubagentStart` spawn-budget wiring (ADR 0006 PreToolUse-only) — not in this Checkpoint
 
 ## Todo
-- [x] ponytail-audit ranked findings
-- [x] grill-with-docs decisions locked
-- [x] Implement all 8 plan steps
-- [x] Gate (verify + phase0/3/5/9 + test-azg + host-contract)
-- [ ] Checkpoint commit
+- [x] Grill layering + soft-dup decisions locked
+- [x] Delete project Overrides telegraphic bullet (tmpl + dogfood)
+- [x] `test-azg.sh` 36/36
+- [x] Checkpoint commit
 
 ## Blockers / Notes
-- Prior downstream commit/push still PENDING (no AUTH)
+- Code-review subagents aborted (`User aborted/interrupted manually`) — local review substituted; not spawn-budget deny
+- Downstream apply/push still PENDING (no AUTH)
+- Optional follow-up: SubagentStart spawn-budget double-wire (see session-handoff)

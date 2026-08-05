@@ -38,6 +38,7 @@
 | Intent-gates form | ADR 0009 — **adopted** 2026-08-01 (`promote=true`); gates in `AZG:AGENT-INSTRUCTIONS` |
 | Think+Prove + domains | ADR 0010 — Prove stance + fit/recall + research/data domain skills + method-refs (orchestrate removed until needed) |
 | Azg skill prune ownership | Source dir under `templates/global/skills/azg/` (not ANTIGRAVITY-NOTE prose); shared `_install_skill_pair` in setup |
+| Project telegraphic policy | Soft-dup removed from project Overrides; global `AZG:AGENT-INSTRUCTIONS` sole always-on source; Placeholder fill how-to word kept |
 
 ---
 
