@@ -21,7 +21,7 @@ Alpha-Zero-G is an **outer agent harness installer and template system** for sol
 - Default read-only: preserve worktree; no installs, commits, network writes, or non-dry-run `azg` mutations without explicit approval.
 - Record audit date, commit SHA, `git status`, and host/version assumptions.
 - Classify proposals as IDE-native, OS-native, repo-native, or out of scope.
-- Report conflicts explicitly. Prefer observed implementation + accepted ADRs over stale secondary docs; `docs/REVAMP-SPEC.md` remains product intent.
+- Report conflicts explicitly. Prefer observed implementation + accepted ADRs over stale secondary docs; `docs/SPEC.md` remains product intent.
 - Adopt / promote decisions use SWE-bench Lite 3-arm (baseline / current / candidate) with automated Task Success; no Blind Judge claim path.
 
 ---
@@ -31,7 +31,7 @@ Alpha-Zero-G is an **outer agent harness installer and template system** for sol
 Evaluate the repository across the following 5 core pillars:
 
 1. **Current Codebase & v4 Spec Alignment**
-   - Audit current state: `azg`, `AGENTS.md`, `README.md`, `CONTEXT.md`, `ROADMAP.md`, `docs/AGENT-ONBOARDING.md`, `docs/REVAMP-SPEC.md`, `docs/agents/current-state.md`, `docs/adr/`, `lib/`, `templates/project/`, `templates/global/`, `tests/`, `evals/`, `.github/workflows/ci.yml`.
+   - Audit current state: `azg`, `AGENTS.md`, `README.md`, `CONTEXT.md`, `ROADMAP.md`, `docs/AGENT-ONBOARDING.md`, `docs/SPEC.md`, `docs/agents/current-state.md`, `docs/adr/`, `lib/`, `templates/project/`, `templates/global/`, `tests/`, `evals/`, `.github/workflows/ci.yml`.
    - Verify if repo-native gates (`tests/run-all.sh`, hooks) and template structures strictly honor the outer harness boundary.
 
 2. **Self-Improving Agents & Learning Loops**
@@ -57,7 +57,7 @@ Evaluate the repository across the following 5 core pillars:
 ### Step 1: Read Project Baseline
 Inspect:
 1. `AGENTS.md` (managed rules, verification gates) and `templates/global/AGENTS.md` (Ponytail source)
-2. `docs/REVAMP-SPEC.md` (canonical v4 specification)
+2. `docs/SPEC.md` (canonical v4 specification)
 3. `ROADMAP.md` & `docs/agents/current-state.md` (completed vs active vs parked features)
 4. `lib/*.sh`, `templates/`, `tests/`, `evals/`, and accepted ADRs
 

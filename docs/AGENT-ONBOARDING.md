@@ -5,19 +5,19 @@ You have **no chat history**. Use **only** the files below to understand what Al
 ## Read order
 
 1. **This file** — orientation (you are here)
-2. [`docs/REVAMP-SPEC.md`](REVAMP-SPEC.md) — **canonical** v4 design (what we are building)
+2. [`docs/SPEC.md`](SPEC.md) — **canonical** v4 design (what we are building)
 3. [`ROADMAP.md`](../ROADMAP.md) — phased checklist (in what order)
 4. [`docs/agents/current-state.md`](agents/current-state.md) — what already exists vs gaps
 
 Optional during implementation:
 
 - [`docs/agents/progress.md`](agents/progress.md) — how to update work-state files
-- [`docs/FRONTIER-REVAMP-EVAL-PROMPT.md`](FRONTIER-REVAMP-EVAL-PROMPT.md) — prompt for frontier agent project re-evaluation
+- [`docs/ARCHITECTURE-AUDIT.md`](ARCHITECTURE-AUDIT.md) — prompt for frontier agent project re-evaluation
 - [`AGENTS.md`](../AGENTS.md) — commands, safety, pre-commit gate for **this repo**
 
 ## One-paragraph summary
 
-Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), full vendored global skills + Ponytail rule, four enforcement hooks, one PreCompact observability hook, and SWE-bench Lite 3-arm adopt gate. `REVAMP-SPEC.md` defines design and `current-state.md` records reality.
+Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), full vendored global skills + Ponytail rule, four enforcement hooks, one PreCompact observability hook, and SWE-bench Lite 3-arm adopt gate. `SPEC.md` defines design and `current-state.md` records reality.
 
 ## Before writing code
 

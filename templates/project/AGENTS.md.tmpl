@@ -37,7 +37,7 @@
 
 ## Off-Limits: Never Touch Without Explicit Instruction
 
-- `.env` and any file containing secrets or credentials
+- `.env` and any file containing secrets, credentials, or tokens
 - Database migrations — always flag, never auto-apply or auto-run
 - Production configuration files
 - Any file marked `# DO NOT EDIT` or `# GENERATED`
@@ -79,12 +79,12 @@ If `AGENTS.md` or tracking docs (`ROADMAP.md`, `progress.md`, `current-state.md`
 
 Lean always-on only:
 
-1. Read `task.md` Work Packet if present.
+1. Read `.agents/session-handoff.md` (if resuming across devices/IDEs) and `task.md` Work Packet if present.
 2. Read `ROADMAP.md` active phase / first unchecked item only (not archived or collapsed phases).
-3. Read `docs/agents/current-state.md` Active phase + What exists / gaps when unfamiliar, or when existence may have changed.
-4. Run `git log -5 --oneline` + `git status`.
-5. Treat `AGENTS.md` / rules as pointer index — open linked docs only when the task needs them.
-6. Do not rely on chat history.
+3. Read `docs/agents/current-state.md` Active phase + What exists / gaps when unfamiliar.
+   *(Skip steps 1–3 for trivial single-file edits: ≤10 lines, no structural changes)*
+4. Run `git status` + `git pull` (if resuming on a new device) + `git log -5 --oneline`.
+5. Treat `AGENTS.md` as pointer index — ground-truth workspace state from files and git rather than relying on chat memory.
 
 Not always-on: full `CONTEXT.md`, `docs/agents/progress.md`, `docs/agents/issue-tracker.md`, archived ROADMAP, research notes.
 
@@ -94,14 +94,12 @@ Before Checkpoint (git commit of in-progress work): update Work Packet SFDBN fie
 
 ## Universal Safety Rules
 
-- No secrets/tokens/credentials in any file.
 - Destructive ops (delete/overwrite/truncate/drop): inline `# DESTRUCTIVE: <reason>`.
 - No new top-level dependencies without flagging in response.
-- Agent harness device changes: implement scalably for current/future devices and new repos.
 - Prefer reversible actions. If irreversible, state clearly before executing.
 - Tool blocked by safety hook? Explain block, suggest exact command/content to write manually.
 - Windows: run CLI/hooks only inside Git Bash.
-- Subagent budget & delegation: Read `.agents/spawn-budget.json` for active limits (`max_spawns`, `max_concurrent`, `max_depth`). Dispatch subagents up to `max_spawns` / `max_concurrent` concurrently; wait for running workers to finish before spawning more. Subagents must not spawn child subagents when `max_depth` is 1.
+- Subagent budget & delegation: Read `.agents/spawn-budget.json` for active limits (`max_spawns`, `max_concurrent`, `max_depth`). Dispatch subagents up to limits; subagents must not spawn child subagents when `max_depth` is 1.
 
 ---
 
@@ -116,6 +114,8 @@ Before Checkpoint (git commit of in-progress work): update Work Packet SFDBN fie
 
 - Progress workflow: use `progress-updates` skill / rule, or read `docs/agents/progress.md`.
 - Issue tracker setup: read `docs/agents/issue-tracker.md`.
+- Continuity & Handoff: When stopping work or switching devices, update `.agents/session-handoff.md` (SFDBN format).
+- Code Commits: Every code commit MUST include an updated `task.md` to pass `commit-gate.sh`. For trivial edits, create a minimal `task.md` and clear/delete it in the same commit.
 - Compaction / archive: see `docs/agents/progress.md` (Active-Phase Compaction; current-state = current truth; CONTEXT glossary-only; `docs/archive/` when-to-archive). Never archive live `CONTEXT.md` / `CONTEXT-MAP.md`; never relocate ADRs from `docs/adr/`.
 - Cleanup: delete transient session files (`task.md`, `implementation_plan.md`, `walkthrough.md`) once milestone/task is complete.
 

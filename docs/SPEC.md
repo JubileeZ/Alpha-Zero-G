@@ -199,7 +199,7 @@ User:        git pull              →  get new Alpha-Zero-G
 | Question | Read |
 |----------|------|
 | Zero context start | `docs/AGENT-ONBOARDING.md` |
-| What to build (this file) | `docs/REVAMP-SPEC.md` |
+| What to build (this file) | `docs/SPEC.md` |
 | Phase checklist | `ROADMAP.md` |
 | What exists vs gaps | `docs/agents/current-state.md` |
 | Progress update ritual | `docs/agents/progress.md` |

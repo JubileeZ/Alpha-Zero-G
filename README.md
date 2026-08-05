@@ -13,7 +13,7 @@ It ships the following capabilities out-of-the-box across macOS, Linux, and Wind
 | Doc | Purpose |
 |-----|---------|
 | [Agent onboarding](docs/AGENT-ONBOARDING.md) | Zero-context start for AI agents |
-| [v4 design spec](docs/REVAMP-SPEC.md) | Canonical — what we are building |
+| [v4 design spec](docs/SPEC.md) | Canonical — what we are building |
 | [Roadmap](ROADMAP.md) | Phase checklist |
 | [Current state](docs/agents/current-state.md) | What exists vs gaps |
 
