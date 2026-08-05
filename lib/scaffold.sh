@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # lib/scaffold.sh — azg new
-# Interactive scaffold engine for new Antigravity CLI projects.
-# 8-question flow; produces a fully wired project directory.
+# Scaffold engine for new Antigravity CLI projects.
 
 set -u
 set -o pipefail
@@ -14,44 +13,7 @@ source "$REPO_ROOT/lib/common.sh"
 AZG_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "unknown")"
 TODAY="$(date +%Y-%m-%d 2>/dev/null || echo "unknown")"
 
-# ── helpers ───────────────────────────────────────────────────────────────────
-
-# Render a template file: replace {{TOKENS}} and write to dest
-render_template() {
-    local src="$1"
-    local dst="$2"
-    shift 2
-
-    local content
-    content="$(cat "$src")"
-
-    while [ $# -ge 2 ]; do
-        local key="$1"
-        local val="$2"
-        shift 2
-        # Use awk for portable multi-line-safe substitution
-        export TEMPLATE_VAL="$val"
-        content="$(printf '%s' "$content" | awk -v k="{{${key}}}" '{ gsub(k, ENVIRON["TEMPLATE_VAL"]); print }')"
-        unset TEMPLATE_VAL
-    done
-
-    local dst_dir
-    dst_dir="$(dirname "$dst")"
-    mkdir -p "$dst_dir"
-    printf '%s\n' "$content" | atomic_write "$dst"
-}
-
-# Copy a template file atomically (no token substitution)
-copy_template() {
-    local src="$1"
-    local dst="$2"
-    local dst_dir
-    dst_dir="$(dirname "$dst")"
-    mkdir -p "$dst_dir"
-    atomic_write "$dst" < "$src"
-}
-
-# ── main scaffold flow ────────────────────────────────────────────────────────
+# ── helpers in lib/common.sh (copy_template, render_template) ────────────────
 
 cmd_new() {
     local target_dir=""
@@ -114,6 +76,11 @@ cmd_new() {
         "$tmpl_proj/.agents/hooks/commit-gate.sh" \
         "$target_dir/.agents/hooks/commit-gate.sh"
     chmod +x "$target_dir/.agents/hooks/commit-gate.sh"
+
+    copy_template \
+        "$tmpl_proj/.agents/hooks/checkpoint-scan.sh" \
+        "$target_dir/.agents/hooks/checkpoint-scan.sh"
+    chmod +x "$target_dir/.agents/hooks/checkpoint-scan.sh"
 
     copy_template \
         "$tmpl_proj/.agents/hooks/checkpoint.sh" \

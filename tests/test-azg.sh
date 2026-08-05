@@ -44,9 +44,6 @@ else
   fail "settings.json not created globally"
 fi
 
-# 1a. --profile removed
-assert_exit "azg setup --profile rejected" 1 "${AZG}" setup --profile core
-
 # 1b. Full vendor install (default)
 if [ -d "${TEMP_HOME}/.gemini/config/skills/tdd" ] && \
    [ -d "${TEMP_HOME}/.gemini/config/skills/teach" ] && \

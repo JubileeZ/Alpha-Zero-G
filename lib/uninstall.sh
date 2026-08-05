@@ -16,7 +16,7 @@ cmd_uninstall() {
     for skill_dir in "${AZG_GLOBAL_SKILLS_DIR}"/*/; do
       [ -d "${skill_dir}" ] || continue
       skill_name="$(basename "${skill_dir}")"
-      if [ -f "${skill_dir}/ANTIGRAVITY-NOTE.md" ] || azg_ownership_owns_skill "${skill_name}"; then
+      if [ -f "${skill_dir}/ANTIGRAVITY-NOTE.md" ] || azg_ownership_list_owns skills "${skill_name}"; then
         # DESTRUCTIVE: remove azg-owned skill only
         rm -rf "${skill_dir}"
         ok "Removed skill: ${skill_name}"
@@ -38,7 +38,7 @@ cmd_uninstall() {
     for cskill_dir in "${AZG_CURSOR_SKILLS_DIR}"/*/; do
       [ -d "${cskill_dir}" ] || continue
       cskill_name="$(basename "${cskill_dir}")"
-      if [ -f "${cskill_dir}/AZG-OWNED.md" ] || azg_ownership_owns_cursor_skill "${cskill_name}"; then
+      if [ -f "${cskill_dir}/AZG-OWNED.md" ] || azg_ownership_list_owns cursor_skills "${cskill_name}"; then
         # DESTRUCTIVE: remove azg-owned Cursor skill only
         rm -rf "${cskill_dir}"
         ok "Removed Cursor skill: ${cskill_name}"
@@ -55,7 +55,7 @@ cmd_uninstall() {
     for rule_file in "${AZG_CURSOR_RULES_DIR}"/azg-*.mdc; do
       [ -f "${rule_file}" ] || continue
       rule_base="$(basename "${rule_file}")"
-      if azg_ownership_owns_cursor_rule "${rule_base}"; then
+      if azg_ownership_list_owns cursor_rules "${rule_base}"; then
         # DESTRUCTIVE: remove azg-owned Cursor rule only
         rm -f "${rule_file}"
         ok "Removed Cursor rule: ${rule_base}"

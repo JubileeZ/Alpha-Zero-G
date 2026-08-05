@@ -7,11 +7,10 @@
 # Called by: azg update --vendor  (via update.sh)
 # Sourced by update.sh; do NOT run directly.
 
-# safe_rm_rf DIR
-# Helper to delete directories recursively without using blocked delete commands.
-safe_rm_rf() {
+_vendor_sync_cleanup() {
   local dir="${1}"
-  if [ -d "${dir}" ]; then
+  if [ -n "${dir}" ] && [ -d "${dir}" ]; then
+  # DESTRUCTIVE: remove temporary vendor clone directory
     find "${dir}" -delete
   fi
 }
@@ -41,7 +40,7 @@ vendor_sync() {
 
   # Always clean up clone directories even on error or early return
   # shellcheck disable=SC2064
-  trap 'safe_rm_rf "${clone_matt}"; safe_rm_rf "${clone_pony}"' RETURN
+  trap '_vendor_sync_cleanup "${clone_matt}"; _vendor_sync_cleanup "${clone_pony}"' RETURN
 
   # 1. Sync mattpocock-skills
   step "vendor-sync: syncing mattpocock-skills"
@@ -78,19 +77,19 @@ _clone_upstream() {
   if [ -d "${upstream}" ]; then
     if ! git clone --quiet "${upstream}" "${tmp_clone}/repo" 2>/dev/null; then
       err "git clone failed from: ${upstream}"
-      safe_rm_rf "${tmp_clone}"
+      _vendor_sync_cleanup "${tmp_clone}"
       return 1
     fi
   else
     if ! git clone --quiet --depth=1 --filter=blob:none --sparse "${upstream}" "${tmp_clone}/repo" 2>/dev/null; then
       err "git clone failed from: ${upstream}"
-      safe_rm_rf "${tmp_clone}"
+      _vendor_sync_cleanup "${tmp_clone}"
       return 1
     fi
     # shellcheck disable=SC2086
     if ! git -C "${tmp_clone}/repo" sparse-checkout set ${sparse_dirs} 2>/dev/null; then
       err "git sparse-checkout failed"
-      safe_rm_rf "${tmp_clone}"
+      _vendor_sync_cleanup "${tmp_clone}"
       return 1
     fi
   fi
@@ -99,7 +98,7 @@ _clone_upstream() {
   commit_sha="$(git -C "${tmp_clone}/repo" rev-parse HEAD 2>/dev/null)"
   if [ -z "${commit_sha}" ]; then
     err "Could not determine HEAD commit SHA"
-    safe_rm_rf "${tmp_clone}"
+    _vendor_sync_cleanup "${tmp_clone}"
     return 1
   fi
 
@@ -143,7 +142,7 @@ _sync_one_repo() {
     fi
 
     # Wholesale replace
-    safe_rm_rf "${dst_dir}"
+    _vendor_sync_cleanup "${dst_dir}"
     cp -R "${src_dir}" "${dst_dir}"
 
     # Count after
@@ -178,7 +177,7 @@ _sync_one_repo() {
       fi
 
       # Wholesale replace
-      safe_rm_rf "${dst_dir}"
+      _vendor_sync_cleanup "${dst_dir}"
       cp -R "${src_dir}" "${dst_dir}"
 
       # Count after

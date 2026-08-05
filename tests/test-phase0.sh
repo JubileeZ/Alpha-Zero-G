@@ -49,14 +49,12 @@ section "4. common.sh — sources cleanly and exposes expected interface"
 _common_test=$(bash -c "
   source '${REPO_ROOT}/lib/common.sh' 2>&1
   echo \"AZG_OS=\${AZG_OS:-UNSET}\"
-  echo \"AZG_ARCH=\${AZG_ARCH:-UNSET}\"
   echo \"AZG_ROOT=\${AZG_ROOT:-UNSET}\"
   echo \"AZG_VERSION=\${AZG_VERSION:-UNSET}\"
   echo \"AZG_GLOBAL_DIR=\${AZG_GLOBAL_DIR:-UNSET}\"
 ")
 
 _os_val=$(echo "${_common_test}"   | grep '^AZG_OS='   | cut -d= -f2)
-_arch_val=$(echo "${_common_test}" | grep '^AZG_ARCH=' | cut -d= -f2)
 _root_val=$(echo "${_common_test}" | grep '^AZG_ROOT=' | cut -d= -f2)
 _ver_val=$(echo "${_common_test}"  | grep '^AZG_VERSION=' | cut -d= -f2)
 _dir_val=$(echo "${_common_test}"  | grep '^AZG_GLOBAL_DIR=' | cut -d= -f2)
@@ -65,12 +63,6 @@ if [ "${_os_val}" = "linux" ] || [ "${_os_val}" = "macos" ] || [ "${_os_val}" = 
   pass "AZG_OS detected correctly (${_os_val})"
 else
   fail "AZG_OS not detected" "got: '${_os_val}'"
-fi
-
-if [ "${_arch_val}" = "x86_64" ] || [ "${_arch_val}" = "arm64" ]; then
-  pass "AZG_ARCH detected correctly (${_arch_val})"
-else
-  fail "AZG_ARCH not detected" "got: '${_arch_val}'"
 fi
 
 assert_var_set "AZG_ROOT is set"         "AZG_ROOT"        "${_root_val}"
@@ -94,9 +86,9 @@ fi
 
 section "5. common.sh — helper functions are defined"
 
-for fn in info ok warn err die step require_cmd require_jq require_agy \
-          ensure_dir atomic_write atomic_copy sed_portable prompt_yn prompt_choice \
-          replace_managed_block; do
+for fn in info ok warn err die step require_cmd require_jq \
+          ensure_dir atomic_write atomic_copy copy_template render_template \
+          replace_managed_block azg_ownership_list_add azg_ownership_list_owns; do
   if bash -c "source '${REPO_ROOT}/lib/common.sh' && declare -f ${fn}" > /dev/null 2>&1; then
     pass "function ${fn}() is defined"
   else
@@ -168,7 +160,8 @@ assert_dir_exists  "templates/global/skills/overlay/ exists"                    
 assert_dir_exists  "templates/global/skills/overlay/mattpocock-skills/ exists"   "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills"
 assert_file_exists "templates/global/mcp_config.json exists"                     "${REPO_ROOT}/templates/global/mcp_config.json"
 assert_file_exists "tool-map.json exists"                                        "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills/tool-map.json"
-assert_file_exists "ANTIGRAVITY-NOTE.md.tmpl exists"                             "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills/_shared/ANTIGRAVITY-NOTE.md.tmpl"
+assert_file_exists "ANTIGRAVITY-NOTE-VENDOR.md.tmpl exists" \
+  "${REPO_ROOT}/templates/global/skills/overlay/_shared/ANTIGRAVITY-NOTE-VENDOR.md.tmpl"
 assert_dir_exists  "templates/project/ exists"                                   "${REPO_ROOT}/templates/project"
 assert_dir_exists  "templates/project/.agents/ exists"                           "${REPO_ROOT}/templates/project/.agents"
 assert_dir_exists  "templates/project/.agents/skills/ exists"                    "${REPO_ROOT}/templates/project/.agents/skills"
@@ -212,17 +205,16 @@ else
   skip "jq not available — skipping JSON validation"
 fi
 
-section "13. ANTIGRAVITY-NOTE.md.tmpl contains {{SKILL_NAME}} placeholder"
+section "13. ANTIGRAVITY-NOTE-VENDOR.md.tmpl contains {{SKILL_NAME}} placeholder"
 
 assert_file_contains \
-  "ANTIGRAVITY-NOTE.md.tmpl contains {{SKILL_NAME}} placeholder" \
-  "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills/_shared/ANTIGRAVITY-NOTE.md.tmpl" \
+  "ANTIGRAVITY-NOTE-VENDOR.md.tmpl contains {{SKILL_NAME}} placeholder" \
+  "${REPO_ROOT}/templates/global/skills/overlay/_shared/ANTIGRAVITY-NOTE-VENDOR.md.tmpl" \
   "{{SKILL_NAME}}"
 
 section "14. Cross-platform guards in common.sh"
 
-# Ensure sed_portable is defined and doesn't use sed -i internally
-# Strip comment lines before checking so docs like "# no sed -i" don't trigger
+# Ensure common.sh doesn't use sed -i internally
 if grep -v '^[[:space:]]*#' "${REPO_ROOT}/lib/common.sh" | grep -q 'sed -i'; then
   fail "common.sh must NOT use 'sed -i' (BSD/GNU incompatible)"
 else

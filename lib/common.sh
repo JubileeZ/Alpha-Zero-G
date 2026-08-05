@@ -24,7 +24,6 @@ if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
   CLR_YELLOW="\033[0;33m"
   CLR_BLUE="\033[0;34m"
   CLR_CYAN="\033[0;36m"
-  CLR_DIM="\033[2m"
 else
   CLR_RESET=""
   CLR_BOLD=""
@@ -33,7 +32,6 @@ else
   CLR_YELLOW=""
   CLR_BLUE=""
   CLR_CYAN=""
-  CLR_DIM=""
 fi
 
 # ---------------------------------------------------------------------------
@@ -50,7 +48,6 @@ step()    { printf "${CLR_CYAN}[azg]${CLR_RESET} ${CLR_BOLD}%s${CLR_RESET}\n" "$
 # OS detection
 # ---------------------------------------------------------------------------
 # Sets: AZG_OS ("linux" | "macos" | "windows" | "unknown")
-#       AZG_ARCH ("x86_64" | "arm64" | "unknown")
 detect_os() {
   local uname_s
   uname_s="$(uname -s 2>/dev/null || echo "Unknown")"
@@ -59,14 +56,6 @@ detect_os() {
     Darwin*) AZG_OS="macos"   ;;
     MINGW*|MSYS*|CYGWIN*) AZG_OS="windows" ;;
     *)       AZG_OS="unknown" ;;
-  esac
-
-  local uname_m
-  uname_m="$(uname -m 2>/dev/null || echo "unknown")"
-  case "${uname_m}" in
-    x86_64|amd64) AZG_ARCH="x86_64" ;;
-    arm64|aarch64) AZG_ARCH="arm64" ;;
-    *) AZG_ARCH="unknown" ;;
   esac
 }
 
@@ -119,14 +108,6 @@ require_jq() {
       ;;
   esac
   die "'jq' is required but not found. ${hint}"
-}
-
-# Checks for agy; prints install hint and exits if missing.
-require_agy() {
-  if command -v agy > /dev/null 2>&1; then
-    return 0
-  fi
-  die "'agy' (Antigravity CLI) is not found in PATH. See: https://antigravity.google/docs/cli-install"
 }
 
 # ---------------------------------------------------------------------------
@@ -189,9 +170,39 @@ atomic_copy() {
 }
 
 # ---------------------------------------------------------------------------
+# Template helpers (used by scaffold + apply)
+# ---------------------------------------------------------------------------
+render_template() {
+  local src="${1}"
+  local dst="${2}"
+  shift 2
+
+  local content
+  content="$(cat "${src}")"
+
+  while [ $# -ge 2 ]; do
+    local key="${1}"
+    local val="${2}"
+    shift 2
+    export TEMPLATE_VAL="${val}"
+    content="$(printf '%s' "${content}" | awk -v k="{{${key}}}" '{ gsub(k, ENVIRON["TEMPLATE_VAL"]); print }')"
+    unset TEMPLATE_VAL
+  done
+
+  mkdir -p "$(dirname "${dst}")"
+  printf '%s\n' "${content}" | atomic_write "${dst}"
+}
+
+copy_template() {
+  local src="${1}"
+  local dst="${2}"
+  mkdir -p "$(dirname "${dst}")"
+  atomic_write "${dst}" < "${src}"
+}
+
+# ---------------------------------------------------------------------------
 # Misc helpers
 # ---------------------------------------------------------------------------
-# ensure_dir DIR — mkdir -p, then print if it was freshly created
 ensure_dir() {
   local dir="${1}"
   if [ ! -d "${dir}" ]; then
@@ -199,64 +210,6 @@ ensure_dir() {
   fi
 }
 
-# sed_portable PATTERN FILE
-# A cross-platform sed substitute that avoids sed -i (BSD/GNU incompatibility).
-# Rewrites FILE in-place using a tmp file approach.
-# Usage: sed_portable 's/foo/bar/g' myfile
-sed_portable() {
-  local pattern="${1}"
-  local file="${2}"
-  local tmp="${file}.azg.tmp"
-  sed "${pattern}" "${file}" > "${tmp}" && mv "${tmp}" "${file}"
-}
-
-# prompt_yn QUESTION DEFAULT
-# Prints QUESTION [Y/n] or [y/N] based on DEFAULT ("y" or "n").
-# Returns 0 for yes, 1 for no.
-prompt_yn() {
-  local question="${1}"
-  local default="${2:-y}"
-  local prompt_suffix
-  if [ "${default}" = "y" ]; then
-    prompt_suffix="[Y/n]"
-  else
-    prompt_suffix="[y/N]"
-  fi
-  local reply
-  printf "%s %s " "${question}" "${prompt_suffix}"
-  read -r reply </dev/tty || reply="${default}"
-  reply="${reply:-${default}}"
-  case "${reply}" in
-    [Yy]*) return 0 ;;
-    [Nn]*) return 1 ;;
-    *)     # fallback to default
-      if [ "${default}" = "y" ]; then return 0; else return 1; fi
-      ;;
-  esac
-}
-
-# prompt_choice QUESTION OPTION1 OPTION2 ...
-# Prints numbered options, reads a selection, echoes the chosen value.
-prompt_choice() {
-  local question="${1}"; shift
-  local options=("$@")
-  printf "%s\n" "${question}"
-  local i=1
-  for opt in "${options[@]}"; do
-    printf "  %d) %s\n" "${i}" "${opt}"
-    i=$((i + 1))
-  done
-  local reply
-  printf "Choice [1-%d]: " "${#options[@]}"
-  read -r reply </dev/tty || reply="1"
-  reply="${reply:-1}"
-  # Validate range
-  if [ "${reply}" -ge 1 ] 2>/dev/null && [ "${reply}" -le "${#options[@]}" ] 2>/dev/null; then
-    echo "${options[$((reply - 1))]}"
-  else
-    echo "${options[0]}"
-  fi
-}
 # replace_managed_block TARGET_FILE START_MARKER END_MARKER NEW_CONTENT
 # Replaces everything between START_MARKER and END_MARKER (inclusive of markers)
 # with START_MARKER + NEW_CONTENT + END_MARKER.
@@ -410,55 +363,25 @@ azg_ownership_set_flag() {
   jq --arg k "${key}" --argjson v "${val}" '.[$k] = $v' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
 }
 
-azg_ownership_add_skill() {
-  local skill="${1}"
+azg_ownership_list_add() {
+  # Usage: azg_ownership_list_add skills|cursor_skills|cursor_rules ITEM
+  local list_key="${1}"
+  local item="${2}"
   local path tmp
   path="$(azg_ownership_path)"
   azg_ownership_init
   tmp="${path}.azg.tmp"
-  jq --arg s "${skill}" '.skills = ((.skills // []) + [$s] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+  jq --arg k "${list_key}" --arg v "${item}" '.[$k] = ((.[$k] // []) + [$v] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
 }
 
-azg_ownership_owns_skill() {
-  local skill="${1}"
+azg_ownership_list_owns() {
+  # Usage: azg_ownership_list_owns skills|cursor_skills|cursor_rules ITEM
+  local list_key="${1}"
+  local item="${2}"
   local path
   path="$(azg_ownership_path)"
   [ -f "${path}" ] || return 1
-  jq -e --arg s "${skill}" '(.skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
-}
-
-azg_ownership_add_cursor_skill() {
-  local skill="${1}"
-  local path tmp
-  path="$(azg_ownership_path)"
-  azg_ownership_init
-  tmp="${path}.azg.tmp"
-  jq --arg s "${skill}" '.cursor_skills = ((.cursor_skills // []) + [$s] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
-}
-
-azg_ownership_owns_cursor_skill() {
-  local skill="${1}"
-  local path
-  path="$(azg_ownership_path)"
-  [ -f "${path}" ] || return 1
-  jq -e --arg s "${skill}" '(.cursor_skills // []) | index($s) != null' "${path}" >/dev/null 2>&1
-}
-
-azg_ownership_add_cursor_rule() {
-  local rule="${1}"
-  local path tmp
-  path="$(azg_ownership_path)"
-  azg_ownership_init
-  tmp="${path}.azg.tmp"
-  jq --arg r "${rule}" '.cursor_rules = ((.cursor_rules // []) + [$r] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
-}
-
-azg_ownership_owns_cursor_rule() {
-  local rule="${1}"
-  local path
-  path="$(azg_ownership_path)"
-  [ -f "${path}" ] || return 1
-  jq -e --arg r "${rule}" '(.cursor_rules // []) | index($r) != null' "${path}" >/dev/null 2>&1
+  jq -e --arg k "${list_key}" --arg v "${item}" '(.[$k] // []) | index($v) != null' "${path}" >/dev/null 2>&1
 }
 
 # True if dest skill is foreign custom (exists, no vendor sentinel, not force).

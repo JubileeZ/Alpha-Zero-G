@@ -11,8 +11,6 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 
 # shellcheck source=lib/common.sh
 source "$REPO_ROOT/lib/common.sh"
-# shellcheck source=lib/scaffold.sh
-source "$REPO_ROOT/lib/scaffold.sh"
 
 cmd_apply() {
     local target_dir=""

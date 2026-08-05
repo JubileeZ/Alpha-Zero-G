@@ -135,13 +135,9 @@ Body text — NOT remapped.
   printf '%s' "${content}" > "${MOCK_VENDOR}/productivity/${skill}/SKILL.md"
 done
 
-# Mock overlay with _shared template
+# Mock overlay (tool-map only; vendor note uses shared template from AZG_ROOT)
 MOCK_OVERLAY="${TEMP_DIR}/overlay/mattpocock-skills"
 mkdir -p "${MOCK_OVERLAY}/_shared"
-
-ANTIGRAVITY_TMPL="${MOCK_OVERLAY}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
-cp "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills/_shared/ANTIGRAVITY-NOTE.md.tmpl" \
-   "${ANTIGRAVITY_TMPL}"
 
 TOOL_MAP="${MOCK_OVERLAY}/tool-map.json"
 cp "${REPO_ROOT}/templates/global/skills/overlay/mattpocock-skills/tool-map.json" \

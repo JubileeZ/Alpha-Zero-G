@@ -147,7 +147,7 @@ _install_skill_pair() {
     warn "Foreign skill '${skill_name}' (no ANTIGRAVITY-NOTE) — skipping (use --force to overwrite)"
   else
     apply_overlay "${skill_name}" "${src_parent}" "${overlay_dir}" "${AZG_GLOBAL_SKILLS_DIR}"
-    azg_ownership_add_skill "${skill_name}"
+    azg_ownership_list_add skills "${skill_name}"
     # ponytail: indirect variable increment via eval (no ((VAR++)) with set -e)
     eval "${gemini_count_var}=\$(( \${${gemini_count_var}} + 1 ))"
   fi
@@ -156,7 +156,7 @@ _install_skill_pair() {
     warn "Foreign Cursor skill '${skill_name}' (no AZG-OWNED.md) — skipping (use --force to overwrite)"
   else
     install_cursor_skill "${skill_name}" "${src_parent}" "${AZG_CURSOR_SKILLS_DIR}"
-    azg_ownership_add_cursor_skill "${skill_name}"
+    azg_ownership_list_add cursor_skills "${skill_name}"
     eval "${cursor_count_var}=\$(( \${${cursor_count_var}} + 1 ))"
   fi
 }
@@ -174,9 +174,6 @@ cmd_setup() {
       --force)
         force=1
         shift
-        ;;
-      --profile)
-        die "azg setup: --profile removed; setup always installs all vendored skills"
         ;;
       *)
         die "azg setup: unknown option '$1'. Usage: azg setup [--dry-run] [--force]"
@@ -488,12 +485,12 @@ cmd_setup() {
       [ -f "${rule_src}" ] || continue
       rule_base="$(basename "${rule_src}")"
       rule_dest="${AZG_CURSOR_RULES_DIR}/${rule_base}"
-      if [ -f "${rule_dest}" ] && [ "${force}" -eq 0 ] && ! azg_ownership_owns_cursor_rule "${rule_base}"; then
+      if [ -f "${rule_dest}" ] && [ "${force}" -eq 0 ] && ! azg_ownership_list_owns cursor_rules "${rule_base}"; then
         warn "Foreign Cursor rule '${rule_base}' — skipping (use --force to overwrite)"
         continue
       fi
       _render_cursor_rule "${rule_src}" "${rule_dest}" "${template_agents}"
-      azg_ownership_add_cursor_rule "${rule_base}"
+      azg_ownership_list_add cursor_rules "${rule_base}"
       cursor_rules_installed=$((cursor_rules_installed + 1))
       ok "Installed Cursor rule: ${rule_base}"
     done

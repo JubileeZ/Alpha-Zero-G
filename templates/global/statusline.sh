@@ -23,43 +23,14 @@ if [ -n "$PROJECT_DIR" ] && [ "$PROJECT_DIR" != "null" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 1. Preset Resolution
-# ---------------------------------------------------------------------------
-SETTINGS_FILE="${HOME}/.gemini/antigravity-cli/settings.json"
-PRESET=""
-if [ -f "$SETTINGS_FILE" ]; then
-  PRESET=$(jq -r '.statusLine.preset // empty' "$SETTINGS_FILE" 2>/dev/null)
-fi
-
-# Override with environment variable if present
-PRESET="${AZG_STATUSLINE_PRESET:-$PRESET}"
-
-# Auto-detection fallback (defaulting to unicode)
-if [ -z "$PRESET" ] || [ "$PRESET" = "null" ]; then
-  if [ -n "${TERM_PROGRAM:-}" ] && [[ "${TERM_PROGRAM}" =~ (Apple_Terminal|iTerm\.app|vscode) ]]; then
-    PRESET="unicode"
-  elif [ -n "${TERM:-}" ] && [[ "${TERM}" =~ (kitty|alacritty|wezterm|tmux|screen) ]]; then
-    PRESET="unicode"
-  else
-    PRESET="unicode"
-  fi
-fi
-
-# Validate preset value
-if [[ ! "$PRESET" =~ ^(nerd-font|unicode|ascii)$ ]]; then
-  PRESET="unicode"
-fi
-
-# ---------------------------------------------------------------------------
-# 2. Color Palette & Glyph Setup
+# 1. Color Palette & Glyph Setup (Unicode-only; ADR 0001 amended)
 # ---------------------------------------------------------------------------
 # Colors are enabled unless NO_COLOR is set
 if [ -z "${NO_COLOR:-}" ]; then
   RESET="\033[0m"
   BOLD="\033[1m"
-  DIM="\033[2m"
 
-  # Foreground colors for unicode/ascii presets
+  # Foreground colors
   GREEN="\033[38;5;71m"
   YELLOW="\033[38;5;179m"
   ORANGE="\033[38;5;166m"
@@ -71,7 +42,6 @@ if [ -z "${NO_COLOR:-}" ]; then
 else
   RESET=""
   BOLD=""
-  DIM=""
   GREEN=""
   YELLOW=""
   ORANGE=""
@@ -82,44 +52,16 @@ else
   GRAY=""
 fi
 
-# Glyph mappings
-if [ "$PRESET" = "nerd-font" ]; then
-  STATE_IDLE_TXT="󰾆 IDLE"
-  STATE_THINKING_TXT=" THINKING"
-  STATE_WORKING_TXT="⚙ WORKING"
-  STATE_WAITING_TXT="⏸ WAITING"
-  VCS_ICON=""
-  WARN_CAUTION=""
-  WARN_DEGRADING=""
-  WARN_CRITICAL=""
-  SEP_LEFT=""
-  SEP_RIGHT=""
-  SEP_CHAR=""
-elif [ "$PRESET" = "unicode" ]; then
-  STATE_IDLE_TXT="● IDLE"
-  STATE_THINKING_TXT="◈ THINKING"
-  STATE_WORKING_TXT="⚙ WORKING"
-  STATE_WAITING_TXT="⏸ WAITING"
-  VCS_ICON="⎇"
-  WARN_CAUTION="⚠"
-  WARN_DEGRADING="⚡"
-  WARN_CRITICAL="🔥"
-  SEP_LEFT=""
-  SEP_RIGHT=""
-  SEP_CHAR="|"
-else # ascii
-  STATE_IDLE_TXT="IDLE"
-  STATE_THINKING_TXT="THINKING"
-  STATE_WORKING_TXT="WORKING"
-  STATE_WAITING_TXT="WAITING"
-  VCS_ICON="branch:"
-  WARN_CAUTION="!"
-  WARN_DEGRADING="!!"
-  WARN_CRITICAL="!!!"
-  SEP_LEFT=""
-  SEP_RIGHT=""
-  SEP_CHAR="|"
-fi
+# Unicode glyph mappings
+STATE_IDLE_TXT="● IDLE"
+STATE_THINKING_TXT="◈ THINKING"
+STATE_WORKING_TXT="⚙ WORKING"
+STATE_WAITING_TXT="⏸ WAITING"
+VCS_ICON="⎇"
+WARN_CAUTION="⚠"
+WARN_DEGRADING="⚡"
+WARN_CRITICAL="🔥"
+SEP_CHAR="|"
 
 # Helper to format milliseconds
 format_time() {
@@ -650,11 +592,7 @@ calculate_visible_length() {
   done
   local n=${#L_TXT[@]}
   local total_l=0
-  if [ "$PRESET" = "nerd-font" ]; then
-    [ $n -gt 0 ] && total_l=$((l_len + 3 * n))
-  else
-    [ $n -gt 0 ] && total_l=$((l_len + 3 * (n - 1)))
-  fi
+  [ $n -gt 0 ] && total_l=$((l_len + 3 * (n - 1)))
   echo $((total_l))
 }
 
@@ -708,13 +646,8 @@ done
 N=${#L_TXT[@]}
 M=${#R_TXT[@]}
 
-if [ "$PRESET" = "nerd-font" ]; then
-  [ $N -gt 0 ] && L_LEN=$((L_LEN + 3 * N))
-  [ $M -gt 0 ] && R_LEN=$((R_LEN + 3 * M))
-else
-  [ $N -gt 0 ] && L_LEN=$((L_LEN + 3 * (N - 1)))
-  [ $M -gt 0 ] && R_LEN=$((R_LEN + 3 * (M - 1)))
-fi
+[ $N -gt 0 ] && L_LEN=$((L_LEN + 3 * (N - 1)))
+[ $M -gt 0 ] && R_LEN=$((R_LEN + 3 * (M - 1)))
 
 # Fixed 4-space gap if both groups are present
 GAP_LEN=0
@@ -732,66 +665,29 @@ if [ $TRAILING_LEN -gt 0 ]; then
   trailing_spaces=$(printf "%${TRAILING_LEN}s" "")
 fi
 
-# Assemble outputs
+# Assemble outputs (Unicode foreground styling)
 left_output=""
 r_output=""
 
-if [ "$PRESET" = "nerd-font" ]; then
-  # Left assembly with solid background blocks
-  for ((i=0; i<N; i++)); do
-    bg="${L_BG[i]}"
-    fg="${L_FG[i]}"
-    txt="${L_TXT[i]}"
-    if [ $i -eq 0 ]; then
-      left_output+="\033[38;5;${fg};48;5;${bg}m ${txt} "
-    else
-      prev_bg="${L_BG[i-1]}"
-      left_output+="\033[38;5;${prev_bg};48;5;${bg}m${SEP_LEFT}\033[38;5;${fg};48;5;${bg}m ${txt} "
-    fi
-  done
-  if [ $N -gt 0 ]; then
-    last_bg="${L_BG[N-1]}"
-    left_output+="\033[38;5;${last_bg};49m${SEP_LEFT}\033[0m"
+for ((i=0; i<N; i++)); do
+  clr="${L_CLR[i]}"
+  txt="${L_TXT[i]}"
+  if [ $i -eq 0 ]; then
+    left_output+="${clr}${txt}${RESET}"
+  else
+    left_output+="${GRAY} ${SEP_CHAR} ${RESET}${clr}${txt}${RESET}"
   fi
+done
 
-  # Right assembly with solid background blocks
-  for ((j=0; j<M; j++)); do
-    bg="${R_BG[j]}"
-    fg="${R_FG[j]}"
-    txt="${R_TXT[j]}"
-    if [ $j -eq 0 ]; then
-      r_output+="\033[38;5;${bg};49m${SEP_RIGHT}\033[38;5;${fg};48;5;${bg}m ${txt} "
-    else
-      prev_bg="${R_BG[j-1]}"
-      r_output+="\033[38;5;${bg};48;5;${prev_bg}m${SEP_RIGHT}\033[38;5;${fg};48;5;${bg}m ${txt} "
-    fi
-  done
-  if [ $M -gt 0 ]; then
-    r_output+="\033[0m"
+for ((j=0; j<M; j++)); do
+  clr="${R_CLR[j]}"
+  txt="${R_TXT[j]}"
+  if [ $j -eq 0 ]; then
+    r_output+="${clr}${txt}${RESET}"
+  else
+    r_output+="${GRAY} ${SEP_CHAR} ${RESET}${clr}${txt}${RESET}"
   fi
-
-else
-  # Standard unicode/ascii layouts (foreground styling only)
-  for ((i=0; i<N; i++)); do
-    clr="${L_CLR[i]}"
-    txt="${L_TXT[i]}"
-    if [ $i -eq 0 ]; then
-      left_output+="${clr}${txt}${RESET}"
-    else
-      left_output+="${GRAY} ${SEP_CHAR} ${RESET}${clr}${txt}${RESET}"
-    fi
-  done
-
-  for ((j=0; j<M; j++)); do
-    clr="${R_CLR[j]}"
-    txt="${R_TXT[j]}"
-    if [ $j -eq 0 ]; then
-      r_output+="${clr}${txt}${RESET}"
-    else
-      r_output+="${GRAY} ${SEP_CHAR} ${RESET}${clr}${txt}${RESET}"
-    fi
-  done
-fi
+done
 
 # Print final statusline
 if [ $N -gt 0 ] && [ $M -gt 0 ]; then

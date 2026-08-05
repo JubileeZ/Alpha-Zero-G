@@ -84,16 +84,16 @@ _Avoid_: Account balance, model credits
 A short-term rolling rate-limit window that cooldowns every five hours.
 _Avoid_: Cooldown quota, hourly limit
 
-**Statusline Preset**:
-The visual rendering style of the statusline (Nerd Font, Unicode, or ASCII) selected dynamically or via user settings to match font capabilities.
-_Avoid_: Status bar theme, icon mode.
+**Statusline style**:
+Unicode foreground glyphs and separators for the Antigravity statusline (single style; width truncation handles narrow terminals).
+_Avoid_: Status bar theme, icon mode, nerd-font preset.
 
 **Safety Hook**:
 An interceptor script run automatically before any agent tool call to validate command patterns and file targets, preventing unauthorized alterations or system damage.
 _Avoid_: Guardrail, safety command, block policy.
 
 **Spawn Budget**:
-Configured limits on concurrent, nested, and optional cumulative subagent fan-out for one session.
+Configured limits on concurrent and nested subagent fan-out for one session (`max_spawns`, `max_depth`).
 _Avoid_: Spawn state, agent quota, subagent throttle
 
 **Prove Stance**:

@@ -22,7 +22,7 @@
 # Sourced by setup.sh; do NOT run directly.
 #
 # Cross-platform guarantees:
-#   - No sed -i (uses tmp-file pattern via sed_portable from common.sh)
+#   - No sed -i on target files (tmp-file + mv)
 #   - No ((VAR++))
 #   - #!/usr/bin/env bash shebang
 
@@ -38,7 +38,14 @@ apply_overlay() {
   local skill_src="${vendor_category_dir}/${skill_name}"
   local skill_dest="${dest_dir}/${skill_name}"
   local skill_md="${skill_dest}/SKILL.md"
-  local note_tmpl="${overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
+  local note_tmpl=""
+  local overlay_name
+  overlay_name="$(basename "${overlay_dir}")"
+  if [ "${overlay_name}" = "azg" ]; then
+    note_tmpl="${overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
+  else
+    note_tmpl="${AZG_ROOT}/templates/global/skills/overlay/_shared/ANTIGRAVITY-NOTE-VENDOR.md.tmpl"
+  fi
   local note_dest="${skill_dest}/ANTIGRAVITY-NOTE.md"
   local tool_map="${overlay_dir}/tool-map.json"
   local per_skill_overlay="${overlay_dir}/${skill_name}"
@@ -55,7 +62,7 @@ apply_overlay() {
   fi
 
   if [ ! -f "${note_tmpl}" ]; then
-    die "apply_overlay: ANTIGRAVITY-NOTE.md.tmpl not found: ${note_tmpl}"
+    die "apply_overlay: ANTIGRAVITY-NOTE template not found: ${note_tmpl}"
   fi
 
   if [ ! -f "${tool_map}" ]; then
@@ -78,7 +85,11 @@ apply_overlay() {
   # -------------------------------------------------------------------------
   # Step 4: Render ANTIGRAVITY-NOTE.md.tmpl → ANTIGRAVITY-NOTE.md
   # -------------------------------------------------------------------------
-  _render_antigravity_note "${note_tmpl}" "${note_dest}" "${skill_name}"
+  if [ "${overlay_name}" = "azg" ]; then
+    _render_antigravity_note "${note_tmpl}" "${note_dest}" "${skill_name}"
+  else
+    _render_vendor_antigravity_note "${note_tmpl}" "${note_dest}" "${skill_name}" "${overlay_name}"
+  fi
 
   # -------------------------------------------------------------------------
   # Step 5: If per-skill overlay exists, copy its contents additively
@@ -145,32 +156,21 @@ _remap_skill_frontmatter() {
   local skill_md="${1}"
   local tool_map_json="${2}"
 
-  # Build lookup pairs from tool-map.json using grep+sed (no jq required).
-  # Expected format (one per line, indented, key-colon-value):
-  #   "Read": "read_file",
-  # We parse key and value out of each line.
+  if [ "$(jq 'length' "${tool_map_json}" 2>/dev/null || echo 0)" -eq 0 ]; then
+    return 0
+  fi
+
   local tmp_map
   tmp_map="$(mktemp "${TMPDIR:-${TEMP:-/tmp}}/tmp_azg-toolmap-XXXXXX")"
   # shellcheck disable=SC2064
   trap "rm -f '${tmp_map}'" RETURN
 
-  # Extract lines like:  "Read": "read_file",
-  # Output format per line: READ_KEY=mapped_value  (key is literal, value is literal)
-  # We store them as: "FROM=TO" pairs, one per line.
-  grep -E '"[^"]+": *"[^"]+"' "${tool_map_json}" | \
-    sed 's/^[[:space:]]*"\([^"]*\)":[[:space:]]*"\([^"]*\)".*/\1=\2/' \
-    > "${tmp_map}" || true
+  jq -r 'to_entries[] | "\(.key)=\(.value)"' "${tool_map_json}" > "${tmp_map}" || true
 
-  # Now rewrite SKILL_MD:
-  # - Find the frontmatter block (between first and second `---`)
-  # - Only remap lines that start with `tools:` or `allowed-tools:` inside that block
-  # - Leave everything else untouched.
-  local tmp_out
-  tmp_out="${skill_md}.azg.tmp"
+  local tmp_out="${skill_md}.azg.tmp"
 
   awk -v mapfile="${tmp_map}" '
     BEGIN {
-      # Load the mapping into an awk associative array
       while ((getline line < mapfile) > 0) {
         n = index(line, "=")
         if (n > 0) {
@@ -180,7 +180,7 @@ _remap_skill_frontmatter() {
         }
       }
       close(mapfile)
-      fm_count = 0   # counts how many --- we have seen
+      fm_count = 0
     }
 
     /^---$/ {
@@ -189,28 +189,16 @@ _remap_skill_frontmatter() {
       next
     }
 
-    # Inside frontmatter (between first and second ---)
     fm_count == 1 && /^(tools|allowed-tools):/ {
       line = $0
-      # For each mapping entry, replace whole-word occurrences in this line.
-      # We use a simple token replacement: look for the key surrounded by
-      # non-identifier characters (spaces, brackets, commas).
       for (k in mapping) {
         v = mapping[k]
-        # Replace all occurrences of k that are preceded and followed by
-        # non-word boundary characters (or start/end of field).
-        # awk does not support \b, so we use a character class approach:
-        # match token boundaries: before k must be start-of-string, "[", " ", or ","
-        # after k must be end-of-string, "]", " ", or ","
-        # We iterate replacing until stable.
         prev = ""
         while (prev != line) {
           prev = line
-          # Build the replacement using split trick
           result = ""
           remaining = line
           while (length(remaining) > 0) {
-            # Find k in remaining
             pos = index(remaining, k)
             if (pos == 0) {
               result = result remaining
@@ -218,18 +206,14 @@ _remap_skill_frontmatter() {
             } else {
               before = substr(remaining, 1, pos - 1)
               after = substr(remaining, pos + length(k))
-              # Check boundary before k
               pre_char = (pos > 1) ? substr(before, length(before), 1) : ""
-              # Check boundary after k
               post_char = (length(after) > 0) ? substr(after, 1, 1) : ""
-              # Valid boundary chars: space, [, ], comma, empty (start/end)
               pre_ok  = (pre_char  == "" || pre_char  == " " || pre_char  == "[" || pre_char  == ",")
               post_ok = (post_char == "" || post_char == " " || post_char == "]" || post_char == ",")
               if (pre_ok && post_ok) {
                 result = result before v
                 remaining = after
               } else {
-                # Not a clean word boundary — skip this occurrence
                 result = result before k
                 remaining = after
               }
@@ -242,7 +226,6 @@ _remap_skill_frontmatter() {
       next
     }
 
-    # Everything else: print unchanged
     { print }
   ' "${skill_md}" > "${tmp_out}"
 
@@ -251,19 +234,42 @@ _remap_skill_frontmatter() {
 
 # ---------------------------------------------------------------------------
 # _render_antigravity_note TEMPLATE DEST SKILL_NAME
-#
-# Renders the ANTIGRAVITY-NOTE.md.tmpl to DEST, substituting {{SKILL_NAME}}.
-# Uses the portable sed_portable helper (no sed -i).
 # ---------------------------------------------------------------------------
 _render_antigravity_note() {
+  render_template "${1}" "${2}" "SKILL_NAME" "${3}"
+}
+
+_render_vendor_antigravity_note() {
   local tmpl="${1}"
   local dest="${2}"
   local skill_name="${3}"
+  local overlay_name="${4}"
 
-  local tmp
-  tmp="${dest}.azg.tmp"
-  sed "s/{{SKILL_NAME}}/${skill_name}/g" "${tmpl}" > "${tmp}"
-  mv "${tmp}" "${dest}"
+  local vendor_label vendor_url vendor_path tool_remap_note
+  case "${overlay_name}" in
+    mattpocock-skills)
+      vendor_label="mattpocock/skills"
+      vendor_url="https://github.com/mattpocock/skills"
+      vendor_path="mattpocock-skills"
+      tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (e.g. Bash → run_command, Read → read_file)."
+      ;;
+    ponytail-skills)
+      vendor_label="DietrichGebert/ponytail"
+      vendor_url="https://github.com/DietrichGebert/ponytail"
+      vendor_path="ponytail-skills"
+      tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (if any)."
+      ;;
+    *)
+      die "apply_overlay: unknown vendor overlay '${overlay_name}'"
+      ;;
+  esac
+
+  render_template "${tmpl}" "${dest}" \
+    "SKILL_NAME" "${skill_name}" \
+    "VENDOR_LABEL" "${vendor_label}" \
+    "VENDOR_URL" "${vendor_url}" \
+    "VENDOR_PATH" "${vendor_path}" \
+    "TOOL_REMAP_NOTE" "${tool_remap_note}"
 }
 
 # ---------------------------------------------------------------------------

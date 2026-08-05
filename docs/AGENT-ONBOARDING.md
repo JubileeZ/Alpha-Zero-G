@@ -28,6 +28,5 @@ Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with 
 
 ## What NOT to read for orientation
 
-- `docs/archive/*` — historical only
-- `docs/antigravity-agent-architect/*` — reference material; may contradict v4 spec
+- `docs/archive/*` — historical only (recover prior research from git history)
 - `docs/ALPHA-ZERO-G-V3-PLAN.md` — moved to archive; superseded
