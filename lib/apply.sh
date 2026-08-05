@@ -138,7 +138,8 @@ cmd_apply() {
         fi
     done
 
-    # 3. Merge hooks.json — preserve user gates; template keys (incl. safety-gate) win
+    # 3. Merge hooks.json — preserve user gates; template keys (incl. safety-gate) win.
+    # jq `*` keeps left-only keys, so drop retired SubagentStart (ADR 0006: PreToolUse only).
     if [ ! -f "$target_dir/.agents/hooks.json" ]; then
         if [ "$dry_run" = "yes" ]; then
             printf "[CREATE] .agents/hooks.json\n"
@@ -150,7 +151,9 @@ cmd_apply() {
         if [ "$dry_run" = "yes" ]; then
             printf "[MERGE] .agents/hooks.json\n"
         else
-            jq -s '.[0] * .[1]' "$target_dir/.agents/hooks.json" "$tmpl_proj/.agents/hooks.json" | atomic_write "$target_dir/.agents/hooks.json"
+            jq -s '.[0] * .[1] | del(."safety-gate".SubagentStart)' \
+              "$target_dir/.agents/hooks.json" "$tmpl_proj/.agents/hooks.json" | \
+              atomic_write "$target_dir/.agents/hooks.json"
             info "Merged hooks.json (template gates refreshed)"
         fi
     fi

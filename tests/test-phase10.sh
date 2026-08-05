@@ -171,6 +171,20 @@ cat > .agents/hooks.json <<'EOF'
   "existing-gate": {
     "enabled": true,
     "PreToolUse": []
+  },
+  "safety-gate": {
+    "enabled": true,
+    "SubagentStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/spawn-budget.sh"
+          }
+        ]
+      }
+    ]
   }
 }
 EOF
@@ -195,6 +209,11 @@ if [ "$(jq -r '."safety-gate".enabled' .agents/hooks.json)" = "true" ]; then
   pass "apply enables template safety-gate"
 else
   fail "apply should enable safety-gate from template" "got: $(cat .agents/hooks.json)"
+fi
+if [ "$(jq -r '."safety-gate" | has("SubagentStart")' .agents/hooks.json)" = "false" ]; then
+  pass "apply strips retired safety-gate.SubagentStart"
+else
+  fail "apply must delete SubagentStart (ADR 0006 double-count)" "got: $(jq -c '."safety-gate" | keys' .agents/hooks.json)"
 fi
 
 section "11. verify rejects repo-root tmp_azg leaks"

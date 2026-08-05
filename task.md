@@ -1,23 +1,25 @@
-# Active Task: Spawn-budget SubagentStart double-wire
+# Active Task: Apply spawn-budget fix to downstream
 
 - **Status:** Done — Checkpoint now
-- **Objective:** Remove SubagentStart spawn-budget; PreToolUse + Stop/Start lifecycle only (ADR 0006)
-- **Acceptance:** host-contract-smoke + test-phase5 green; no `"SubagentStart"` in project hooks.json
-- **Issue/Ticket:** subagent die diagnosis follow-up
+- **Objective:** Make `azg apply` strip SubagentStart; refresh fpl-jubilee-ascent
+- **Acceptance:** phase10 asserts strip; fpl hooks.json has no SubagentStart
+- **Issue/Ticket:** downstream apply follow-up
 
 ## Work Packet (SFDBN)
 
 - **Status:** Done
-- **Files:** `.agents/hooks.json` · `templates/project/.agents/hooks.json` · `tests/host-contract-smoke.sh` · ADR 0006 · host-contract-smoke.md
-- **Decisions:** Drop SubagentStart wire entirely (cannot block + double-counts); keep PreToolUse / --finish / --reset. Cursor Task abort ≠ budget deny — habit: skip parallel review Task on tiny diffs or `run_in_background: true`
+- **Files:** `lib/apply.sh` · `tests/test-phase10.sh` · fpl apply (separate repo)
+- **Decisions:** `del(.\"safety-gate\".SubagentStart)` on merge; only local client was fpl-jubilee-ascent
 - **Blocked:** None
-- **Next:** Downstream `azg apply` refreshes client hooks.json merge — PENDING AUTH for push
+- **Next:** career-agent / jubilees-gambit absent locally — PENDING paths; push AUTH
 
 ## Todo
-- [x] Remove SubagentStart from root + template hooks.json
-- [x] Assert no SubagentStart in host-contract-smoke
-- [x] Tests green (host-contract 14 · phase5 16)
-- [x] Checkpoint commit
+- [x] Fix apply merge del SubagentStart
+- [x] phase10 regression
+- [x] phase10 32 + host-contract 14
+- [x] azg apply fpl-jubilee-ascent (SubagentStart false)
+- [x] Checkpoint alpha-zero-g
+- [ ] Commit fpl (downstream)
 
 ## Blockers / Notes
-- Prior AGENTS telegraphic Checkpoint: `184361b`
+- Prior template-only fix `55f6a45` insufficient alone — apply merge kept left-only key
