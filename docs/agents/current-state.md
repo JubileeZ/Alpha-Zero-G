@@ -24,6 +24,7 @@
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
 | Project skills | `.agents/skills/{progress-updates,domain-vocabulary}` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project |
+| Research notes | `docs/research/` | Context engineering 2026-07-31; always-on AGENTS budget 2026-08-05 (no tok industry standard; absolute lean + JIT) |
 
 ---
 
