@@ -22,4 +22,3 @@
 
 ## Blockers / Notes
 - Prior downstream commit/push still PENDING (no AUTH)
-- `python3 tests/verify_docs.py` skipped (no Python on host)

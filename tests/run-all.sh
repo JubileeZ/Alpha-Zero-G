@@ -62,30 +62,21 @@ else
 fi
 
 # --- Python verifiers ---
-for py in tests/verify_docs.py; do
-  printf "\n\033[1m\033[0;36m▶ %s\033[0m\n" "${py}"
-  if [ "${LIST_ONLY}" -eq 1 ]; then
-    ok "listed: ${py}"
-    continue
-  fi
-  if ! [ -f "${py}" ]; then
-    skip "${py} not present"
-    continue
-  fi
-  if command -v python3 >/dev/null 2>&1 && python3 -c "import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)" 2>/dev/null; then
-    if python3 "${py}"; then
-      ok "${py}"
-    else
-      bad "${py}"
-    fi
+printf "\n\033[1m\033[0;36m▶ tests/run-verify-docs.sh\033[0m\n"
+if [ "${LIST_ONLY}" -eq 1 ]; then
+  ok "listed: tests/run-verify-docs.sh"
+else
+  if bash tests/run-verify-docs.sh; then
+    ok "tests/run-verify-docs.sh"
   else
-    if [ "${STRICT}" = "1" ]; then
-      bad "python3 missing for ${py} (AZG_STRICT=1)"
+    _rvd_exit=$?
+    if [ "${_rvd_exit}" -eq 127 ] && [ "${STRICT}" != "1" ]; then
+      skip "python3 not usable (tests/run-verify-docs.sh)"
     else
-      skip "python3 not usable (${py})"
+      bad "tests/run-verify-docs.sh"
     fi
   fi
-done
+fi
 
 # --- Bash suites ---
 run_suite "tests/test-azg.sh" bash tests/test-azg.sh

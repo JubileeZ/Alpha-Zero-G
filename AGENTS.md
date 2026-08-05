@@ -36,7 +36,7 @@ VERSION           # release version
 | `AZG_STRICT=1 bash tests/run-all.sh` | Strict CI parity (fails if shellcheck/python3 missing) |
 | `shellcheck azg lib/*.sh evals/*.sh tests/*.sh` | Lint edited Bash |
 | `bash tests/run-all.sh --list` | Suite order when unsure |
-| `python3 tests/verify_docs.py` | Docs-only |
+| `bash tests/run-verify-docs.sh` | Docs-only link check (python3 / python / `py -3`) |
 
 **Diff → suite:** setup/common/Cursor device → `test-cursor-device-setup.sh` · scaffold/apply → `test-azg.sh` + `test-phase*.sh` · `templates/project/` → `test-phase10.sh` + `test-mutation-verify.sh` · `evals/lite/` → `test-lite.sh` · hooks → `host-contract-smoke.sh` + `test-phase5.sh`
 
