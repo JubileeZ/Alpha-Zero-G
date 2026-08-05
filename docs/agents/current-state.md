@@ -40,6 +40,7 @@
 | Think+Prove + domains | ADR 0010 — Prove stance + fit/recall + research/data domain skills + method-refs (orchestrate removed until needed) |
 | Azg skill prune ownership | Source dir under `templates/global/skills/azg/` (not ANTIGRAVITY-NOTE prose); shared `_install_skill_pair` in setup |
 | Project telegraphic policy | Soft-dup removed from project Overrides; global `AZG:AGENT-INSTRUCTIONS` sole always-on source; Placeholder fill how-to word kept |
+| AGENTS always-on budget | No invented tok cap; soft vendor line targets + progressive disclosure; absolute lean as windows grow; no template cut 2026-08-05 (`docs/research/2026-08-05-agents-md-always-on-budget.md`); revisit on adherence fail only |
 
 ---
 
