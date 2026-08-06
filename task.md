@@ -19,8 +19,8 @@
 - [x] `./azg setup` refresh device rules/skills
 - [x] Packet 2 skills light pass (domain twins + method-refs micro)
 - [ ] Adherence smoke (below)
-- [ ] Commit Packet 2
-- [ ] Clear/empty task.md when smoke pass + Packet 2 committed
+- [x] Commit Packet 2 (`7096f0f`)
+- [ ] Clear/empty task.md when smoke pass
 
 ## Adherence smoke (Packet 1)
 
