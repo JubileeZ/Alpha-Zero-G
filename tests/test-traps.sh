@@ -15,7 +15,9 @@ ids=$(TRAP_FULL=1 bash "${REPO_ROOT}/evals/select-trap-scenarios.sh" | wc -l | t
 if [ "${ids}" = "14" ]; then pass "TRAP_FULL=1 → 14"; else fail "TRAP_FULL count" "ids=${ids}"; fi
 
 section "3. select N=5"
-ids=$(TRAP_N=5 TRAP_SEED=42 TRAP_CHANGE_TYPE=intent_gates bash "${REPO_ROOT}/evals/select-trap-scenarios.sh")
+# Isolate from operator shell (TRAP_FULL=1 must not leak into default N)
+ids=$(TRAP_FULL=0 TRAP_IDS= TRAP_N=5 TRAP_SEED=42 TRAP_CHANGE_TYPE=intent_gates \
+  bash "${REPO_ROOT}/evals/select-trap-scenarios.sh")
 c=$(printf '%s\n' "${ids}" | sed '/^$/d' | wc -l | tr -d ' ')
 if [ "${c}" = "5" ]; then pass "N=5"; else fail "N=5" "c=${c}"; fi
 if printf '%s\n' "${ids}" | grep -q 's2-surprise-trap'; then pass "prefers s2"; else fail "missing s2"; fi

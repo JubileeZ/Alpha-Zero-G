@@ -1,13 +1,14 @@
-# Active Task: Trap Suite Process Gate (ADR 0012)
+# Active Task: Pre-WFA reverse Trap Suite
 
-- **Status:** In Progress
-- **Objective:** Vendor Fable traps; Process Gate runners; retire adherence; Lite→luna-medium; glossary+ADR; full-first campaign.
-- **Acceptance:** test-traps.sh pass; run-all includes traps; full TRAP_FULL=1 campaign kicked (or scored); committed.
+- **Status:** Cleanup commit+push; full `pre-wfa-reverse` campaign
+- **Objective:** Process Gate — current=`d5711c2` (WFA) vs candidate=`2e6ff14` (pre-WFA reverse)
+- **Acceptance:** cleanup pushed; `TRAP_FULL=1` campaign `pre-wfa-reverse` complete + `promote-result.json`
 
 ## Work Packet (SFDBN)
 
-- **Status:** In Progress
-- **Files:** evals/traps/** · evals/*trap* · CONTEXT.md · docs/adr/0012* · evals/lite · tests/test-traps.sh · tests/run-all.sh
-- **Decisions:** Grill Q1–Q11; full first run then N=5 default
-- **Blocked:** Full campaign wall-clock (~42 cells × judge)
-- **Next:** Commit harness; start TRAP_FULL=1 campaign
+- **Status:** Starting full reverse campaign
+- **Files:** evals share cleanup; local `evals/traps/campaigns/pre-wfa-reverse/`
+- **Decisions:** Candidate = pre-WFA reverse; Current = WFA keep (`d5711c2`)
+- **Blocked:** —
+- **Next:** jobs=3 full corpus; analyze; interpret reverse
+- **Acceptance:** promote-result written; s7/s8 scored

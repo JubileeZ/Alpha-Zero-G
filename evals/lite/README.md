@@ -4,7 +4,9 @@ Official adopt gate. Automated **Task Success** only — no Blind Judge / humans
 
 **Before a run:** read [`CAMPAIGN.md`](CAMPAIGN.md) for the **Live Campaign** (Candidate under test + arm checkouts). This file is the durable how-to; that file is overwritten per campaign.
 
-Parent index: [`evals/README.md`](../README.md). Glossary: Evaluation Suite · Live Campaign · Campaign cost envelope · Delivery Cost (`CONTEXT.md`).
+Parent index: [`evals/README.md`](../README.md) (device setup + **shared vs local**). Glossary: Evaluation Suite · Live Campaign · Campaign cost envelope · Delivery Cost (`CONTEXT.md`).
+
+**Git:** track runners + `instances.json` + docs; ignore `campaigns/` and `worktrees/` (per-device).
 
 ## Campaign cost envelope
 

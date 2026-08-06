@@ -1,18 +1,48 @@
 # Evaluation Suite
 
-Official adopt gate: **SWE-bench Lite 3-arm** (ADR 0007). Default agent model: `gpt-5.6-luna-medium` (`LITE_MODEL`).
+Two gates, one tree. **Clone + Cursor Agent CLI** is enough to run on any device; campaign artifacts stay local (gitignored).
 
-- How to run: [`lite/README.md`](lite/README.md)
-- Live Campaign: [`lite/CAMPAIGN.md`](lite/CAMPAIGN.md)
+| Gate | Path | Role | Default model |
+|------|------|------|----------------|
+| **Lite** (adopt) | [`lite/`](lite/) | SWE-bench Task Success — ADR 0007 | `gpt-5.6-luna-medium` |
+| **Trap Suite** (process) | [`traps/`](traps/) | Intent/Prove traps — ADR 0012 | `gpt-5.6-luna-low` |
 
-**Process Gate** (Intent/Prove Candidates — not Lite): [`traps/README.md`](traps/README.md) (ADR 0012).
+## Shared vs local
+
+| Tracked (share) | Ignored (per-device) |
+|-----------------|----------------------|
+| `evals/*.sh` runners | `lite/campaigns/`, `lite/worktrees/` |
+| `lite/{README,CAMPAIGN,instances,scorecard tmpl}` | `traps/campaigns/`, `traps/worktrees/` |
+| `traps/{README,CAMPAIGN,corpus,relevance-map}` | `.venv-swebench/` (Lite harness) |
+| `traps/vendor/fable-method/` (MIT fixtures) | |
+
+## Device setup (once per machine)
 
 ```bash
-bash evals/prepare-lite-campaign.sh
-bash evals/run-lite-arm.sh <instance_id> baseline|current|candidate
-bash evals/record-lite-score.sh <workdir>/scorecard.json --task-success 1 [--delivery-cost N]
-bash evals/analyze-lite-promote.sh <campaign_dir>
-bash tests/test-lite.sh
+# Cursor Agent CLI — required for trap + Lite agent cells
+curl https://cursor.com/install -fsS | bash
+export PATH="$HOME/.local/bin:$PATH"
+agent login          # or export CURSOR_API_KEY=...
+
+# Repo tooling
+command -v jq git bash
+# Trap Suite: no Docker. Lite: Docker + swebench venv — see lite/README.md
 ```
 
-Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on Task Success only; Delivery Cost informational when present (ADR 0007). See **Campaign cost envelope** in `lite/README.md` for operator disk/time/spend planning.
+Then follow gate README. Do **not** commit under `*/campaigns/` or `*/worktrees/`.
+
+## Quick links
+
+```bash
+# Trap Process Gate (N=5 default)
+bash evals/prepare-trap-campaign.sh
+bash evals/run-trap-campaign.sh --jobs 3
+bash evals/analyze-trap.sh
+
+# Lite adopt gate — see lite/README.md
+bash evals/prepare-lite-campaign.sh evals/lite/campaigns/<id>
+bash evals/run-lite-composer-campaign.sh --score --jobs 6
+
+bash tests/test-traps.sh
+bash tests/test-lite.sh
+```
