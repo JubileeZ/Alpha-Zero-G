@@ -31,7 +31,6 @@ TEMP_TEST_DIR="$(azg_mktemp_d "tmp_azg_phase5-XXXXXX")"
 cd "${TEMP_TEST_DIR}"
 mkdir -p .agents/hooks tests
 cp "$REPO_ROOT/templates/project/.agents/hooks/commit-gate.sh" .agents/hooks/
-cp "$REPO_ROOT/templates/project/.agents/hooks/spawn-budget.sh" .agents/hooks/
 
 # commit-gate testing (uses portable tests/verify.sh)
 # 1. Success case: verify returns 0
@@ -78,65 +77,6 @@ fi
 
 # Clean up files created for testing
 rm -f task.md implementation_plan.md
-
-# spawn-budget testing (requires jq for counter enforcement)
-if ! command -v jq >/dev/null 2>&1; then
-  skip "spawn-budget enforcement tests require jq (install jq; covered by Phase 7 preflight)"
-  test_summary
-  exit $?
-fi
-
-# 1. Reset spawn budget
-_res_reset=$(bash .agents/hooks/spawn-budget.sh --reset)
-if [ -f .agents/spawn-state.json ] && echo "${_res_reset}" | grep -q '"decision":"allow"'; then
-  pass "spawn-budget resets and initializes successfully"
-else
-  fail "spawn-budget reset failed"
-fi
-
-# 2. Concurrent slot count — pin max_spawns=3 (independent of shipped defaults)
-printf '{"max_spawns": 3, "max_depth": 10, "mode": "concurrent"}\n' > .agents/spawn-budget.json
-bash .agents/hooks/spawn-budget.sh --reset >/dev/null
-
-_res1=$(echo '{"session_id":"sess1","subagent_id":"sub1"}' | bash .agents/hooks/spawn-budget.sh)
-_res2=$(echo '{"session_id":"sess1","subagent_id":"sub2"}' | bash .agents/hooks/spawn-budget.sh)
-_res3=$(echo '{"session_id":"sess1","subagent_id":"sub3"}' | bash .agents/hooks/spawn-budget.sh)
-
-if echo "${_res1}" | grep -q '"decision":"allow"' && \
-   echo "${_res2}" | grep -q '"decision":"allow"' && \
-   echo "${_res3}" | grep -q '"decision":"allow"'; then
-  pass "spawn-budget allows spawns within budget limits"
-else
-  fail "spawn-budget denied spawns within budget" "res1: ${_res1}, res2: ${_res2}, res3: ${_res3}"
-fi
-
-_res4=$(echo '{"session_id":"sess1","subagent_id":"sub4"}' | bash .agents/hooks/spawn-budget.sh)
-if echo "${_res4}" | grep -q '"decision":"deny"' && echo "${_res4}" | grep -q "Spawn budget exceeded"; then
-  pass "spawn-budget denies spawn when max_spawns is exceeded"
-else
-  fail "spawn-budget failed to deny spawn on exceed limit" "got: ${_res4}"
-fi
-
-# 3. Spawn depth limit — pin max_depth=2
-bash .agents/hooks/spawn-budget.sh --reset >/dev/null
-printf '{"max_spawns": 10, "max_depth": 2, "mode": "concurrent"}\n' > .agents/spawn-budget.json
-
-# Session root depth is 0.
-# Spawn child at depth 1
-_depth1=$(echo '{"session_id":"root","subagent_id":"child1"}' | bash .agents/hooks/spawn-budget.sh)
-# Spawn child at depth 2 (parent session_id is child1, which has depth 1)
-_depth2=$(echo '{"session_id":"child1","subagent_id":"child2"}' | bash .agents/hooks/spawn-budget.sh)
-# Spawn child at depth 3 (parent session_id is child2, which has depth 2) - should be denied
-_depth3=$(echo '{"session_id":"child2","subagent_id":"child3"}' | bash .agents/hooks/spawn-budget.sh)
-
-if echo "${_depth1}" | grep -q '"decision":"allow"' && \
-   echo "${_depth2}" | grep -q '"decision":"allow"' && \
-   echo "${_depth3}" | grep -q '"decision":"deny"' && \
-   echo "${_depth3}" | grep -q "depth"; then
-  pass "spawn-budget enforces max_depth limit successfully"
-else
-  fail "spawn-budget depth limit enforcement failed" "depth1: ${_depth1}, depth2: ${_depth2}, depth3: ${_depth3}"
-fi
 
 test_summary
 

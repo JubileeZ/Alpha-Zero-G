@@ -19,15 +19,6 @@
             "command": "./hooks/commit-gate.sh"
           }
         ]
-      },
-      {
-        "matcher": "invoke_subagent|START_SUBAGENT|task|Task|spawn_subagent|subagent|agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/spawn-budget.sh"
-          }
-        ]
       }
     ],
     "Stop": [
@@ -37,28 +28,6 @@
           {
             "type": "command",
             "command": "./hooks/checkpoint.sh"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/spawn-budget.sh --finish"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/spawn-budget.sh --reset"
           }
         ]
       }

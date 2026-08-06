@@ -94,7 +94,6 @@ docs/agents/
     commit-gate.sh             # NEW v4
     checkpoint.sh              # NEW v4 — Stop hook, not PreCompact block
   session-handoff.md           # SFDBN template
-  spawn-budget.json            # max_spawns: 3, max_depth: 2
 .cursor/rules/                 # 2–3 Cursor-only deltas max
 .vscode/settings.json        # terminal cwd = workspace (Windows-safe)
 tests/test-harness.sh        # meta-harness self-check (no app stack required)
@@ -120,7 +119,6 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 | `block-destructive-ops.sh` | PreToolUse / shell | Block `rm -rf`, force-push main, credential leaks |
 | `commit-gate.sh` | PreToolUse on `git commit` | Block commit until `bash tests/verify.sh` passes |
 | `checkpoint.sh` | **Stop** (Cursor + Antigravity) | Enforce fresh `current-state.md` or handoff before agent stops; return continue/followup if stale |
-| `spawn-budget.sh` | PreToolUse `START_SUBAGENT` | Read `.agents/spawn-budget.json`; deny when `max_spawns: 3` or `max_depth: 2` exceeded; SubagentStart observe-only |
 
 **PreCompact:** Cursor `preCompact` is **observability only** (log/toast) — cannot block compaction on Cursor or Antigravity. Do not design around blocking PreCompact.
 
@@ -178,7 +176,6 @@ User:        git pull              →  get new Alpha-Zero-G
 - Blocking PreCompact hooks
 - Full GitHub MCP enabled by default
 - `implement` skill broken `/review` upstream reference (still vendored; fix upstream or overlay)
-- Multi-agent deliberation orchestration beyond spawn-budget guard
 
 ---
 

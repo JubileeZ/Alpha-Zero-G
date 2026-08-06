@@ -29,11 +29,9 @@ REQUIRED=(
   docs/agents/triage-labels.md
   docs/agents/domain.md
   .agents/hooks.json
-  .agents/spawn-budget.json
   .agents/hooks/block-destructive-ops.sh
   .agents/hooks/commit-gate.sh
   .agents/hooks/checkpoint.sh
-  .agents/hooks/spawn-budget.sh
   .agents/hooks/pre-compact.sh
   tests/test-harness.sh
   tests/verify.sh

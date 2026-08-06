@@ -33,8 +33,7 @@ for f in current-state.md progress.md issue-tracker.md triage-labels.md domain.m
   printf '# stub\n' > "docs/agents/${f}"
 done
 cp "${ROOT}/templates/project/.agents/hooks.json" .agents/hooks.json
-cp "${ROOT}/templates/project/.agents/spawn-budget.json" .agents/spawn-budget.json
-for hook in checkpoint.sh spawn-budget.sh pre-compact.sh; do
+for hook in checkpoint.sh pre-compact.sh; do
   cp "${ROOT}/templates/project/.agents/hooks/${hook}" .agents/hooks/
   chmod +x ".agents/hooks/${hook}"
 done
@@ -144,47 +143,6 @@ if grep -E '"command"[[:space:]]*:[[:space:]]*"[^"]*\.sh"' "${HOOKS_JSON}"; then
 else
   pass "Cursor hooks.json commands contain no .sh paths"
 fi
-
-section "5b. Spawn-budget PreToolUse wiring (ADR 0006)"
-
-AGY_HOOKS="${ROOT}/templates/project/.agents/hooks.json"
-if grep -q 'invoke_subagent' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh' "${AGY_HOOKS}"; then
-  pass "hooks.json wires spawn-budget on PreToolUse invoke_subagent"
-else
-  fail "spawn-budget must be on PreToolUse invoke_subagent (SubagentStart cannot block)"
-fi
-# SubagentStart + PreToolUse both calling spawn-budget.sh double-counts slots (one --finish)
-if grep -q '"SubagentStart"' "${AGY_HOOKS}"; then
-  fail "hooks.json must not register SubagentStart (observe-only; double-counts with PreToolUse)"
-else
-  pass "hooks.json has no SubagentStart spawn-budget wire"
-fi
-if grep -q 'spawn-budget.sh --finish' "${AGY_HOOKS}" && grep -q 'spawn-budget.sh --reset' "${AGY_HOOKS}"; then
-  pass "hooks.json keeps SubagentStop --finish and SessionStart --reset"
-else
-  fail "spawn-budget lifecycle hooks (--finish / --reset) missing"
-fi
-
-section "5c. Spawn-budget slot lifecycle (allow → deny → finish → reuse)"
-
-SPAWN_HOOK=".agents/hooks/spawn-budget.sh"
-bash "${SPAWN_HOOK}" --reset >/dev/null
-_spawn_ok=1
-for _i in 1 2 3 4 5; do
-  _out=$(printf '{"subagent_id":"s%s"}' "${_i}" | bash "${SPAWN_HOOK}")
-  echo "${_out}" | grep -q '"decision":"allow"' || _spawn_ok=0
-done
-_deny=$(printf '{"subagent_id":"s6"}' | bash "${SPAWN_HOOK}")
-echo "${_deny}" | grep -q '"decision":"deny"' || _spawn_ok=0
-printf '{"subagent_id":"s1"}' | bash "${SPAWN_HOOK}" --finish >/dev/null
-_reuse=$(printf '{"subagent_id":"s6"}' | bash "${SPAWN_HOOK}")
-echo "${_reuse}" | grep -q '"decision":"allow"' || _spawn_ok=0
-if [ "${_spawn_ok}" -eq 1 ]; then
-  pass "spawn-budget concurrent slots: 5 allow, 6th deny, finish frees reuse"
-else
-  fail "spawn-budget slot lifecycle broken" "deny=${_deny} reuse=${_reuse}"
-fi
-bash "${SPAWN_HOOK}" --reset >/dev/null
 
 section "6. Manual smoke doc present"
 

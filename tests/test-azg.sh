@@ -110,7 +110,7 @@ fi
 
 if [ -f "my-new-app/.agents/hooks/commit-gate.sh" ] && \
    [ -f "my-new-app/.agents/hooks/checkpoint.sh" ] && \
-   [ -f "my-new-app/.agents/hooks/spawn-budget.sh" ]; then
+   [ ! -f "my-new-app/.agents/hooks/spawn-budget.sh" ]; then
   pass "Hooks generated correctly during new"
 else
   fail "Hooks missing or failed to generate during new"
@@ -179,10 +179,11 @@ else
   fail "Apply failed to create tracking templates"
 fi
 
-if [ -f ".agents/spawn-budget.json" ] && [ -f ".agents/session-handoff.md" ] && [ -f ".vscode/settings.json" ] && [ -f "tests/test-harness.sh" ]; then
-  pass "Apply copied budget, handoff, vscode settings, and test harness"
+if [ -f ".agents/session-handoff.md" ] && [ -f ".vscode/settings.json" ] && [ -f "tests/test-harness.sh" ] && \
+   [ ! -f ".agents/spawn-budget.json" ]; then
+  pass "Apply copied handoff, vscode settings, and test harness (spawn-budget retired)"
 else
-  fail "Apply failed to copy budget, handoff, vscode settings, or test harness"
+  fail "Apply failed to copy handoff, vscode settings, or test harness"
 fi
 
 # Retired template Cursor rule must be removed on reapply
@@ -200,6 +201,15 @@ assert_file_not_exists "reapply removes retired domain-vocabulary.mdc" \
   ".cursor/rules/domain-vocabulary.mdc"
 assert_dir_not_exists "reapply removes retired domain-vocabulary skill" \
   ".agents/skills/domain-vocabulary"
+# Retired spawn-budget must be removed on reapply
+mkdir -p .agents/hooks
+printf 'orphan\n' > .agents/hooks/spawn-budget.sh
+printf '{"max_spawns":1}\n' > .agents/spawn-budget.json
+assert_exit "azg apply retires spawn-budget" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "reapply removes retired spawn-budget.sh" \
+  ".agents/hooks/spawn-budget.sh"
+assert_file_not_exists "reapply removes retired spawn-budget.json" \
+  ".agents/spawn-budget.json"
 if [ -f "AGENTS.md" ] && grep -q "## Session start" "AGENTS.md"; then
   pass "Session start remains in AGENTS.md after continuity rule retire"
 else

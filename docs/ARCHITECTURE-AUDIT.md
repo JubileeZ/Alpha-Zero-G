@@ -44,7 +44,7 @@ Evaluate the repository across the following 5 core pillars:
 
 4. **Proactive & Autonomous Execution**
    - Evaluate deterministic gates, supported lifecycle hooks, and native host automation.
-   - Evaluate long-horizon execution, spawn-budget limits, and recovery. Do not add timers, watchers, or loop wrappers without a concrete unmet need and verified host support.
+   - Evaluate long-horizon execution, subagent limits, and recovery. Do not add timers, watchers, or loop wrappers without a concrete unmet need and verified host support.
 
 5. **Solo Analyst Fit & Cost Efficiency**
    - Stress-test YAGNI ("You Aren't Gonna Need It") and Ponytail lazy dev principles (boring > clever, stdlib/CLI over extra dependencies, shortest working diff).

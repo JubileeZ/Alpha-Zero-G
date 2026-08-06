@@ -88,17 +88,11 @@ cmd_new() {
     chmod +x "$target_dir/.agents/hooks/checkpoint.sh"
 
     copy_template \
-        "$tmpl_proj/.agents/hooks/spawn-budget.sh" \
-        "$target_dir/.agents/hooks/spawn-budget.sh"
-    chmod +x "$target_dir/.agents/hooks/spawn-budget.sh"
-
-    copy_template \
         "$tmpl_proj/.agents/hooks/pre-compact.sh" \
         "$target_dir/.agents/hooks/pre-compact.sh"
     chmod +x "$target_dir/.agents/hooks/pre-compact.sh"
 
     copy_template "$tmpl_proj/.agents/hooks.json" "$target_dir/.agents/hooks.json"
-    copy_template "$tmpl_proj/.agents/spawn-budget.json" "$target_dir/.agents/spawn-budget.json"
     copy_template "$tmpl_proj/.agents/session-handoff.md.tmpl" "$target_dir/.agents/session-handoff.md"
     copy_template "$tmpl_proj/.gitignore" "$target_dir/.gitignore"
 

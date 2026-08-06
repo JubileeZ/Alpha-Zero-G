@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (amended 2026-08: concurrent + depth only)
+Superseded by [ADR 0011](0011-no-spawn-budget.md) (2026-08).
 
 ## Context
 

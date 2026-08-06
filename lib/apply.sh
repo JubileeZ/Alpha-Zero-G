@@ -139,7 +139,7 @@ cmd_apply() {
     done
 
     # 3. Merge hooks.json — preserve user gates; template keys (incl. safety-gate) win.
-    # jq `*` keeps left-only keys, so drop retired SubagentStart (ADR 0006: PreToolUse only).
+    # jq `*` keeps left-only keys; strip retired SubagentStart + spawn-budget wires (ADR 0011).
     if [ ! -f "$target_dir/.agents/hooks.json" ]; then
         if [ "$dry_run" = "yes" ]; then
             printf "[CREATE] .agents/hooks.json\n"
@@ -151,7 +151,26 @@ cmd_apply() {
         if [ "$dry_run" = "yes" ]; then
             printf "[MERGE] .agents/hooks.json\n"
         else
-            jq -s '.[0] * .[1] | del(."safety-gate".SubagentStart)' \
+            jq -s '
+              def strip_spawn_budget:
+                map(
+                    if .hooks then
+                      .hooks |= map(select(.command | test("spawn-budget") | not))
+                    else . end
+                  )
+                | map(select(.hooks != null and (.hooks | length) > 0));
+
+              .[0] * .[1]
+              | del(."safety-gate".SubagentStart)
+              | ."safety-gate" |= (
+                  if .PreToolUse then .PreToolUse |= strip_spawn_budget else . end
+                  | if .SubagentStop then .SubagentStop |= strip_spawn_budget else . end
+                  | if .SessionStart then .SessionStart |= strip_spawn_budget else . end
+                  | with_entries(
+                      if (.value | type) == "array" and (.value | length) == 0 then empty else . end
+                    )
+                )
+            ' \
               "$target_dir/.agents/hooks.json" "$tmpl_proj/.agents/hooks.json" | \
               atomic_write "$target_dir/.agents/hooks.json"
             info "Merged hooks.json (template gates refreshed)"
@@ -276,6 +295,20 @@ cmd_apply() {
           ok "Removed retired skill: domain-vocabulary"
         fi
       fi
+      if [ ! -f "$tmpl_proj/.agents/hooks/spawn-budget.sh" ]; then
+        if [ -f "$target_dir/.agents/hooks/spawn-budget.sh" ]; then
+          # DESTRUCTIVE: remove retired spawn-budget hook (ADR 0011)
+          rm -f "$target_dir/.agents/hooks/spawn-budget.sh"
+          ok "Removed retired hook: spawn-budget.sh"
+        fi
+      fi
+      if [ ! -f "$tmpl_proj/.agents/spawn-budget.json" ]; then
+        if [ -f "$target_dir/.agents/spawn-budget.json" ]; then
+          # DESTRUCTIVE: remove retired spawn-budget config (ADR 0011)
+          rm -f "$target_dir/.agents/spawn-budget.json"
+          ok "Removed retired config: spawn-budget.json"
+        fi
+      fi
     fi
     azg_owned_refresh "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json" ".cursor/hooks.json"
     azg_owned_refresh "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd" ".cursor/hooks/run-hook.cmd"
@@ -371,9 +404,7 @@ cmd_apply() {
         fi
     fi
 
-    # 9. Refresh AZG-owned spawn-budget; create session-handoff only if missing (user content)
-    azg_owned_refresh "$tmpl_proj/.agents/spawn-budget.json" "$target_dir/.agents/spawn-budget.json" ".agents/spawn-budget.json"
-
+    # 9. Create session-handoff only if missing (user content)
     if [ ! -f "$target_dir/.agents/session-handoff.md" ]; then
         if [ "$dry_run" = "yes" ]; then
             printf "[CREATE] .agents/session-handoff.md\n"

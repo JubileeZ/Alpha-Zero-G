@@ -92,10 +92,6 @@ _Avoid_: Status bar theme, icon mode, nerd-font preset.
 An interceptor script run automatically before any agent tool call to validate command patterns and file targets, preventing unauthorized alterations or system damage.
 _Avoid_: Guardrail, safety command, block policy.
 
-**Spawn Budget**:
-Configured limits on concurrent and nested subagent fan-out for one session (`max_spawns`, `max_depth`).
-_Avoid_: Spawn state, agent quota, subagent throttle
-
 **Prove Stance**:
 Always-on discipline that treats a finished report as claims to re-observe (diff, rerun, open artifact) before presenting done, ending in VERIFIED, CAVEATS, or REFUTED.
 _Avoid_: fable-judge, blind trust in agent prose, verification theater

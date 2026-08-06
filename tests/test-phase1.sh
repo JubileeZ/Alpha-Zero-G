@@ -80,7 +80,8 @@ assert_file_exists ".agents/hooks.json exists" "${APP_DIR}/.agents/hooks.json"
 assert_file_exists ".agents/hooks/block-destructive-ops.sh exists" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
 assert_executable "block-destructive-ops.sh is executable" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
 assert_file_exists ".agents/session-handoff.md exists" "${APP_DIR}/.agents/session-handoff.md"
-assert_file_exists ".agents/spawn-budget.json exists" "${APP_DIR}/.agents/spawn-budget.json"
+assert_file_not_exists ".agents/spawn-budget.json retired (ADR 0011)" \
+  "${APP_DIR}/.agents/spawn-budget.json"
 
 assert_dir_exists ".vscode/ directory exists" "${APP_DIR}/.vscode"
 assert_file_exists ".vscode/settings.json exists" "${APP_DIR}/.vscode/settings.json"
@@ -94,7 +95,7 @@ section "3. File Contents & Configurations"
 # Thin AGENTS.md managed block checks
 assert_file_contains "AGENTS.md has AZG:MANAGED block start" "${APP_DIR}/AGENTS.md" "<!-- AZG:MANAGED:START -->"
 assert_file_contains "AGENTS.md has AZG:MANAGED block end" "${APP_DIR}/AGENTS.md" "<!-- AZG:MANAGED:END -->"
-assert_file_contains "AGENTS.md references session start" "${APP_DIR}/AGENTS.md" "docs/agents/current-state.md"
+assert_file_contains "AGENTS.md references session start" "${APP_DIR}/AGENTS.md" "current-state.md"
 
 # Empty phase ROADMAP.md checks
 assert_file_contains "ROADMAP.md has active status" "${APP_DIR}/ROADMAP.md" "Phase 1"

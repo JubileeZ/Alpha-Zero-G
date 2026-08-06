@@ -44,7 +44,8 @@ assert_file_exists "hooks.json exists" "${APP_DIR}/.agents/hooks.json"
 assert_file_exists "block-destructive-ops.sh exists" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
 assert_file_exists "commit-gate.sh exists" "${APP_DIR}/.agents/hooks/commit-gate.sh"
 assert_file_exists "checkpoint.sh exists" "${APP_DIR}/.agents/hooks/checkpoint.sh"
-assert_file_exists "spawn-budget.sh exists" "${APP_DIR}/.agents/hooks/spawn-budget.sh"
+assert_file_not_exists "spawn-budget.sh retired (ADR 0011)" \
+  "${APP_DIR}/.agents/hooks/spawn-budget.sh"
 assert_file_exists "pre-compact.sh exists" "${APP_DIR}/.agents/hooks/pre-compact.sh"
 
 assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/read-agents-md.mdc"
@@ -62,7 +63,7 @@ assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/
 assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
 
 # Executable checks
-for h in block-destructive-ops.sh commit-gate.sh checkpoint.sh spawn-budget.sh pre-compact.sh; do
+for h in block-destructive-ops.sh commit-gate.sh checkpoint.sh pre-compact.sh; do
   if [ -x "${APP_DIR}/.agents/hooks/${h}" ]; then
     pass "Hook ${h} is executable"
   else
@@ -262,77 +263,9 @@ fi
 git checkout -q task.md
 
 # ---------------------------------------------------------------------------
-# spawn-budget.sh Integration Tests
-# ---------------------------------------------------------------------------
-section "5. spawn-budget.sh Tests"
-
-SPAWN_BUDGET="${APP_DIR}/.agents/hooks/spawn-budget.sh"
-
-# Test 1: Reset budget
-out_reset=$("${SPAWN_BUDGET}" --reset <<< "{}")
-dec_reset=$(echo "${out_reset}" | jq -r '.decision')
-if [ "${dec_reset}" = "allow" ] && [ -f .agents/spawn-state.json ]; then
-  total=$(jq -r '.total_spawns' .agents/spawn-state.json)
-  if [ "${total}" -eq 0 ]; then
-    pass "spawn-budget.sh --reset initializes and resets spawn budget state"
-  else
-    fail "Total spawns is not 0 after reset" "got: ${total}"
-  fi
-else
-  fail "Reset failed" "got: ${out_reset}"
-fi
-
-# Test 2: Spawn nesting depth — pin budget so defaults cannot break CI
-printf '{"max_spawns": 10, "max_depth": 2, "mode": "concurrent"}\n' > .agents/spawn-budget.json
-"${SPAWN_BUDGET}" --reset <<< "{}" >/dev/null
-
-# Spawn 1 (Parent: root -> Child: c1) depth 1
-in1='{"session_id":"root","subagent_id":"c1"}'
-out1=$(echo "${in1}" | "${SPAWN_BUDGET}")
-dec1=$(echo "${out1}" | jq -r '.decision')
-
-# Spawn 2 (Parent: c1 -> Child: g1) depth 2
-in2='{"session_id":"c1","subagent_id":"g1"}'
-out2=$(echo "${in2}" | "${SPAWN_BUDGET}")
-dec2=$(echo "${out2}" | jq -r '.decision')
-
-# Spawn 3 (Parent: g1 -> Child: gg1) depth 3 — exceeds max_depth 2
-in3='{"session_id":"g1","subagent_id":"gg1"}'
-out3=$(echo "${in3}" | "${SPAWN_BUDGET}")
-dec3=$(echo "${out3}" | jq -r '.decision')
-
-if [ "${dec1}" = "allow" ] && [ "${dec2}" = "allow" ] && [ "${dec3}" = "deny" ]; then
-  pass "Spawn nesting depth budget (max_depth = 2) is enforced correctly"
-else
-  fail "Depth budget enforcement failed" "spawn1=${dec1} spawn2=${dec2} spawn3=${dec3}"
-fi
-
-# Test 3: Concurrent slot count — pin max_spawns=3 (independent of shipped defaults)
-printf '{"max_spawns": 3, "max_depth": 10, "mode": "concurrent"}\n' > .agents/spawn-budget.json
-"${SPAWN_BUDGET}" --reset <<< "{}" >/dev/null
-
-in1='{"session_id":"root","subagent_id":"agent1"}'
-dec1=$(echo "${in1}" | "${SPAWN_BUDGET}" | jq -r '.decision')
-
-in2='{"session_id":"root","subagent_id":"agent2"}'
-dec2=$(echo "${in2}" | "${SPAWN_BUDGET}" | jq -r '.decision')
-
-in3='{"session_id":"root","subagent_id":"agent3"}'
-dec3=$(echo "${in3}" | "${SPAWN_BUDGET}" | jq -r '.decision')
-
-in4='{"session_id":"root","subagent_id":"agent4"}'
-dec4=$(echo "${in4}" | "${SPAWN_BUDGET}" | jq -r '.decision')
-
-if [ "${dec1}" = "allow" ] && [ "${dec2}" = "allow" ] && [ "${dec3}" = "allow" ] && [ "${dec4}" = "deny" ]; then
-  pass "Spawn count budget (max_spawns = 3) is enforced correctly"
-else
-  fail "Count budget enforcement failed" "spawn1=${dec1} spawn2=${dec2} spawn3=${dec3} spawn4=${dec4}"
-fi
-
-# ---------------------------------------------------------------------------
 # pre-compact.sh Integration Tests
 # ---------------------------------------------------------------------------
-section "6. pre-compact.sh Tests"
+section "5. pre-compact.sh Tests"
 
 PRE_COMPACT="${APP_DIR}/.agents/hooks/pre-compact.sh"
 # Test 1: Always allows and logs message to stderr

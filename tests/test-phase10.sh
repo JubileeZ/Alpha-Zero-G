@@ -215,6 +215,11 @@ if [ "$(jq -r '."safety-gate" | has("SubagentStart")' .agents/hooks.json)" = "fa
 else
   fail "apply must delete SubagentStart (ADR 0006 double-count)" "got: $(jq -c '."safety-gate" | keys' .agents/hooks.json)"
 fi
+if ! grep -q 'spawn-budget' .agents/hooks.json; then
+  pass "apply strips spawn-budget wires from hooks.json (ADR 0011)"
+else
+  fail "apply must remove spawn-budget from hooks.json" "got: $(cat .agents/hooks.json)"
+fi
 
 section "11. verify rejects repo-root tmp_azg leaks"
 
