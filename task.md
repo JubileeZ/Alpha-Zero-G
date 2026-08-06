@@ -10,8 +10,8 @@
 - **Status:** In Progress
 - **Files:** templates/global/AGENTS.md · templates/project/AGENTS.md.tmpl · AGENTS.md · templates/global/skills/azg/* · task.md · docs/agents/current-state.md
 - **Decisions:** A+B; adherence primary; Fence Prove; AGENTS then skills; gentle levers; smoke in task.md; no new writing-for-agents always-on pointer
-- **Blocked:** Adherence smoke needs 5×2 fresh chats (Current = pre-4fe6fa3 checkout or prior notes; Candidate = post-setup)
-- **Next:** Run smoke table; clear packet when Candidate ≥ Current
+- **Blocked:** Agent CLI installed; **not logged in** — run `agent login` (or set `CURSOR_API_KEY`), then Luna 3-arm adherence campaign
+- **Next:** `agent login` → `ADHERENCE_MODEL=gpt-5.6-luna bash evals/run-adherence-campaign.sh --jobs 3`
 
 ## Todo
 - [x] Grill shared understanding

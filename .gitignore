@@ -7,6 +7,9 @@ evals/pilot/SESSION-LOCAL.md
 evals/lite/campaigns/
 # Local SWE-bench checkouts for agent runs
 evals/lite/worktrees/
+# Adherence mini-campaign local runs
+evals/adherence/campaigns/
+evals/adherence/worktrees/
 # Local swebench Python env (operator machine)
 .venv-swebench/
 # SWE-bench harness local artifacts

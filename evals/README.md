@@ -14,3 +14,5 @@ bash tests/test-lite.sh
 ```
 
 Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on Task Success only; Delivery Cost informational when present (ADR 0007). See **Campaign cost envelope** in `lite/README.md` for operator disk/time/spend planning.
+
+Adherence (gate process, not Lite): [`adherence/README.md`](adherence/README.md) — cheap Luna 3-arm mini-campaign for Intent/Domain adherence smoke.
