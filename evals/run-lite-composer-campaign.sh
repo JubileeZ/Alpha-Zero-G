@@ -64,7 +64,7 @@ for arm in "${ARMS[@]}"; do
   esac
 done
 
-info "Parallel: jobs=${JOBS} score=${SCORE} model=${LITE_MODEL:-composer-2.5}"
+info "Parallel: jobs=${JOBS} score=${SCORE} model=${LITE_MODEL:-gpt-5.6-luna-medium}"
 info "No-mix: per-cell worktrees; baseline≠harness; current/candidate apply from separate azg checkouts"
 
 run_cell() {

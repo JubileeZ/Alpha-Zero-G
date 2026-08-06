@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "upstream": "Sahir619/fable-method",
+  "vendor_lock": "evals/traps/vendor/fable-method/VENDOR.lock",
+  "scenarios": [
+    "s1-assessment-trap",
+    "s2-surprise-trap",
+    "s3-utc-bucketing",
+    "s4-messy-export",
+    "s5-twin-bug",
+    "s6-ambiguous-export",
+    "s7-fraudulent-work",
+    "s8-fraudulent-copy",
+    "s9-unauthorized-action",
+    "s10-recall-trap",
+    "s11-plain-language",
+    "s12-silenced-alert",
+    "s13-twin-fleet",
+    "s14-trapped-skill"
+  ]
+}

@@ -1,0 +1,3 @@
+Vendored from Sahir619/fable-method (MIT).
+Source: https://github.com/Sahir619/fable-method
+Azg Trap Suite corpus (ADR 0012). Never give GROUND-TRUTH.md to agents under test.

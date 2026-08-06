@@ -54,7 +54,15 @@ _Avoid_: Chat transfer, synchronized folder
 
 **Evaluation Suite**:
 Frozen SWE-bench Lite instance list scored by automated tests; adoption runs three arms (No-Harness Baseline, Current Treatment, Candidate Treatment) and promotes only on hard quantitative rules.
-_Avoid_: Homemade fixtures as claim, blind-rubric suite, human-calibrated judge, full SWE-bench Verified by default
+_Avoid_: Homemade fixtures as claim, blind-rubric suite, human-calibrated judge, full SWE-bench Verified by default, Trap Suite as adopt gate
+
+**Trap Suite**:
+Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Process Gate corpus. Not Task Success.
+_Avoid_: Evaluation Suite, adherence mini-campaign, full Fable product paste
+
+**Process Gate**:
+3-arm trap campaign promoting Intent/Prove/Domain Candidates when Candidate pass rate ≥ Current and ≥ Baseline on the selected scenario subset (default N=5; relevance map + random-fill).
+_Avoid_: Lite promote, always-run-all-traps as default
 
 **Live Campaign**:
 The Candidate Treatment (and arm checkouts) under test for the current Evaluation Suite run. Recorded in `evals/lite/CAMPAIGN.md`; procedure stays in `evals/lite/README.md`.

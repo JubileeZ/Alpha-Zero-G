@@ -1,9 +1,11 @@
 # Evaluation Suite
 
-Official gate: **SWE-bench Lite 3-arm** (ADR 0007).
+Official adopt gate: **SWE-bench Lite 3-arm** (ADR 0007). Default agent model: `gpt-5.6-luna-medium` (`LITE_MODEL`).
 
 - How to run: [`lite/README.md`](lite/README.md)
-- Live Campaign (Candidate + checkouts): [`lite/CAMPAIGN.md`](lite/CAMPAIGN.md)
+- Live Campaign: [`lite/CAMPAIGN.md`](lite/CAMPAIGN.md)
+
+**Process Gate** (Intent/Prove Candidates — not Lite): [`traps/README.md`](traps/README.md) (ADR 0012).
 
 ```bash
 bash evals/prepare-lite-campaign.sh
@@ -14,5 +16,3 @@ bash tests/test-lite.sh
 ```
 
 Arms: No-Harness Baseline · Current Treatment · Candidate Treatment. Promote on Task Success only; Delivery Cost informational when present (ADR 0007). See **Campaign cost envelope** in `lite/README.md` for operator disk/time/spend planning.
-
-Adherence (gate process, not Lite): [`adherence/README.md`](adherence/README.md) — cheap Luna 3-arm mini-campaign for Intent/Domain adherence smoke.

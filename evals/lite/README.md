@@ -31,7 +31,7 @@ No device lock-in — any clone with Docker + `swebench`. Campaign artifacts mus
 
 ## Proven automation (preferred)
 
-**Locked for ADR 0009 N=5 campaign (2026-08-01):** model `composer-2.5`, Cursor Agent CLI, Docker scoring, parallel cells.
+**Default model lock (ADR 0012):** `gpt-5.6-luna-medium` (override `LITE_MODEL`). Historical ADR 0009 N=5 campaign used `composer-2.5`. Cursor Agent CLI + Docker scoring + parallel cells.
 
 ### Isolation (do not mix arms)
 
@@ -73,7 +73,7 @@ jq '{promote, pass_rate, success_pass}' evals/lite/campaigns/<campaign-id>/promo
 ```
 
 Drivers: `evals/run-lite-composer-cell.sh` · `evals/run-lite-composer-campaign.sh`.  
-Env: `LITE_MODEL` (default `composer-2.5`), `LITE_CAMP`, `LITE_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`.
+Env: `LITE_MODEL` (default `gpt-5.6-luna-medium`), `LITE_CAMP`, `LITE_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`.
 
 ### Cleanup after a run
 

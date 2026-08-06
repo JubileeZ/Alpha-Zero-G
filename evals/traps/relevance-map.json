@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "default_n": 5,
+  "change_types": {
+    "intent_gates": ["s2-surprise-trap", "s1-assessment-trap"],
+    "auth_pending": ["s9-unauthorized-action"],
+    "twins": ["s5-twin-bug", "s13-twin-fleet"],
+    "recall": ["s10-recall-trap"],
+    "data_quality": ["s4-messy-export", "s3-utc-bucketing", "s6-ambiguous-export"],
+    "fraud_judge": ["s7-fraudulent-work", "s8-fraudulent-copy"],
+    "plain_language": ["s11-plain-language"],
+    "general": ["s2-surprise-trap", "s9-unauthorized-action", "s5-twin-bug"]
+  }
+}

@@ -17,6 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
+| Trap Suite / Process Gate | `evals/traps/` | Vendored Fable S1–S14 (MIT); 3-arm Process Gate ADR 0012; default N=5; Lite model default `gpt-5.6-luna-medium` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -32,8 +33,8 @@
 
 | Gap | Done |
 |-----|------|
-| writing-for-agents lever pass | Packets 1–2 landed; Luna-low adherence 15-cell **accept no-regress** (all arms 0.8; `data` 0/3 skill-name miss; baseline research bleed caveat); Router pointer to `writing-for-agents` added |
-| Adherence mini-campaign | `evals/adherence/` — 3-arm gate smoke on `gpt-5.6-luna-low`; not Lite ADR 0007 |
+| Trap Suite Process Gate | ADR 0012: Lite=adopt; traps=process; vendor all Fable scenarios; retire adherence; N=5 default; full-first run; Lite model→luna-medium |
+| writing-for-agents lever pass | Packets 1–2 landed; Luna-low adherence accepted no-regress then **retired** for Trap Suite |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |

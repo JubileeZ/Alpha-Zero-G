@@ -44,7 +44,7 @@ if [ "${FORCE}" -eq 0 ] && [ "${EXISTING}" != "null" ]; then
   exit 0
 fi
 
-MODEL="${LITE_MODEL:-composer-2.5}"
+MODEL="${LITE_MODEL:-gpt-5.6-luna-medium}"
 AZG_CURRENT_REF="${AZG_CURRENT_REF:-fef3e84}"
 AZG_CANDIDATE_REF="${AZG_CANDIDATE_REF:-d2df37f}"
 WT_ROOT="${ROOT}/evals/lite/worktrees"
