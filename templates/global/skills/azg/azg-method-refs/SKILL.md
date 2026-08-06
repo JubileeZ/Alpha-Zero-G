@@ -1,11 +1,11 @@
 ---
 name: azg-method-refs
-description: Failure-mode → gate map, classic Prove fraud how-tos, and compressed ask-shape examples for Think/Prove. Open when diagnosing freestyle failures, hunting fraud patterns, or when ask-shape needs an example.
+description: Freestyle failure / fraud hunt / ask-shape unclear — failure→gate map, classic Prove how-tos, compressed examples. Open on demand; supplements always-on Prove.
 ---
 
-# azg-method-refs
+# Method refs (Think / Prove depth)
 
-On-demand depth for always-on intent gates. Not a substitute for Prove stance in AGENTS / Cursor rules.
+On-demand depth for always-on intent gates. Supplements Prove stance in AGENTS / Cursor rules; keep always-on stance primary.
 
 ## Failure modes → gate
 

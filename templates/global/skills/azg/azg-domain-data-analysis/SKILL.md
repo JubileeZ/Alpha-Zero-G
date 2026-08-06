@@ -1,6 +1,6 @@
 ---
 name: azg-domain-data-analysis
-description: Domain adapter for data analysis — binding min evidence on raw data, quality pass, and reproducible aggregates. Use for spreadsheets, exports, logs, metrics, top-N from data. Open before aggregating.
+description: Aggregates from data — open before aggregating. Binding raw-data look, quality pass, reproducible top-N/metrics from spreadsheets, exports, logs.
 ---
 
 # Domain adapter: data analysis
@@ -27,6 +27,8 @@ Authority: user question/definitions > data > column names/file labels > assumpt
 
 ## Fraud table (Prove)
 
+Apply every row to the draft aggregate before Done:
+
 | Fraud | Symptom |
 |---|---|
 | Naive aggregation | duplicates/refunds/out-of-window included silently |
@@ -38,6 +40,6 @@ Authority: user question/definitions > data > column names/file labels > assumpt
 | Label/claim mismatch | scenario or Findings names not in runner/CSV output |
 | Unfair counterfactual | compared paths that optimized the same objective |
 
-## Done (example)
+## Done
 
-Ranking with amounts; quality issues found and how handled; sensitivity if judgment flips rank-1; script/method that reproduces. Not: "I summed the amount column."
+Ranking or aggregate reproducible from a named artifact/method; quality issues found and how handled; sensitivity if judgment flips the headline answer. Exit only when each fraud row is applied (or N/A).

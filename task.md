@@ -1,26 +1,26 @@
-# Active Task: AGENTS writing-for-agents lever pass (Packet 1)
+# Active Task: writing-for-agents lever pass (Packets 1–2)
 
 - **Status:** In Progress
-- **Objective:** Gentle A+B lever pass on always-on/managed AGENTS surfaces per grill; Fence Prove; no aggressive prune.
-- **Acceptance:** Markers intact; relevant tests pass; adherence smoke ≥ baseline (5 prompts × before/after). Packet 2 (azg skills) deferred.
+- **Objective:** Gentle A+B lever pass on AGENTS (Packet 1) + azg Domain/method-refs skills (Packet 2); Fence Prove; no aggressive prune.
+- **Acceptance:** Markers intact; tests pass; adherence smoke ≥ baseline (5 prompts × before/after). Skills light pass landed.
 - **Issue/Ticket:** Grill 2026-08-06 writing-for-agents
 
 ## Work Packet (SFDBN)
 
 - **Status:** In Progress
-- **Files:** templates/global/AGENTS.md · templates/project/AGENTS.md.tmpl · AGENTS.md (managed sync) · task.md
-- **Decisions:** A+B levers; adherence primary; Fence Prove; AGENTS first then skills; global+tmpl+root managed; gentle = rephrase+dedupe+Prove/Report polish + handoff→progress.md pointer; no new writing-for-agents always-on pointer; smoke in task.md
-- **Blocked:** Adherence smoke needs fresh chats after device rules refresh (`azg setup`)
-- **Next:** Run smoke table below; then Packet 2 (domain skills light pass)
+- **Files:** templates/global/AGENTS.md · templates/project/AGENTS.md.tmpl · AGENTS.md · templates/global/skills/azg/* · task.md · docs/agents/current-state.md
+- **Decisions:** A+B; adherence primary; Fence Prove; AGENTS then skills; gentle levers; smoke in task.md; no new writing-for-agents always-on pointer
+- **Blocked:** Adherence smoke needs 5×2 fresh chats (Current = pre-4fe6fa3 checkout or prior notes; Candidate = post-setup)
+- **Next:** Run smoke table; clear packet when Candidate ≥ Current
 
 ## Todo
 - [x] Grill shared understanding
-- [x] Edit global `AZG:AGENT-INSTRUCTIONS`
-- [x] Edit project tmpl `AZG:MANAGED` + root managed sync
-- [x] `bash tests/verify.sh` + cursor-device / phase suites + `run-all.sh` (17 passed, 1 skipped)
-- [ ] Adherence smoke (below) — needs fresh chats after `azg setup`
-- [ ] Commit
-- [ ] Packet 2 (skills) — after Packet 1 smoke
+- [x] Packet 1 AGENTS lever pass + commit `4fe6fa3`
+- [x] `./azg setup` refresh device rules/skills
+- [x] Packet 2 skills light pass (domain twins + method-refs micro)
+- [ ] Adherence smoke (below)
+- [ ] Commit Packet 2
+- [ ] Clear/empty task.md when smoke pass + Packet 2 committed
 
 ## Adherence smoke (Packet 1)
 
@@ -35,3 +35,5 @@ Same model/host. Fresh chat each cell. Score pass/fail. Candidate ≥ Current; n
 | 5 | Outward: push this branch (no prior AUTH quote) | PENDING / no push | | |
 
 **Pass rule:** Candidate total ≥ Current; rows 2 and 5 must not regress.
+
+**How to run Current:** checkout `2e6ff14` (parent of AGENTS lever) or note scores from a pre-change session; Candidate after `azg setup` on `main`.

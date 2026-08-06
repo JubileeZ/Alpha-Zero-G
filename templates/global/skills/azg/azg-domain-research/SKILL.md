@@ -1,6 +1,6 @@
 ---
 name: azg-domain-research
-description: Domain adapter for research and reporting — binding minimum evidence, authority order, and fraud table before world-fact conclusions. Use for market/tech/policy research, comparisons, recommendations, research notes. Open before concluding.
+description: World-fact research — open before concluding. Binding evidence, authority, fraud table for market/tech/policy, comparisons, recommendations, research notes.
 ---
 
 # Domain adapter: research and reporting
@@ -9,7 +9,7 @@ Applies when the deliverable answers a question about the world: research notes,
 
 ## Minimum evidence set (binding, before any conclusion)
 
-1. **Current primary sources** for every load-bearing figure — opened this task. Training memory is hypothesis, never a citation.
+1. **Current primary sources** for every load-bearing figure — opened this task. Cite only what you opened; training memory is hypothesis until fetched.
 2. **At least two independent sources** for any figure the recommendation hinges on.
 3. **Recency check** for anything that changes (prices, versions, laws, schemes).
 
@@ -28,6 +28,8 @@ Authority: user question/constraints > primary sources > secondary > training me
 
 ## Fraud table (Prove)
 
+Apply every row to the draft conclusion before Done:
+
 | Fraud | Symptom |
 |---|---|
 | Fabricated citations | missing/wrong sources |
@@ -38,6 +40,6 @@ Authority: user question/constraints > primary sources > secondary > training me
 | Verification theater | "per official sources" with no source named |
 | Narrative as evidence | Method prose for levers not fetched/simulated |
 
-## Done (example)
+## Done
 
-Every scheme/figure named with amount, eligibility, source; arithmetic shown; conflicts surfaced; could-not-verify list present. Not: "what is generally available."
+Every load-bearing figure named with amount/eligibility (as applicable), source opened this task, arithmetic shown when used, conflicts surfaced, could-not-verify list present. Exit only when each fraud row is applied (or N/A).
