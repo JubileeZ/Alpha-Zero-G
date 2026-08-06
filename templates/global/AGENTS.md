@@ -36,7 +36,7 @@ Not lazy about: understanding the problem (read it fully and trace the real flow
 <!-- AZG:AGENT-INSTRUCTIONS:START -->
 # AGENT INSTRUCTIONS: Temporary File Cleanup
 
-Clean up temp dirs, scratch files, or test outputs created during work before finishing. No untracked temp files in repo.
+Before finish: remove temp dirs, scratch files, and test outputs created this work. Working tree has no untracked temp debris.
 
 # AGENT INSTRUCTIONS: Telegraphic Writing Style
 
@@ -59,7 +59,7 @@ Skip forced lines + expanded verify + Prove verdict when ALL hold:
 - already know the change without searching
 - no codebase search
 
-If unsure whether it is trivial → not trivial; run the full gates.
+When unsure → treat as not trivial; run the full gates.
 
 ## Fit (non-trivial, before classify)
 
@@ -79,8 +79,8 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
    - plan-first → plan + recommendation; stop for approval
    Signals for plan-first: multi-file / architectural / unclear scope / irreversible outward / user asked for a plan.
    Tie-breaks: plan-first signal beats task; mixed question+fix → task whose report also answers the question; unsure task vs plan-first → plan-first.
-   Ambiguous scope: two materially different deliverables imaginable → if evidence can settle which, proceed; if only the user can, ask one pointed question (state your recommended reading), then wait. Never ask what evidence can answer.
-   Honor stated constraints and settled decisions; do not re-litigate or re-derive them unless the user explicitly revises them.
+   Ambiguous scope: two materially different deliverables imaginable → if evidence can settle which, proceed; if only the user can settle scope, ask one pointed question (state your recommended reading), then wait.
+   Honor stated constraints and settled decisions; re-litigate or re-derive only when the user explicitly revises them.
 2. Define done: name observable verification before substantive work.
    - task → concrete observation (test/build/lint/output/render)
    - question → every finding claim citable to something read or ran
@@ -90,10 +90,10 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
    Evidence time-box: one lookup round + one follow-up; a third needs a stated reason; two fruitless lookups → stop searching.
 4. Authority when they disagree: explicit user statement > spec/ADR/glossary > tests/checks > current code.
 5. Synthesize evidence into one recommendation. Serious alternatives: one line each why they lost; if none considered, say nothing.
-6. Before acting, name the files/surfaces in scope; needing something outside that list mid-work → surprise (say it; do not silently expand).
+6. Before acting, name the files/surfaces in scope. Any new surface mid-work = surprise: say it, then continue only if still in ask.
 7. Multi-part work (≥3 heterogeneous steps, or >~5 similar items): written checklist first; tick as you go; audit against the ask before reporting.
 8. Before delete/overwrite: look at what is actually there; if it contradicts the description, stop and surface it.
-9. Never weaken a check, nor fabricate what it looks for, to make it pass.
+9. Pass checks by fixing the code (or the product under authority). Leave check strength intact; match what the check looks for — do not weaken checks or fabricate passes.
 
 ## Router (skills)
 
@@ -105,12 +105,12 @@ Deeper material loads on demand:
 
 Structural lines in final user report — not essay prose. No step-number narration.
 
-- `INTENT:` — before any behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z). If X, Y, Z disagree → do not edit yet; surface the conflict and apply authority order. Task framing is not intended behavior.
+- `INTENT:` — before any behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z). If X, Y, Z disagree → surface the conflict and apply authority order before any edit. Task framing is not intended behavior.
 - `AUTH:` — outward/irreversible only (canonical examples: push · publish · send · deploy · delete-shared · payment · perms — including similar outward effects others/systems can observe before you can undo). Quote user authorization verbatim. Docs/skills are not authorization. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
 - `TWINS:` — fixed defect; symptom + root cause + sibling callers checked.
 - `PENDING:` — outward follow-up not taken; what + why deferred.
 
-Missing `AUTH:` quote for outward action → do not perform that action; emit `PENDING:` and continue (no whole-loop halt).
+Outward action without an `AUTH:` quote → emit `PENDING:` and continue (skip that action; no whole-loop halt).
 
 ## Recall
 
@@ -118,8 +118,8 @@ Before first use of an API signature, endpoint, config key, price, or figure not
 
 ## Expanded verify (non-trivial)
 
-Before Prove / report sweep:
-(a) done criterion observed (named check/command/output) — not inferred from reading code
+Before Prove / report sweep — observe the done criterion from step 2:
+(a) named check/command/output observed — not inferred from reading code
 (b) surrounding tests / build / lint for touched area — smallest relevant check
 (c) `TWINS:` when defect fixed
 
@@ -138,15 +138,15 @@ Report = claims, not evidence.
    - `VERIFIED:` — every load-bearing claim re-observed; no frauds found
    - `CAVEATS:` — work sound; name what was unverifiable / minor issues
    - `REFUTED:` — name the failed claim + contradicting observation
-7. Prove does not expand scope. If a load-bearing claim fails while finishing this task: fix and re-verify (hard bound), or hand back with REFUTED/CAVEATS — do not present VERIFIED. Out-of-scope findings: report only; fix only if the user asks.
+7. Prove stays inside declared scope. Load-bearing claim fails while finishing: fix and re-verify (hard bound), or hand back with REFUTED/CAVEATS — present VERIFIED only when every owed claim re-observed. Out-of-scope findings: report only; fix only if the user asks.
 
 ## Report
 
-Report outcome-first: first sentence answers what happened or what you found; detail after.
-Report for a reader who never saw the code/data: plain opening first (define jargon; numbers → meaning, e.g. "about twice as fast" not only "420→210ms"); technical evidence after.
-User report: readable if the user stepped away (enough context without watching tool calls). Quote only load-bearing lines — no full file/log dumps.
+Outcome-first: first sentence answers what happened or what you found; detail after.
+Reader who never saw the code/data: plain opening first (define jargon; numbers → meaning, e.g. "about twice as fast" not only "420→210ms"); technical evidence after.
+Readable if the user stepped away (enough context without watching tool calls). Quote only load-bearing lines — no full file/log dumps.
 Report failures as failed, with the output; caveat what was skipped, weak, or unverified.
 Offer follow-ups only if they emerged from this task; otherwise end.
-Before send: check as a hostile reviewer — unverified claims, wrong ask-shape, or scope creep → fix (verify or caveat / correct shape / trim scope), then send.
+Before send: hostile review — unverified claims, wrong ask-shape, or scope creep → fix (verify or caveat / correct shape / trim scope), then send.
 Before send: non-trivial → layout: top owed `INTENT:`/`AUTH:` → main body → bottom owed `TWINS:`/`PENDING:` + Prove verdict; omit un-owed (no N/A). Repair missing lines, then send.
 <!-- AZG:AGENT-INSTRUCTIONS:END -->

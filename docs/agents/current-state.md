@@ -32,6 +32,7 @@
 
 | Gap | Done |
 |-----|------|
+| writing-for-agents AGENTS lever pass | Packet 1: A+B gentle (rephrase/dedupe/polish); Fence Prove; no aggressive prune; global+tmpl+root managed; smoke in task.md; Packet 2 skills next |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
