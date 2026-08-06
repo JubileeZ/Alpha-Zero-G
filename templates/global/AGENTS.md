@@ -100,6 +100,7 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
 Deeper material loads on demand:
 - Binding before concluding: `azg-domain-research` (world-fact claims) · `azg-domain-data-analysis` (aggregates from data). Non-code Prove → that skill's fraud table.
 - On demand: `azg-method-refs` (failure→gate map · classic frauds · ask-shape examples).
+- Editing skills / AGENTS.md / CLAUDE.md → open `writing-for-agents` (pointers, hierarchy, Done criteria, prune; keep azg telegraphic voice).
 
 ## Forced report lines (when owed)
 

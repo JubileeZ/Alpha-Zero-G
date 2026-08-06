@@ -32,7 +32,8 @@
 
 | Gap | Done |
 |-----|------|
-| writing-for-agents lever pass | Packet 1 AGENTS gentle A+B (`4fe6fa3`); Packet 2 skills light (domain Done/pointers + method-refs micro); smoke table still open |
+| writing-for-agents lever pass | Packets 1–2 landed; Luna-low adherence 15-cell **accept no-regress** (all arms 0.8; `data` 0/3 skill-name miss; baseline research bleed caveat); Router pointer to `writing-for-agents` added |
+| Adherence mini-campaign | `evals/adherence/` — 3-arm gate smoke on `gpt-5.6-luna-low`; not Lite ADR 0007 |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
