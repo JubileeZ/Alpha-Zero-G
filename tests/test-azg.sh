@@ -118,10 +118,10 @@ fi
 
 if [ -f "my-new-app/.cursor/rules/read-agents-md.mdc" ] && \
    [ ! -f "my-new-app/.cursor/rules/work-state-continuity.mdc" ] && \
+   [ ! -f "my-new-app/.cursor/rules/domain-vocabulary.mdc" ] && \
    [ -f "my-new-app/.cursor/rules/progress-updates.mdc" ] && \
-   [ -f "my-new-app/.cursor/rules/domain-vocabulary.mdc" ] && \
    [ -f "my-new-app/.agents/skills/progress-updates/SKILL.md" ] && \
-   [ -f "my-new-app/.agents/skills/domain-vocabulary/SKILL.md" ] && \
+   [ ! -d "my-new-app/.agents/skills/domain-vocabulary" ] && \
    [ -f "my-new-app/.cursor/hooks.json" ]; then
   pass "Cursor rules, continuity skills, and hooks generated correctly during new"
 else
@@ -191,6 +191,15 @@ printf 'orphan\n' > .cursor/rules/work-state-continuity.mdc
 assert_exit "azg apply reapply exits 0" 0 "${AZG}" apply . >/dev/null
 assert_file_not_exists "reapply removes retired work-state-continuity.mdc" \
   ".cursor/rules/work-state-continuity.mdc"
+# Retired domain-vocabulary must be removed on reapply
+mkdir -p .cursor/rules .agents/skills/domain-vocabulary
+printf 'orphan\n' > .cursor/rules/domain-vocabulary.mdc
+printf 'orphan\n' > .agents/skills/domain-vocabulary/SKILL.md
+assert_exit "azg apply retires domain-vocabulary" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "reapply removes retired domain-vocabulary.mdc" \
+  ".cursor/rules/domain-vocabulary.mdc"
+assert_dir_not_exists "reapply removes retired domain-vocabulary skill" \
+  ".agents/skills/domain-vocabulary"
 if [ -f "AGENTS.md" ] && grep -q "## Session start" "AGENTS.md"; then
   pass "Session start remains in AGENTS.md after continuity rule retire"
 else
@@ -200,6 +209,11 @@ if [ -f "AGENTS.md" ] && grep -q "## Placeholder fill" "AGENTS.md"; then
   pass "Placeholder fill lives in project AGENTS managed block"
 else
   fail "AGENTS.md missing Placeholder fill after apply"
+fi
+if [ -f "AGENTS.md" ] && grep -q "## Harness Safety" "AGENTS.md" && grep -q "## Work State & Checkpoints" "AGENTS.md"; then
+  pass "Managed block has Harness Safety and Work State & Checkpoints"
+else
+  fail "AGENTS.md managed headings missing after apply"
 fi
 
 # 3a. Tracker validation

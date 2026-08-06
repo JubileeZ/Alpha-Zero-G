@@ -23,7 +23,7 @@
 | ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
-| Project skills | `.agents/skills/{progress-updates,domain-vocabulary}` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project |
+| Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project. Domain consumer = `docs/agents/domain.md`; writes = `/grill-with-docs` |
 | Research notes | `docs/research/` | Context engineering 2026-07-31; always-on AGENTS budget 2026-08-05 (no tok industry standard; absolute lean + JIT) |
 
 ---

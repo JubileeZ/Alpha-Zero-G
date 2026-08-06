@@ -251,15 +251,31 @@ cmd_apply() {
             azg_owned_refresh "$rule" "$target_dir/.cursor/rules/$base" ".cursor/rules/$base"
         fi
     done
-    # Refresh only creates/updates. Retire rules removed from templates/project so reapply cleans orphans.
-    if [ "$dry_run" != "yes" ] && [ ! -f "$tmpl_proj/.cursor/rules/work-state-continuity.mdc" ]; then
-      for retired in work-state-continuity.mdc work-state-continuity.md; do
-        if [ -f "$target_dir/.cursor/rules/$retired" ]; then
-          # DESTRUCTIVE: remove retired azg project Cursor rule (lean ritual lives in AGENTS.md Session start)
-          rm -f "$target_dir/.cursor/rules/$retired"
-          ok "Removed retired Cursor rule: $retired"
+    # Refresh only creates/updates. Retire rules/skills removed from templates/project so reapply cleans orphans.
+    if [ "$dry_run" != "yes" ]; then
+      if [ ! -f "$tmpl_proj/.cursor/rules/work-state-continuity.mdc" ]; then
+        for retired in work-state-continuity.mdc work-state-continuity.md; do
+          if [ -f "$target_dir/.cursor/rules/$retired" ]; then
+            # DESTRUCTIVE: remove retired azg project Cursor rule (lean ritual lives in AGENTS.md Session start)
+            rm -f "$target_dir/.cursor/rules/$retired"
+            ok "Removed retired Cursor rule: $retired"
+          fi
+        done
+      fi
+      if [ ! -f "$tmpl_proj/.cursor/rules/domain-vocabulary.mdc" ]; then
+        if [ -f "$target_dir/.cursor/rules/domain-vocabulary.mdc" ]; then
+          # DESTRUCTIVE: remove retired rule (consumer = docs/agents/domain.md; writes = grill-with-docs)
+          rm -f "$target_dir/.cursor/rules/domain-vocabulary.mdc"
+          ok "Removed retired Cursor rule: domain-vocabulary.mdc"
         fi
-      done
+      fi
+      if [ ! -d "$tmpl_proj/.agents/skills/domain-vocabulary" ]; then
+        if [ -d "$target_dir/.agents/skills/domain-vocabulary" ]; then
+          # DESTRUCTIVE: remove retired project skill (consumer = docs/agents/domain.md)
+          rm -rf "$target_dir/.agents/skills/domain-vocabulary"
+          ok "Removed retired skill: domain-vocabulary"
+        fi
+      fi
     fi
     azg_owned_refresh "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json" ".cursor/hooks.json"
     azg_owned_refresh "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd" ".cursor/hooks/run-hook.cmd"

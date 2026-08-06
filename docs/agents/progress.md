@@ -29,17 +29,24 @@ flowchart LR
 
 ### 1. Start
 
-Follow lean always-on ritual in `AGENTS.md` (`task.md` if present; ROADMAP active / first unchecked only; `current-state` when unfamiliar or existence may have changed). Then pick or create task/issue.
+Follow Session start in `AGENTS.md` (once per session). Then pick or create task/issue.
 
 ### 2. During work
 
 - Comment on the issue/task if blocked or scope changes.
 - Do **not** check ROADMAP boxes for partial work.
 
+### 2b. Device Handoff (user-triggered)
+
+- Handoff write: only when user asks (handoff / device switch / leave-for-other-agent).
+- Canonical: `.agents/session-handoff.md` (SFDBN); commit with work.
+- Day-to-day same device: prefer `task.md` + `current-state.md`.
+- If another handoff skill writes elsewhere (e.g. temp): copy SFDBN into `.agents/session-handoff.md` and commit before switch. Non-repo handoff ≠ Device Handoff.
+
 ### 3. Before finishing (pre-commit gate)
 
-- Run all linting and test commands to verify success.
-- Delete transient session files (`task.md`, `implementation_plan.md`, `walkthrough.md`) once milestone/task complete.
+- Run applicable lint/test commands to verify success.
+- Cleanup when task complete: delete `implementation_plan.md` / `walkthrough.md`; delete or empty `task.md` (finished packet — do not re-seed old content). Next task: create a new Work Packet with required SFDBN markers; durable state stays in ROADMAP / current-state / git.
 
 ### 4. On completion — update docs
 
@@ -115,7 +122,7 @@ Pull before starting on a new device. Read `current-state.md` after pull — not
 
 ## Checklist for agents (copy mentally)
 
-- [ ] Lean always-on ritual followed (`AGENTS.md`)
+- [ ] Session start ritual followed (`AGENTS.md`)
 - [ ] Task/issue created or referenced
 - [ ] Tests + lint pass
 - [ ] `ROADMAP.md` checkbox(es) match **only** what this commit ships

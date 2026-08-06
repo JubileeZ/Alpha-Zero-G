@@ -53,9 +53,10 @@ assert_file_not_exists "work-state-continuity.mdc retired (Session start in AGEN
 assert_file_exists "progress-updates.mdc rule exists" "${APP_DIR}/.cursor/rules/progress-updates.mdc"
 assert_file_contains "progress-updates rule is agent-requestable" "${APP_DIR}/.cursor/rules/progress-updates.mdc" "alwaysApply: false"
 assert_file_exists "progress-updates skill exists" "${APP_DIR}/.agents/skills/progress-updates/SKILL.md"
-assert_file_exists "domain-vocabulary.mdc rule exists" "${APP_DIR}/.cursor/rules/domain-vocabulary.mdc"
-assert_file_contains "domain-vocabulary rule is agent-requestable" "${APP_DIR}/.cursor/rules/domain-vocabulary.mdc" "alwaysApply: false"
-assert_file_exists "domain-vocabulary skill exists" "${APP_DIR}/.agents/skills/domain-vocabulary/SKILL.md"
+assert_file_not_exists "domain-vocabulary.mdc retired (consumer = docs/agents/domain.md)" \
+  "${APP_DIR}/.cursor/rules/domain-vocabulary.mdc"
+assert_dir_not_exists "domain-vocabulary skill retired" \
+  "${APP_DIR}/.agents/skills/domain-vocabulary"
 assert_file_exists "Cursor hooks.json exists" "${APP_DIR}/.cursor/hooks.json"
 assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/commit-verify.sh"
 assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
