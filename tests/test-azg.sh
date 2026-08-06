@@ -47,8 +47,8 @@ fi
 # 1b. Full vendor install (default)
 if [ -d "${TEMP_HOME}/.gemini/config/skills/tdd" ] && \
    [ -d "${TEMP_HOME}/.gemini/config/skills/teach" ] && \
-   [ -d "${TEMP_HOME}/.gemini/config/skills/writing-great-skills" ]; then
-  pass "setup copies core skills (tdd, teach, writing-great-skills)"
+   [ -d "${TEMP_HOME}/.gemini/config/skills/writing-for-agents" ]; then
+  pass "setup copies core skills (tdd, teach, writing-for-agents)"
 else
   fail "setup missing some skills"
 fi

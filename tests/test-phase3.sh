@@ -64,7 +64,7 @@ PRODUCTIVITY_SKILLS=(
   "grilling"
   "handoff"
   "teach"
-  "writing-great-skills"
+  "writing-for-agents"
 )
 
 # ---------------------------------------------------------------------------

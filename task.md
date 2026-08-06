@@ -1,23 +1,25 @@
-# Active Task: Downstream azg apply & template alignment
+# Active Task: Upstream Vendor Skills Sync
 
 - **Status:** Complete
-- **Objective:** Reapply azg v4 harness and align AGENTS.md User Zone sections across downstream repos
-- **Acceptance:** azg apply executed; retired files removed; AGENTS.md aligned; tests/verify.sh green across all repos
-- **Issue/Ticket:** Downstream harness retrofit
+- **Objective:** Sync upstream vendored skills via `azg update --vendor` and align test suite expectations (`writing-for-agents`).
+- **Acceptance:** Upstream skills synced (`mattpocock/skills` @ 6acc160e); test assertions updated; `bash tests/run-all.sh` passing (109/109); global config synced via `azg setup`.
+- **Issue/Ticket:** Vendor updates
 
 ## Work Packet (SFDBN)
 
 - **Status:** Complete
-- **Files:** AGENTS.md, .agents/hooks/checkpoint-scan.sh, .cursor/hooks/commit-verify.sh
-- **Decisions:** User Zone sections aligned to template canonical sequence across alpha-zero-g, fpl-jubilee-ascent, career-agent, and jubilees-gambit
+- **Files:** templates/global/skills/vendor/*, tests/test-azg.sh, tests/test-phase3.sh, task.md
+- **Decisions:** Vendor updated to mattpocock/skills @ 6acc160e; updated test expectation from writing-great-skills to writing-for-agents.
 - **Blocked:** None
-- **Next:** Push changes to GitHub remotes
+- **Next:** Commit and push to origin/main
 
 ## Todo
-- [x] Align AGENTS.md User Zone section headers
-- [x] Run azg apply across local downstream repos
-- [x] Prune retired spawn-budget and domain-vocabulary files
-- [x] Verify tests/verify.sh passing on all repos
+- [x] Run `./azg update --vendor` to pull upstream vendor updates
+- [x] Review new skills (`wizard`, `to-questionnaire`, `wait-what`, `writing-for-agents`)
+- [x] Update test expectations for `writing-for-agents` in `test-azg.sh` and `test-phase3.sh`
+- [x] Run `azg setup` to refresh global skills
+- [x] Run `bash tests/run-all.sh` to confirm harness integrity (109/109 passed)
 
 ## Blockers / Notes
 - None
+
