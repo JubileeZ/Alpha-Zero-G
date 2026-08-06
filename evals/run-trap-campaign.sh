@@ -56,11 +56,21 @@ while IFS= read -r line; do
   run_one "${id}" "${arm}" &
   batch=$((batch + 1))
   if [ "${batch}" -ge "${JOBS}" ]; then
-    wait || fail=1
+    set +e
+    wait
+    wec=$?
+    set -e
+    [ "${wec}" -eq 0 ] || fail=1
     batch=0
   fi
 done <"${list}"
-[ "${batch}" -gt 0 ] && { wait || fail=1; }
+if [ "${batch}" -gt 0 ]; then
+  set +e
+  wait
+  wec=$?
+  set -e
+  [ "${wec}" -eq 0 ] || fail=1
+fi
 
 bash "${ROOT}/evals/analyze-trap.sh" "${CAMP}" || true
 [ "${fail}" -eq 0 ] || warn "some cells failed — see ${LOGDIR}"

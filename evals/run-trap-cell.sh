@@ -34,8 +34,21 @@ if [ "${FORCE}" -eq 0 ] && [ "$(jq -r '.task_success' "${SC}")" != "null" ]; the
 fi
 
 # pristine copy once (with GROUND-TRUTH for scoring only)
-mkdir -p "$(dirname "${PRISTINE}")"
-if [ ! -d "${PRISTINE}" ]; then
+mkdir -p "${ROOT}/evals/traps/worktrees/pristine"
+LOCKDIR="${ROOT}/evals/traps/worktrees/pristine/.lock-${SID}"
+for _i in 1 2 3 4 5 6 7 8 9 10; do
+  if mkdir "${LOCKDIR}" 2>/dev/null; then
+    if [ ! -f "${PRISTINE}/GROUND-TRUTH.md" ]; then
+      rm -rf "${PRISTINE}"
+      cp -R "${VENDOR}" "${PRISTINE}"
+    fi
+    rmdir "${LOCKDIR}" 2>/dev/null || true
+    break
+  fi
+  sleep 0.2
+done
+if [ ! -f "${PRISTINE}/GROUND-TRUTH.md" ]; then
+  rm -rf "${PRISTINE}"
   cp -R "${VENDOR}" "${PRISTINE}"
 fi
 
