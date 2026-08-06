@@ -17,7 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` | Vendored Fable S1–S14 (MIT); 3-arm Process Gate ADR 0012; default N=5; Lite model default `gpt-5.6-luna-medium`; Live Campaign = pre-WFA reverse (`CAMPAIGN.md`) |
+| Trap Suite / Process Gate | `evals/traps/` | Vendored Fable S1–S14 (MIT); ADR 0012; default N=5; traps model `luna-low`; Lite `luna-medium`. Parked: full Fable-method Candidate vs baseline → distill if wins (`ROADMAP.md`) |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -33,8 +33,8 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012: Lite=adopt; traps=process; vendor all Fable scenarios; retire adherence; N=5 default; full-first run; Lite model→luna-medium |
-| writing-for-agents lever pass | Packets 1–2 landed; Luna-low adherence accepted no-regress then **retired** for Trap Suite |
+| Trap Suite Process Gate | ADR 0012 live. Findings 2026-08-06: WFA keep (pre-WFA reverse no-promote); WFA≈baseline on full corpus — **not** license to full-remove. Next parked on `ROADMAP.md`: full Fable-method Candidate → distill if > baseline |
+| writing-for-agents lever pass | Packets 1–2 landed; keep for now pending Fable-method Candidate test |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
@@ -54,6 +54,7 @@
 | Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
 | Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
+| Full Fable-method as Process Gate Candidate | Parked — see `ROADMAP.md` (Candidate > baseline → distill → re-gate) |
 
 ---
 

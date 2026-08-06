@@ -1,13 +1,9 @@
-# Live Campaign — Trap Suite (local; gitignored under campaigns/)
+# Live Campaign — Trap Suite (parked)
 
 | Field | Value |
 |-------|-------|
-| Campaign id | `pre-wfa-reverse` |
-| Mode | **Full corpus** (`TRAP_FULL=1`) |
-| Model | `gpt-5.6-luna-low` |
-| Current ref | `d5711c2` — WFA-era Intent gates (keep) |
-| Candidate ref | `2e6ff14` — **pre-WFA** (reverse Candidate) |
-| Metric | Process Gate binary — not Lite Task Success |
-| Prior | `full-first` was harness smoke (current≈candidate); not a WFA A/B |
+| Status | **Parked** 2026-08-06 — see `ROADMAP.md` § Process Gate vs full Fable-method |
+| Last run | `pre-wfa-reverse` — current WFA `d5711c2` 0.71 = baseline 0.71; pre-WFA cand `2e6ff14` 0.64 → **no reverse** |
+| Next Candidate | Full Fable-method pack; promote only if **> baseline**, then distill + re-gate |
 
-Overwrite when Candidate under test changes. Do not commit campaign trees.
+Do not commit campaign trees under `campaigns/` (gitignored).

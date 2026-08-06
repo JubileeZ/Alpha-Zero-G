@@ -35,6 +35,18 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot (t
 
 Stack wizard · full GitHub MCP default · blocking PreCompact
 
+## Parked — Process Gate vs full Fable-method (ADR 0012)
+
+Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈ baseline on full Trap Suite).
+
+- [ ] **Candidate = full Fable-method** always-on / method pack (not WFA levers alone) — full Trap Suite 3-arm vs **No-Harness Baseline**
+- [ ] If Candidate **> baseline** on Process Gate → **distill** into azg Intent gates / skills
+- [ ] Re-run Process Gate on distilled Candidate; promote only if ≥ current and ≥ baseline
+
+Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.
+
+---
+
 ## Pending Lite (ADR 0009)
 
 - [x] Distilled intent-gates in `AZG:AGENT-INSTRUCTIONS` — Lite 3-arm **adopted** (Task Success only; map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85); form [#75](https://github.com/JubileeZ/alpha-zero-g/issues/75); run [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90))
