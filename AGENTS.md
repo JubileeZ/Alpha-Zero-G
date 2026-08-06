@@ -24,7 +24,7 @@ VERSION           # release version
 
 ---
 
-## Commands & testing
+## Key Commands
 
 | Command | When |
 |---------|------|
@@ -118,5 +118,4 @@ JIT (read when task needs): full `CONTEXT.md`, `progress.md`, `issue-tracker.md`
 - Handoff write: only when user asks (handoff / device switch / leave-for-other-agent). Canonical: `.agents/session-handoff.md` (SFDBN); commit with work. Day-to-day same device: prefer `task.md` + `current-state.md`. If another handoff skill writes elsewhere (e.g. temp): copy SFDBN into `.agents/session-handoff.md` and commit before switch. Non-repo handoff ≠ Device Handoff.
 - Before Checkpoint / stop with code: refresh `task.md` and/or `current-state.md` and/or handoff as appropriate (hooks accept those).
 - Cleanup when task complete: delete `implementation_plan.md` / `walkthrough.md`; delete or empty `task.md` (finished packet — do not re-seed old content). Next task: create a new Work Packet with required SFDBN markers; durable state stays in ROADMAP / current-state / git.
-
 <!-- AZG:MANAGED:END -->

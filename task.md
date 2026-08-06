@@ -1,23 +1,23 @@
-# Active Task: Spawn-budget teardown (ADR 0011)
+# Active Task: Downstream azg apply & template alignment
 
-- **Status:** In Progress
-- **Objective:** Remove spawn-budget hook system (plan B)
-- **Acceptance:** No spawn files/wires; tests green; ADR 0011; apply strips Downstream orphans
-- **Issue/Ticket:** AGENTS grill spawn-budget decision
+- **Status:** Complete
+- **Objective:** Reapply azg v4 harness and align AGENTS.md User Zone sections across downstream repos
+- **Acceptance:** azg apply executed; retired files removed; AGENTS.md aligned; tests/verify.sh green across all repos
+- **Issue/Ticket:** Downstream harness retrofit
 
 ## Work Packet (SFDBN)
 
-- **Status:** Implemented; landing commit
-- **Files:** lib/apply.sh, lib/scaffold.sh, hooks.json, tests/*, docs/adr/0011
-- **Decisions:** Full teardown; host owns subagent limits; ADR 0006 superseded
+- **Status:** Complete
+- **Files:** AGENTS.md, .agents/hooks/checkpoint-scan.sh, .cursor/hooks/commit-verify.sh
+- **Decisions:** User Zone sections aligned to template canonical sequence across alpha-zero-g, fpl-jubilee-ascent, career-agent, and jubilees-gambit
 - **Blocked:** None
-- **Next:** Downstream `azg apply` on client repos
+- **Next:** Push changes to GitHub remotes
 
 ## Todo
-- [x] Delete spawn-budget runtime + template
-- [x] apply/scaffold retirement + jq strip
-- [x] Tests + docs + ADR 0011
-- [ ] Downstream client reapply (operator)
+- [x] Align AGENTS.md User Zone section headers
+- [x] Run azg apply across local downstream repos
+- [x] Prune retired spawn-budget and domain-vocabulary files
+- [x] Verify tests/verify.sh passing on all repos
 
 ## Blockers / Notes
 - None
