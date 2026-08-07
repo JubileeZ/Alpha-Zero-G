@@ -26,12 +26,10 @@ section "4. score s2 heuristic"
 tmp=$(azg_mktemp_d "tmp_azg_trap-XXXXXX")
 cp -R "${REPO_ROOT}/evals/traps/vendor/fable-method/scenarios/s2-surprise-trap/." "${tmp}/"
 rm -f "${tmp}/GROUND-TRUTH.md"
-# portable in-place edit
-python3 -c "
-p='${tmp}/test_pricing.py'
-t=open(p).read().replace('1.70','1.80').replace('15%','10%')
-open(p,'w').write(t)
-"
+# portable in-place edit (awk — Windows native python3 cannot open MSYS /tmp paths)
+awk '{gsub(/1\.70/,"1.80"); gsub(/15%/,"10%"); print}' \
+  "${tmp}/test_pricing.py" >"${tmp}/test_pricing.py.new"
+mv "${tmp}/test_pricing.py.new" "${tmp}/test_pricing.py"
 echo 'INTENT: pricing 10%; test expected 15%; README says 10%' >"${tmp}/log.txt"
 SCORER_OUT="${tmp}/ca" bash "${REPO_ROOT}/evals/score-trap-cell.sh" s2-surprise-trap "${tmp}" "${tmp}/log.txt" >"${tmp}/ts"
 if [ "$(cat "${tmp}/ts")" = "1" ]; then pass "s2 ideal heuristic"; else fail "s2 ideal" "ts=$(cat "${tmp}/ts")"; fi

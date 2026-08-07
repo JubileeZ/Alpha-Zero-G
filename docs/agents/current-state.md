@@ -17,9 +17,9 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` + `evals/stage-eval-home.sh` | ADR 0012 + **0013** Eval Isolation + Eval Device Home; default Docker; `TRAP_JOBS` default **12**; `TRAP_CANDIDATE_PACK`; model `luna-low` |
+| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` + `evals/stage-eval-home.sh` | ADR 0012 + **0013** Eval Isolation + Eval Device Home; default Docker; `TRAP_JOBS` default **12**; analyze auto-writes `REPORT.md` + `LAST-GATE.md` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
-| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
+| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows: shellcheck from GitHub zip; jq choco→direct fallback; flatten nested `shellcheck.exe`; accept `python` if no `python3` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains · **0013** Eval Isolation |
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment · Eval Isolation |
@@ -83,7 +83,7 @@
 5. Harness counters do not cross Bash subshells.
 6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
 7. **CI macOS bash 3.2:** GHA `macos-latest` default `bash` is `/bin/bash` 3.2. Do **not** add Bash 4-only builtins in `lib/` (`mapfile`/`readarray`, `declare -A`, `${var,,}`). Recurring main-branch red was `mapfile` in `setup.sh` → exit 127 → phase3/8/9 cascade. Prefer Homebrew bash locally if desired; CI intentionally stays on system bash so regressions surface.
-8. **CI Windows shellcheck:** Do not install shellcheck via Chocolatey in GHA (CDN 503 flakes). Workflow downloads `shellcheck-v*.zip` from GitHub Releases into `$RUNNER_TEMP/azg-tools`. Zip already contains `shellcheck.exe` at root — do not `Copy-Item` onto itself after `Expand-Archive`.
+8. **CI Windows shellcheck:** Do not install shellcheck via Chocolatey in GHA (CDN 503 flakes). Workflow downloads `shellcheck-v*.zip` from GitHub Releases into `$RUNNER_TEMP/azg-tools`. After Expand-Archive, move nested `shellcheck.exe` to tools bin root if needed. **WIP:** jq choco-fail → direct `jq-win64.exe` download; verify `python3` or `python`.
 9. Smart sync skips **vendor** skill copy when `VENDOR.lock` stamp unchanged — azg-owned skills still refresh; empty `~/.cursor/skills` still needs `./azg setup --force`.
 10. **Windows `azg apply`:** may touch harness files with CRLF-only diffs (no content change). `git restore` those paths if working tree is clean aside from line endings.
 11. Vendor prune: first-party azg skills identified by `templates/global/skills/azg/<name>/` existing under `AZG_ROOT` — do not rely on note wording.

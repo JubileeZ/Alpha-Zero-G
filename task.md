@@ -1,21 +1,25 @@
-# Active Task: (next) s9 triage or Lite isolation
+# Active Task: Auto gate report + Windows CI fix → push
 
-- **Status:** Ready — Device Home arc closed; Current=`87b4eda`
-- **Objective:** Pick next Candidate theme or ROADMAP follow-up
-- **Acceptance:** New Work Packet scoped after user picks recommended path
-- **Issue/Ticket:** See `docs/research/2026-08-07-eval-device-home-process-gate.md`
+- **Status:** Implementing finish-report + Windows `test-traps` `/tmp` fix + land CI.yml; then push
+- **Objective:** Campaign finish auto-writes REPORT/LAST-GATE; CI green on Windows; progress saved + pushed
+- **Acceptance:** `LAST-GATE.md` after analyze; `test-traps` OK; commit pushed; CI watching
+- **Issue/Ticket:** User ask 2026-08-07 auto-track/report + fix CI + push
 
 ## Work Packet (SFDBN)
 
-- **Status:** Idle — prior packet complete
-- **Files:** research note above · `evals/traps/CAMPAIGN.md`
-- **Decisions:** No promote; stay on Current Treatment `87b4eda`
-- **Blocked:** Awaiting user pick of next step
-- **Next:** **Recommended** — triage s9 (Cand fail vs Current pass). Alt A: s2/s13 hard fails. Alt B: Lite → `run-agent-isolated.sh`
+- **Status:** In progress → commit/push
+- **Files:** `evals/report-trap-campaign.sh` · `evals/analyze-trap.sh` · `tests/test-traps.sh` · `.github/workflows/ci.yml` · `.gitignore` · traps README · continuity
+- **Decisions:** Auto report on analyze (campaign end); keep Current=`87b4eda`; push authorized
+- **Blocked:** None
+- **Next:** Push → watch Windows CI; then idle for s9/Lite pick
 
 ## Todo
-- [ ] User picks next: s9 / s2+s13 / Lite arms
-- [ ] Open scoped packet + implement
+- [x] Auto REPORT + LAST-GATE on trap analyze
+- [x] Fix Windows s2 ideal (awk vs native python `/tmp`)
+- [x] Land Windows CI jq/shellcheck/python fallbacks
+- [ ] Commit + push
+- [ ] Confirm CI (esp. windows-latest)
 
 ## Blockers / Notes
-- Prior camp evidence: `evals/traps/campaigns/azg-concept-device-home/promote-result.json`
+- Prior CI fail: `tests/test-traps.sh` s2 ideal FileNotFoundError on MSYS `/tmp` + Windows python3
+- Device Home log: `docs/research/2026-08-07-eval-device-home-process-gate.md`

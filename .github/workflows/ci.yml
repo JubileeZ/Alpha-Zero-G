@@ -64,7 +64,13 @@ jobs:
               if (Get-Command jq -ErrorAction SilentlyContinue) { $jqOk = $true; break }
               Start-Sleep -Seconds (5 * $i)
             }
-            if (-not $jqOk) { throw 'jq install failed after choco retries' }
+            if (-not $jqOk) {
+              $jqUrl = "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-win64.exe"
+              Invoke-WebRequest -Uri $jqUrl -OutFile (Join-Path $toolsBin 'jq.exe')
+              if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
+                throw 'jq install failed after choco retries and direct download'
+              }
+            }
           }
 
           if (-not (Get-Command shellcheck -ErrorAction SilentlyContinue)) {
@@ -73,6 +79,10 @@ jobs:
             $url = "https://github.com/koalaman/shellcheck/releases/download/$ver/shellcheck-$ver.zip"
             Invoke-WebRequest -Uri $url -OutFile $zip
             Expand-Archive -Path $zip -DestinationPath $toolsBin -Force
+            $scExe = Get-ChildItem -Path $toolsBin -Recurse -Filter "shellcheck.exe" | Select-Object -First 1
+            if ($scExe) {
+              Move-Item -Path $scExe.FullName -Destination (Join-Path $toolsBin 'shellcheck.exe') -Force
+            }
             if (-not (Test-Path (Join-Path $toolsBin 'shellcheck.exe'))) {
               throw 'shellcheck.exe missing from GitHub release zip'
             }
@@ -86,10 +96,10 @@ jobs:
           bash --version | head -1
           command -v jq
           command -v shellcheck
-          command -v python3
+          command -v python3 || command -v python
           jq --version
           shellcheck --version | head -2
-          python3 --version
+          python3 --version 2>/dev/null || python --version
           # Guard: working tree must be LF for shell scripts (Windows autocrlf regressions)
           if tr -cd '\r' < azg | grep -q .; then
             echo "::error::azg has CR — .gitattributes / autocrlf misconfigured"

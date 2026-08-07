@@ -11,7 +11,8 @@ Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 | `vendor/fable-method/scenarios/` | Upstream fixtures (MIT); strip `GROUND-TRUTH.md` from agent copies | tracked |
 | `relevance-map.json` | change-type → preferred scenario IDs | tracked |
 | `corpus.json` | Full S1–S14 id list | tracked |
-| `campaigns/<id>/` | selection, scorecards, logs, `promote-result.json` | **ignored** |
+| `campaigns/<id>/` | selection, scorecards, logs, `promote-result.json`, **`REPORT.md`** (auto) | **ignored** |
+| `LAST-GATE.md` | Pointer copy of latest `REPORT.md` after analyze | **ignored** |
 | `worktrees/` | pristine + per-cell agent trees | **ignored** |
 | `../{prepare,run,select,score,analyze}-trap*.sh` | runners (repo `evals/`) | tracked |
 
@@ -53,6 +54,7 @@ bash evals/prepare-trap-campaign.sh "$TRAP_CAMP"
 bash evals/run-trap-campaign.sh --jobs 12
 # or: bash evals/traps/run-full-first.sh
 bash evals/analyze-trap.sh "$TRAP_CAMP"
+# Auto: $TRAP_CAMP/REPORT.md + evals/traps/LAST-GATE.md (rates + grid; no manual jq)
 ```
 
 Resume skips cells with `task_success` set; `--force` re-runs all.

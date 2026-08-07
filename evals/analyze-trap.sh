@@ -72,3 +72,5 @@ result = {
 out.write_text(json.dumps(result, indent=2) + "\n")
 print(json.dumps(result, indent=2))
 PY
+
+bash "${ROOT}/evals/report-trap-campaign.sh" "${CAMP}" || warn "trap report skipped"
