@@ -30,9 +30,10 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ## Default policy
 
 - **N=5** — relevance map for `TRAP_CHANGE_TYPE` (default `general`), then random-fill; seed + IDs in campaign dir
-- **Full corpus** — `TRAP_FULL=1` (first campaign / deep runs)
-- **Model** — `TRAP_MODEL` default `gpt-5.6-luna-low`
+- **Full corpus** — `TRAP_FULL=1` (first campaign / deep runs); **also default** when `TRAP_CANDIDATE_PACK=fable-method` (adopt-candidate gate) unless `TRAP_FULL` or `TRAP_IDS` is set
+- **Model** — `TRAP_MODEL` default `gpt-5.6-luna-medium`
 - **Jobs** — `TRAP_JOBS` / `--jobs N` (parallel cells; default 12)
+- **Repeats** — `TRAP_REPEATS=3` via `bash evals/traps/run-repeats.sh` (full corpus × R; majority aggregate)
 - **Promote** — Candidate rate ≥ Current and ≥ Baseline **and** `isolation=docker` (Process Gate — not Lite)
 
 ## One-shot
@@ -41,25 +42,22 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 export PATH="$HOME/.local/bin:$PATH"
 cd /path/to/alpha-zero-g   # any clone
 
-# routine Process Gate (N=5)
-TRAP_CHANGE_TYPE=intent_gates bash evals/prepare-trap-campaign.sh
+# routine Process Gate (N=5) — azg Candidate overlay
+TRAP_CANDIDATE_PACK=none TRAP_CHANGE_TYPE=intent_gates bash evals/prepare-trap-campaign.sh
 bash evals/run-trap-campaign.sh --jobs 12
-bash evals/analyze-trap.sh
 
-# full corpus (first / deep)
-export TRAP_CAMP="$PWD/evals/traps/campaigns/full-first"
-export TRAP_FULL=1 TRAP_MODEL=gpt-5.6-luna-low
-export AZG_CURRENT_REF=<current-sha> AZG_CANDIDATE_REF=HEAD
-bash evals/prepare-trap-campaign.sh "$TRAP_CAMP"
-bash evals/run-trap-campaign.sh --jobs 12
-# or: bash evals/traps/run-full-first.sh
-bash evals/analyze-trap.sh "$TRAP_CAMP"
-# Auto: $TRAP_CAMP/REPORT.md + evals/traps/LAST-GATE.md (rates + grid; no manual jq)
+# 3× full corpus gap check (fable pack vs Current Device Home) — durable
+export TRAP_CAMP="$PWD/evals/traps/campaigns/fable-medium-r3"
+export TRAP_CANDIDATE_PACK=fable-method   # implies TRAP_FULL=1 when unset
+export AZG_CURRENT_REF=87b4eda
+# or: setsid bash evals/traps/run-repeats.sh --force
+bash evals/traps/run-repeats.sh --force
+# Auto: $TRAP_CAMP/AGGREGATE.md + evals/traps/LAST-GATE.md
 ```
 
 Resume skips cells with `task_success` set; `--force` re-runs all.
 
-Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream pack; else azg overlay), `AZG_EVAL_DOCKER` (default `1`).
+Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_REPEATS`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream pack + default full corpus; else azg overlay), `AZG_EVAL_DOCKER` (default `1`).
 
 ## Cleanup (local)
 

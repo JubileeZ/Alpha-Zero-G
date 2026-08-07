@@ -47,9 +47,10 @@ Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈
 - [x] **Adopt** Candidate (D+clarity) as Current Treatment — default `AZG_CURRENT_REF=87b4eda` (tie≥; take for now)
 - [x] **Eval Device Home** — fake HOME mimic Device Setup (azg-owned core; no WT inject)
 - [x] Re-run Docker Process Gate under Eval Device Home — **71/86/79** · `promote=false` · **keep Current=`87b4eda`**
-- [ ] Triage Candidate gap **s9** (or Alt: s2/s13 · Lite isolation arms) — see `docs/research/2026-08-07-eval-device-home-process-gate.md`
+- [x] **Clean slate** — strip Fable distill from always-on; **delete** `templates/global/skills/azg/`
+- [ ] **Tier sweep** — `cleanslate-tier-sweep` low/medium/high → re-earn policy
+- [x] Trap default model → **`gpt-5.6-luna-medium`** + `run-repeats.sh` / `run-tier-sweep.sh`
 - [ ] Wire Lite Agent arms to `run-agent-isolated.sh` (follow-up)
-- [x] Land `TRAP_JOBS`/`LITE_JOBS` default 12 + isolation-file harden
 
 
 Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.

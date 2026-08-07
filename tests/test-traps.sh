@@ -22,6 +22,26 @@ c=$(printf '%s\n' "${ids}" | sed '/^$/d' | wc -l | tr -d ' ')
 if [ "${c}" = "5" ]; then pass "N=5"; else fail "N=5" "c=${c}"; fi
 if printf '%s\n' "${ids}" | grep -q 's2-surprise-trap'; then pass "prefers s2"; else fail "missing s2"; fi
 
+section "3b. fable adopt pack defaults full"
+tmp=$(azg_mktemp_d "tmp_azg_trap-prep-XXXXXX")
+# Unset TRAP_FULL so prepare's adopt-candidate default applies
+env -u TRAP_FULL -u TRAP_IDS TRAP_CANDIDATE_PACK=fable-method \
+  bash "${REPO_ROOT}/evals/prepare-trap-campaign.sh" "${tmp}" >/dev/null
+n=$(jq '.scenarios|length' "${tmp}/selection.json")
+full=$(jq -r '.trap_full' "${tmp}/selection.json")
+if [ "${n}" = "14" ] && [ "${full}" = "1" ]; then
+  pass "fable pack → TRAP_FULL=1 (14)"
+else
+  fail "fable pack full default" "n=${n} trap_full=${full}"
+fi
+# Explicit TRAP_FULL=0 still allows N=5
+tmp2=$(azg_mktemp_d "tmp_azg_trap-prep2-XXXXXX")
+TRAP_CANDIDATE_PACK=fable-method TRAP_FULL=0 TRAP_N=5 TRAP_SEED=42 TRAP_IDS= \
+  TRAP_CHANGE_TYPE=general \
+  bash "${REPO_ROOT}/evals/prepare-trap-campaign.sh" "${tmp2}" >/dev/null
+n2=$(jq '.scenarios|length' "${tmp2}/selection.json")
+if [ "${n2}" = "5" ]; then pass "fable pack + TRAP_FULL=0 → N=5"; else fail "override N=5" "n2=${n2}"; fi
+
 section "4. score s2 heuristic"
 tmp=$(azg_mktemp_d "tmp_azg_trap-XXXXXX")
 cp -R "${REPO_ROOT}/evals/traps/vendor/fable-method/scenarios/s2-surprise-trap/." "${tmp}/"
@@ -39,5 +59,8 @@ if grep -q 'Trap Suite' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Trap Suite
 assert_file_exists "ADR 0012" "${REPO_ROOT}/docs/adr/0012-trap-suite-process-gate.md"
 if [ ! -d "${REPO_ROOT}/evals/adherence" ]; then pass "adherence retired"; else fail "adherence still present"; fi
 if grep -q 'gpt-5.6-luna-medium' "${REPO_ROOT}/evals/run-lite-composer-cell.sh"; then pass "Lite default luna-medium"; else fail "Lite model default"; fi
+if grep -q 'gpt-5.6-luna-medium' "${REPO_ROOT}/evals/run-trap-cell.sh"; then pass "Trap default luna-medium"; else fail "Trap model default"; fi
+assert_file_exists "run-repeats" "${REPO_ROOT}/evals/traps/run-repeats.sh"
+assert_file_exists "analyze-trap-repeats" "${REPO_ROOT}/evals/analyze-trap-repeats.sh"
 
 test_summary

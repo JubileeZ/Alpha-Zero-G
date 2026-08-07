@@ -5,7 +5,7 @@ Two gates, one tree. **Clone + Cursor Agent CLI** is enough to run on any device
 | Gate | Path | Role | Default model |
 |------|------|------|----------------|
 | **Lite** (adopt) | [`lite/`](lite/) | SWE-bench Task Success — ADR 0007 | `gpt-5.6-luna-medium` |
-| **Trap Suite** (process) | [`traps/`](traps/) | Intent/Prove traps — ADR 0012 | `gpt-5.6-luna-low` |
+| **Trap Suite** (process) | [`traps/`](traps/) | Intent/Prove traps — ADR 0012 | `gpt-5.6-luna-medium` |
 
 ## Shared vs local
 

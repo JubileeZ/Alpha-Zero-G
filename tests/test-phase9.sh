@@ -32,6 +32,7 @@ TEMP_DIR="$(azg_mktemp_d "tmp_azg_phase9-test-XXXXXX")"
 run_prune() {
   local skills_dir="$1" vendor_dir="$2"
   bash -c "
+    export AZG_ROOT='${AZG_ROOT:-}'
     source '${REPO_ROOT}/lib/common.sh'
     source '${REPO_ROOT}/lib/apply-overlay.sh'
     count=0
@@ -110,13 +111,15 @@ assert_dir_exists \
 
 section "5b. First-party azg skill absent from vendor → NOT pruned"
 
-# Sentinel present, absent from vendor tree, and note text carries no azg wording:
-# survival must come from templates/global/skills/azg/<name>/ existing, not prose.
+# Sentinel present, absent from vendor: survival = source under templates/global/skills/azg/
+# (fixture creates the ownership path; product tree may have no azg skills after clean slate)
+mkdir -p "${TEMP_DIR}/azg_root/templates/global/skills/azg/azg-method-refs"
+printf 'SKILL.md\n' > "${TEMP_DIR}/azg_root/templates/global/skills/azg/azg-method-refs/SKILL.md"
 mkdir -p "${SKILLS_DIR}/azg-method-refs"
 printf 'vendored\n' > "${SKILLS_DIR}/azg-method-refs/ANTIGRAVITY-NOTE.md"
 printf 'SKILL.md for azg-method-refs\n' > "${SKILLS_DIR}/azg-method-refs/SKILL.md"
 
-run_prune "${SKILLS_DIR}" "${VENDOR_DIR}" > /dev/null
+AZG_ROOT="${TEMP_DIR}/azg_root" run_prune "${SKILLS_DIR}" "${VENDOR_DIR}" > /dev/null
 
 assert_dir_exists \
   "azg-method-refs/ preserved (first-party, owned by templates/global/skills/azg)" \

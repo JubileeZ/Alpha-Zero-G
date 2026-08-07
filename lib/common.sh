@@ -11,7 +11,10 @@ set -euo pipefail
 # Version
 # ---------------------------------------------------------------------------
 AZG_VERSION="$(cat "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/VERSION" 2>/dev/null || echo "unknown")"
-AZG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Honor pre-set AZG_ROOT (tests / wrappers); else resolve from this file
+if [ -z "${AZG_ROOT:-}" ]; then
+  AZG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
 
 # ---------------------------------------------------------------------------
 # Colors (disabled when not a terminal or NO_COLOR is set)
@@ -372,6 +375,18 @@ azg_ownership_list_add() {
   azg_ownership_init
   tmp="${path}.azg.tmp"
   jq --arg k "${list_key}" --arg v "${item}" '.[$k] = ((.[$k] // []) + [$v] | unique)' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
+}
+
+azg_ownership_list_remove() {
+  # Usage: azg_ownership_list_remove skills|cursor_skills|cursor_rules ITEM
+  local list_key="${1}"
+  local item="${2}"
+  local path tmp
+  path="$(azg_ownership_path)"
+  [ -f "${path}" ] || return 0
+  tmp="${path}.azg.tmp"
+  jq --arg k "${list_key}" --arg v "${item}" \
+    '.[$k] = ((.[$k] // []) | map(select(. != $v)))' "${path}" > "${tmp}" && mv "${tmp}" "${path}"
 }
 
 azg_ownership_list_owns() {

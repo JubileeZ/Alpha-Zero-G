@@ -142,47 +142,35 @@ else
   fail "ownership missing cursor_rules azg-agent-instructions.mdc"
 fi
 
-section "1b. first-party azg skills + Prove stance (ADR 0010)"
+section "1b. clean slate — azg distill skills removed + no Prove in always-on"
 
 for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-  assert_file_exists "Cursor azg skill ${azg_skill}" \
+  assert_file_not_exists "Cursor azg skill ${azg_skill} not installed" \
     "${TEMP_HOME}/.cursor/skills/${azg_skill}/SKILL.md"
-  assert_file_exists "Cursor ${azg_skill} AZG-OWNED.md" \
-    "${TEMP_HOME}/.cursor/skills/${azg_skill}/AZG-OWNED.md"
-  assert_file_exists "Gemini azg skill ${azg_skill}" \
+  assert_file_not_exists "Gemini azg skill ${azg_skill} not installed" \
     "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/SKILL.md"
-  assert_file_exists "Gemini ${azg_skill} ANTIGRAVITY-NOTE" \
-    "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/ANTIGRAVITY-NOTE.md"
-  if [ -f "${OWN}" ] && jq -e --arg s "${azg_skill}" '(.cursor_skills // []) | index($s) != null' "${OWN}" >/dev/null; then
-    pass "ownership lists cursor_skills ${azg_skill}"
-  else
-    fail "ownership missing cursor_skills ${azg_skill}"
-  fi
 done
 
-if grep -q 'Failure modes → gate' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
-  grep -q 'same construct' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
-  grep -q 'Classic frauds (Prove)' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
-  grep -q 'Compressed examples' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"; then
-  pass "method-refs failure-mode map + frauds + examples inlined in SKILL.md"
+if [ -d "${TEMP_REPO}/templates/global/skills/azg" ]; then
+  fail "templates/global/skills/azg must be deleted (clean slate)"
 else
-  fail "method-refs SKILL.md missing failure-mode / frauds / examples"
+  pass "azg distill skill sources removed"
 fi
 
-if grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  grep -q 'azg-method-refs' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  grep -q 'azg-domain-research' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  grep -q 'VERIFIED:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" &&
-  ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions include Prove stance + skill router; placeholders not global"
+if grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Temporary File Cleanup' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'INTENT:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions clean slate (cleanup+telegraphic only)"
 else
-  fail "agent-instructions missing Prove/router or still has global Placeholder Rule"
+  fail "agent-instructions not clean slate"
 fi
 
-# Smart-sync skip must still refresh azg-owned skills (VENDOR.lock unchanged)
+# Smart-sync skip must not resurrect retired skills
 assert_exit "second setup (smart sync) exits 0" 0 \
   env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
-assert_file_exists "azg-method-refs survives smart sync" \
+assert_file_not_exists "azg-method-refs stays absent after smart sync" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 
 assert_marker_rejected() {
@@ -250,7 +238,7 @@ assert_exit "azg uninstall exits 0" 0 \
 
 assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
-assert_file_not_exists "uninstall removed azg-method-refs" \
+assert_file_not_exists "uninstall removed azg-method-refs (already parked)" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"

@@ -64,6 +64,17 @@ VERSION           # release version
 - Downstream client `AGENTS.md`: hybrid layout (user zone above markers; managed between)
 - Keep `AGENTS.md` light; detail → `docs/agents/`
 
+### Eval campaigns — agent owns the watch
+
+When this agent **starts** or **inherits** a Trap Suite / Lite / tier-sweep campaign (setsid, background `run-*-campaign`, `run-repeats`, `run-tier-sweep`):
+
+1. **Do not** leave the user to `tail -f` / poll alone. Agent watches until finish or hard block.
+2. Poll: filled scorecards vs expected · `campaign.log` / `campaign.pid` · terminal artifacts (`TIERS.md`, `AGGREGATE.md`, `REPORT.md`, `promote-result.json`, `LAST-GATE.md`).
+3. Cadence: first check within ~1–2 min of launch; then every few minutes while running. On process exit without artifact → diagnose.
+4. **On finish:** report outcome (rates + material splits) in chat; update `task.md` + `evals/traps/CAMPAIGN.md` and/or `docs/agents/current-state.md` as needed. Do not end the turn with only "watch this path."
+
+Live camps (gitignored): `evals/traps/campaigns/<id>/`.
+
 ---
 
 <!-- AZG:MANAGED:START -->

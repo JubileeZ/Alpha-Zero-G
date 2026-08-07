@@ -2,14 +2,40 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Done** — Device Home Gate `azg-concept-device-home` · **71 / 86 / 79** · `promote=false` (Cand < Current) |
+| Status | **Running** — clean-slate tier sweep `cleanslate-tier-sweep` (luna-low → medium → high); Current=HEAD worktree (no Fable distill) |
+| Prior medium×3 | `fable-medium-r3` maj **79/71/93** — historical (pre-clean-slate) |
+| Trap default model | **`gpt-5.6-luna-medium`** (ADR 0012); tier sweep also runs low+high once each |
+| Next | Read `TIERS.md` → re-earn only traps that beat clean slate |
+| Prior Device Home (azg Cand) | `azg-concept-device-home` — **71 / 86 / 79** · keep Current=`87b4eda` |
+| Fable gap camp (N=1 low) | `fable-method-device-home` — **71 / 57 / 71** · superseded |
 | Host smoke (`azg-concept-candidate`) | 71/71/79 — blocked (`isolation=host`); triage only |
-| Last Fable-pack run | `fable-method-full` — 64/79/71 · no promote |
+| Last Fable-pack (pre-iso) | `fable-method-full` — 64/79/71 · `isolation=null` (**not comparable**) |
 | Last inject-era Docker | `azg-concept-docker` — 71/71/71 tie · adopted Current=`87b4eda` (**not comparable**) |
-| Next | Keep Current=`87b4eda`; triage Device Home splits; Lite Agent arms → `run-agent-isolated.sh` |
+| Next | Distill Candidate for maj gaps (s13/s9/s3) or park; Lite stays adopt gate |
 | Prior | `pre-wfa-reverse` — WFA 0.71 = baseline 0.71 |
+| Trap default model | **`gpt-5.6-luna-medium`** (ADR 0012) |
 
 Do not commit campaign trees under `campaigns/` (gitignored).
+
+## Verdict — fable-method-device-home (gap check, not adopt)
+
+| Arm | Pass | Rate |
+|-----|------|------|
+| Baseline (empty HOME) | 10/14 | **71%** |
+| Current (`87b4eda` Device Home) | 8/14 | **57%** |
+| Candidate (fable-method pack inject) | 10/14 | **71%** |
+
+`isolation=docker`. Analyze `promote_process_gate=true` — **ignore for adopt**. Headline vs prior Device Home (Current 86%→57%) is **noise** — see noise policy. Do not distill from this grid alone.
+
+### Cross-run read (vs prior Device Home)
+
+| Split | IDs | Meaning |
+|-------|-----|---------|
+| Current flipped 1→0 | s3, s11, s12, s14 | Easy-cell / unstable — **not** distill targets |
+| Baseline flipped | s4, s14 | Same — N=1 luna-low |
+| Stable harness lift | **s9** | C beats B both camps |
+| Stable hard fail | **s2** | All arms |
+| Fable-only (once) | **s13** | Only candidate gap — confirm before distill |
 
 ## Verdict — azg-concept-device-home (promote-grade, Eval Device Home)
 
@@ -167,9 +193,12 @@ These are **hard traps by design** — s2 is the headline Fable eval; s13 is the
 ## Reproduce
 
 ```bash
-export TRAP_CAMP="$PWD/evals/traps/campaigns/fable-method-full"
-bash evals/traps/run-full-first.sh --resume   # or --force to re-run all
-bash evals/analyze-trap.sh "$TRAP_CAMP"
+# Device Home–era fable adopt gate (default camp for run-full-first.sh)
+export TRAP_CAMP="$PWD/evals/traps/campaigns/fable-method-device-home"
+bash evals/traps/run-full-first.sh --force   # or --resume
+# Auto: REPORT.md + evals/traps/LAST-GATE.md
 ```
+
+Historical pre-isolation camp `fable-method-full` (`isolation=null`) is not comparable.
 
 Do not commit `campaigns/` trees.

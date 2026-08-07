@@ -1,25 +1,24 @@
-# Active Task: Idle — auto-report landed; watch CI
+# Active Task: Clean slate + tier sweep; push progress
 
-- **Status:** Pushed `bb93d6d` (auto REPORT + Windows trap/CI fixes). Awaiting CI.
-- **Objective:** Confirm windows-latest green; then pick next theme
-- **Acceptance:** CI green on push; LAST-GATE exists after future gates
-- **Issue/Ticket:** Auto-track/report + CI fix + push 2026-08-07
+- **Status:** Sweep running; distill skills deleted; eval-watch rule in AGENTS.md
+- **Objective:** Clean slate Device Setup; agent-owned eval watch; persist + push
+- **Acceptance:** skills/azg gone; AGENTS.md eval-watch; commit+push on main
+- **Issue/Ticket:** Clean slate cleanup push 2026-08-07
 
 ## Work Packet (SFDBN)
 
-- **Status:** Waiting CI
-- **Files:** (shipped) `evals/report-trap-campaign.sh` · `tests/test-traps.sh` · `.github/workflows/ci.yml`
-- **Decisions:** Current=`87b4eda`; gate finish → `REPORT.md` + `evals/traps/LAST-GATE.md`
+- **Status:** In progress — tier sweep still running (agent watches)
+- **Files:** `templates/global/AGENTS.md` · deleted `skills/azg/` · `AGENTS.md` eval-watch · evals runners · tests
+- **Decisions:** Distill skills deleted not parked; agent must poll eval camps; Current=HEAD clean slate for sweep
 - **Blocked:** None
-- **Next:** Watch CI; then s9 triage / s2+s13 / Lite arms
+- **Next:** Finish `cleanslate-tier-sweep` → TIERS.md → report
 
 ## Todo
-- [x] Auto REPORT + LAST-GATE
-- [x] Windows s2 `/tmp` fix + CI tool fallbacks
-- [x] Commit + push (`bb93d6d`)
-- [ ] Confirm CI green
-- [ ] User picks next theme
+- [x] Delete templates/global/skills/azg
+- [x] Eval-watch rule in repo AGENTS.md
+- [ ] Tier sweep complete
+- [x] Commit + push
 
 ## Blockers / Notes
-- After any trap campaign: open `evals/traps/LAST-GATE.md` (no manual jq)
-- Device Home evidence still under `campaigns/azg-concept-device-home/`
+- Camp: `evals/traps/campaigns/cleanslate-tier-sweep`
+- Re-enable skills later only after traps earn them + restore overlay if needed

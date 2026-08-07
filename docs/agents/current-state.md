@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Device Home Gate done; **keep Current=`87b4eda`** (no promote); next = s9 triage or Lite isolation arms
+**Active phase:** post-v4 — **clean slate** (Fable distill stripped); **running** luna low/medium/high tier sweep
 
 ---
 
@@ -15,9 +15,9 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
-| Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` + `evals/stage-eval-home.sh` | ADR 0012 + **0013** Eval Isolation + Eval Device Home; default Docker; `TRAP_JOBS` default **12**; analyze auto-writes `REPORT.md` + `LAST-GATE.md` |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | **Clean slate:** cleanup + telegraphic only; Process Gate distill **parked** (re-earn from traps) |
+| Azg-owned skills | *(deleted)* | Distill skills removed clean slate 2026-08-07; re-create under `templates/global/skills/azg/` only when Trap Suite re-earns |
+| Trap Suite / Process Gate | `evals/traps/` + `run-agent-isolated.sh` + docker + `stage-eval-home.sh` + **`run-repeats.sh`** | ADR 0012+0013; default model **`gpt-5.6-luna-medium`**; `TRAP_JOBS` 12; repeats → `AGGREGATE.md` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows: shellcheck from GitHub zip; jq choco→direct fallback; flatten nested `shellcheck.exe`; accept `python` if no `python3` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -33,7 +33,8 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. **Device Home** `azg-concept-device-home`: **71/86/79** · `promote=false` · keep Current=`87b4eda`. Inject-era docker 71/71/71 historical only. Hard fails: s2/s13 |
+| Trap Suite Process Gate | ADR 0012+0013. Default model **luna-medium**; use **R≥3 majority** for gap claims (`run-repeats.sh`). N=1 low camps historical only |
+| Fable-method distill + re-gate | **Gaps confirmed** (maj) — s13/s9/s3; Current mean still noisy (3 flips); distill optional next; never adopt upstream pack |
 | writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
@@ -54,7 +55,7 @@
 | Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
 | Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
-| Fable-method distill + re-gate | **Not needed** — Fable pack lost to current. Azg concept Candidate supersedes distill path |
+| Fable-method distill + re-gate | **Deleted** always-on + `skills/azg/` — re-earn from clean-slate tier sweep; never vendor upstream pack |
 
 ---
 
@@ -69,7 +70,8 @@
 | `bash evals/run-lite-composer-campaign.sh --score --jobs 12` | Parallel Composer Lite campaign (skips filled scorecards; `LITE_JOBS` default 12) |
 | `bash evals/analyze-lite-promote.sh <camp>` | Write `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
-| `bash evals/traps/run-full-first.sh` | Full S1–S14 Process Gate (default Candidate = fable-method pack) |
+| `bash evals/traps/run-repeats.sh` | R× full Process Gate (default R=3, model medium, Candidate=fable pack); writes `AGGREGATE.md` |
+| `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop (default medium + fable pack camp) |
 | `bash evals/analyze-trap.sh <camp>` | `promote-result.json` for trap campaign |
 
 ---

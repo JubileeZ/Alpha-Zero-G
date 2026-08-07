@@ -91,13 +91,18 @@ for f in azg-ponytail.mdc azg-agent-instructions.mdc; do
   if [ -f "${staged}/.cursor/rules/${f}" ]; then pass "staged ${f}"; else fail "missing ${f}" ""; fi
 done
 for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-  if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ]; then pass "staged skill ${sk}"; else fail "missing skill ${sk}" ""; fi
+  if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ]; then
+    fail "clean slate must not stage skill ${sk}" ""
+  else
+    pass "skill ${sk} not staged"
+  fi
 done
 if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Impl-Equivalent Default\|Reversible Default\|Intent gates\|INTENT:' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions body present"
+  && grep -q 'Telegraphic Writing Style\|Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -qE 'Intent gates|INTENT:|Prove stance' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions clean-slate body"
 else
-  fail "agent-instructions body weak" ""
+  fail "agent-instructions body unexpected" ""
 fi
 if grep -q 'PONYTAIL\|lazy senior\|YAGNI' "${staged}/.cursor/rules/azg-ponytail.mdc"; then
   pass "ponytail body present"
@@ -106,7 +111,7 @@ else
 fi
 # idempotent restage
 bash "${ROOT}/evals/stage-eval-home.sh" "${ref}" "${staged}" >/dev/null
-if [ -f "${staged}/.azg-eval-home-ref" ] && [ "$(cat "${staged}/.azg-eval-home-ref")" = "${ref}" ]; then
+if [ -f "${staged}/.azg-eval-home-ref" ] && grep -q "${ref}" "${staged}/.azg-eval-home-ref"; then
   pass "home ref marker"
 else
   fail "home ref marker" ""

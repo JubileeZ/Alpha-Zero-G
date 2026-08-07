@@ -8,6 +8,12 @@ source "${ROOT}/lib/common.sh"
 CAMP="${1:-${ROOT}/evals/traps/campaigns/default}"
 mkdir -p "${CAMP}"
 
+# Adopt candidate (upstream fable pack): full corpus unless TRAP_FULL or TRAP_IDS set
+if [ "${TRAP_CANDIDATE_PACK:-}" = "fable-method" ] && [ -z "${TRAP_FULL+x}" ] && [ -z "${TRAP_IDS:-}" ]; then
+  export TRAP_FULL=1
+  info "TRAP_CANDIDATE_PACK=fable-method → default TRAP_FULL=1 (override: TRAP_FULL=0)"
+fi
+
 # stable seed for this prepare (select reads TRAP_SEED)
 if [ -z "${TRAP_SEED:-}" ] && [ "${TRAP_FULL:-0}" != "1" ]; then
   export TRAP_SEED
@@ -30,8 +36,10 @@ esac
   echo "  \"trap_n\": ${TRAP_N:-5},"
   echo "  \"trap_change_type\": \"${TRAP_CHANGE_TYPE:-general}\","
   echo "  \"trap_seed\": \"${TRAP_SEED:-}\","
-  echo "  \"model_default\": \"${TRAP_MODEL:-gpt-5.6-luna-low}\","
+  echo "  \"model_default\": \"${TRAP_MODEL:-gpt-5.6-luna-medium}\","
   echo "  \"isolation\": \"${ISOLATION}\","
+  echo "  \"candidate_pack\": \"${TRAP_CANDIDATE_PACK:-}\","
+  echo "  \"current_ref\": \"${AZG_CURRENT_REF:-87b4eda}\","
   echo "  \"scenarios\": ["
   first=1
   while IFS= read -r id; do

@@ -119,7 +119,12 @@ _migrate_agent_instruction_try() {
 
 _migrate_agent_instruction_markers() {
   local target="${1}"
-  # Current template (Cleanup → last Report line), then legacy Placeholder → old telegraphic.
+  # Clean slate (Cleanup → telegraphic end), then legacy full gates, then Placeholder → old telegraphic.
+  if _migrate_agent_instruction_try "${target}" \
+    "# AGENT INSTRUCTIONS: Temporary File Cleanup" \
+    "Write updates to agent-reread surfaces (AGENTS.md, CONTEXT.md, ADRs, ROADMAP, progress/current-state, and similar always-on or JIT agent docs) in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact. Goal: denser future context, less bloat. Not for the user-facing task report."; then
+    return 0
+  fi
   if _migrate_agent_instruction_try "${target}" \
     "# AGENT INSTRUCTIONS: Temporary File Cleanup" \
     "Before send: non-trivial → layout: top owed \`INTENT:\`/\`AUTH:\` → main body → bottom owed \`TWINS:\`/\`PENDING:\` + Prove verdict; omit un-owed (no N/A). Repair missing lines, then send."; then
@@ -456,10 +461,11 @@ cmd_setup() {
     info "Tip: run 'azg update --vendor' to vendor skills"
   fi
 
-  # First-party azg skills — always refresh (not gated by VENDOR.lock smart sync)
+  # First-party azg distill skills — removed clean slate 2026-08-07 (re-earn via traps).
+  # Prune any leftover device installs from older releases.
   local azg_skills_copied=0
   local azg_cursor_skills_copied=0
-  if [ -d "${azg_skills_dir}" ]; then
+  if [ -d "${azg_skills_dir}" ] && [ "${AZG_SHIP_AZG_SKILLS:-0}" = "1" ]; then
     if [ ! -f "${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl" ]; then
       die "azg skill overlay missing: ${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
     fi
@@ -468,13 +474,29 @@ cmd_setup() {
       [ -d "${azg_skill_dir}" ] || continue
       [ -f "${azg_skill_dir}/SKILL.md" ] || continue
       azg_skill_name="$(basename "${azg_skill_dir}")"
-
       _install_skill_pair "${azg_skill_name}" "${azg_skills_dir}" \
         "${azg_overlay_dir}" "${force}" \
         azg_skills_copied azg_cursor_skills_copied
     done
   else
-    warn "First-party azg skills dir missing: ${azg_skills_dir}"
+    info "azg distill skills absent/parked (no templates/global/skills/azg ship)"
+    local parked_sk
+    for parked_sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
+      if [ -d "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}" ] \
+        && { [ -f "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}/AZG-OWNED.md" ] \
+          || azg_ownership_list_owns cursor_skills "${parked_sk}"; }; then
+        # DESTRUCTIVE: remove retired distill skill from Cursor
+        rm -rf "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}"
+        azg_ownership_list_remove cursor_skills "${parked_sk}"
+      fi
+      if [ -d "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}" ] \
+        && { [ -f "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}/ANTIGRAVITY-NOTE.md" ] \
+          || azg_ownership_list_owns skills "${parked_sk}"; }; then
+        # DESTRUCTIVE: remove retired distill skill from Gemini
+        rm -rf "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}"
+        azg_ownership_list_remove skills "${parked_sk}"
+      fi
+    done
   fi
 
   # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)
