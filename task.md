@@ -1,24 +1,22 @@
-# Active Task: Process Gate done — adopt vs ablate
+# Active Task: Process Gate adopted — Lite isolation next
 
-- **Status:** Docker Process Gate **complete** (`azg-concept-docker`)
-- **Objective:** Recorded; await human adopt (tie≥) or ablate D delta
-- **Acceptance:** 42/42 · isolation=docker · promote-result written · continuity updated
+- **Status:** Candidate (D+clarity) **adopted** as Current (`87b4eda`); take for now
+- **Objective:** Keep adopted gates; next = Lite Agent arms via `run-agent-isolated.sh`
+- **Acceptance:** Defaults point at `87b4eda`; continuity records adopt
 - **Issue/Ticket:** Grill-with-docs 2026-08-07 · ADR 0012/0013
 
 ## Work Packet (SFDBN)
 
-- **Status:** B/C/Cand = 10/14 each (71%); `promote_process_gate=true` (three-way tie, no lift); auto-loop not needed
-- **Files:** `evals/traps/CAMPAIGN.md` · `promote-result.json` (gitignored camp) · ROADMAP · current-state
-- **Decisions:** Mechanical promote on ≥; product choice still open — adopt Candidate as Current or ablate D for no aggregate gain
-- **Blocked:** None (human decision)
-- **Next:** User: adopt or ablate; then Lite Agent `run-agent-isolated` wire
+- **Status:** Adopt done; Docker Gate closed
+- **Files:** `evals/run-trap-cell.sh` · `evals/traps/run-full-first.sh` · CAMPAIGN · ROADMAP · current-state
+- **Decisions:** Take Candidate despite 71% three-way tie (mechanical ≥); prior Current `d5711c2` retired for trap defaults
+- **Blocked:** None
+- **Next:** Wire Lite Agent arms to `run-agent-isolated.sh`
 
 ## Todo
-- [x] Docker Process Gate 42/42
-- [x] Analyze + continuity
-- [ ] Adopt or ablate Candidate (D)
-- [ ] Lite Agent arms via same helper (follow-up)
+- [x] Docker Process Gate
+- [x] Adopt Candidate as Current
+- [ ] Lite Agent arms via same helper
 
 ## Blockers / Notes
-- All-fail: s2-surprise-trap, s13-twin-fleet
-- Cand beat Current only on s6; Current beat Cand on s11; Baseline beat both on s3
+- Still open hard fails: s2, s13 (future Candidate material)

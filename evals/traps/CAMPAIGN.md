@@ -2,10 +2,10 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Docker Process Gate done** — `azg-concept-docker` · B/C/Cand **71%/71%/71%** · `isolation=docker` · `promote_process_gate=true` (**three-way tie**, no rate lift) |
+| Status | **Adopted** — Docker Gate `azg-concept-docker` 71/71/71 tie · `promote=true` · Candidate (D+clarity) = new Current (`87b4eda`) |
 | Host smoke (`azg-concept-candidate`) | 71/71/79 — blocked (`isolation=host`); triage only |
 | Last Fable-pack run | `fable-method-full` — 64/79/71 · no promote |
-| Next | Human: keep Candidate (D) as new Current (tie≥) or ablate D delta for no lift; Lite Agent isolation follow-up |
+| Next | Lite Agent arms → `run-agent-isolated.sh` |
 | Prior | `pre-wfa-reverse` — WFA 0.71 = baseline 0.71 |
 
 Do not commit campaign trees under `campaigns/` (gitignored).
@@ -18,7 +18,7 @@ Do not commit campaign trees under `campaigns/` (gitignored).
 | Current (`d5711c2`) | 10/14 | **71%** |
 | Candidate (HEAD D+clarity) | 10/14 | **71%** |
 
-`promote_process_gate: true` (Candidate ≥ Current and ≥ Baseline). **No Task Success lift** — three-way tie under Docker Eval Isolation. All-fail still: s2, s13. Cand>C: s6. C>Cand: s11. B>C: s3, s6.
+`promote_process_gate: true` (Candidate ≥ Current and ≥ Baseline). **No Task Success lift** — three-way tie under Docker Eval Isolation. **Adopted 2026-08-07** as Current (`AZG_CURRENT_REF=87b4eda`) — take for now despite no rate lift. All-fail still: s2, s13. Cand>C: s6. C>Cand: s11. B>C: s3, s6.
 
 ---
 
