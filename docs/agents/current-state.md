@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 — **clean slate** (Fable distill stripped); **running** luna low/medium/high tier sweep
+**Active phase:** post-v4 — clean slate shipped (`a9a68ff`); tier sweep **done** (see CAMPAIGN); re-earn TBD
 
 ---
 

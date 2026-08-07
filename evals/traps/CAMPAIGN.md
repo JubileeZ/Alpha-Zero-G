@@ -2,10 +2,11 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Running** — clean-slate tier sweep `cleanslate-tier-sweep` (luna-low → medium → high); Current=HEAD worktree (no Fable distill) |
-| Prior medium×3 | `fable-medium-r3` maj **79/71/93** — historical (pre-clean-slate) |
-| Trap default model | **`gpt-5.6-luna-medium`** (ADR 0012); tier sweep also runs low+high once each |
-| Next | Read `TIERS.md` → re-earn only traps that beat clean slate |
+| Status | **Done** — clean-slate tier sweep `cleanslate-tier-sweep` · B/C/Fable low **71/79/79** · med **71/64/79** · high **64/71/93** |
+| Prior medium×3 (pre-clean) | `fable-medium-r3` maj **79/71/93** — historical |
+| Trap default model | **`gpt-5.6-luna-medium`** |
+| Next | Re-earn global lines only for durable Fable>clean-Current gaps; or park |
+| Shipped | `a9a68ff` clean slate + eval-watch |
 | Prior Device Home (azg Cand) | `azg-concept-device-home` — **71 / 86 / 79** · keep Current=`87b4eda` |
 | Fable gap camp (N=1 low) | `fable-method-device-home` — **71 / 57 / 71** · superseded |
 | Host smoke (`azg-concept-candidate`) | 71/71/79 — blocked (`isolation=host`); triage only |

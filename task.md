@@ -1,24 +1,24 @@
-# Active Task: Clean slate + tier sweep; push progress
+# Active Task: Clean-slate tier sweep — done
 
-- **Status:** Sweep running; distill skills deleted; eval-watch rule in AGENTS.md
-- **Objective:** Clean slate Device Setup; agent-owned eval watch; persist + push
-- **Acceptance:** skills/azg gone; AGENTS.md eval-watch; commit+push on main
-- **Issue/Ticket:** Clean slate cleanup push 2026-08-07
+- **Status:** Done
+- **Objective:** Delete distill skills; agent eval-watch; tier sweep low/medium/high
+- **Acceptance:** Push `a9a68ff`; TIERS.md complete
+- **Issue/Ticket:** Clean slate + tier sweep 2026-08-07
 
 ## Work Packet (SFDBN)
 
-- **Status:** In progress — tier sweep still running (agent watches)
-- **Files:** `templates/global/AGENTS.md` · deleted `skills/azg/` · `AGENTS.md` eval-watch · evals runners · tests
-- **Decisions:** Distill skills deleted not parked; agent must poll eval camps; Current=HEAD clean slate for sweep
+- **Status:** Complete
+- **Files:** (shipped) clean-slate templates · deleted `skills/azg` · `AGENTS.md` eval-watch · camp `cleanslate-tier-sweep`
+- **Decisions:** No adopt. Clean Current ≈ Baseline; Fable still ahead especially at high. Re-earn only durable Fable>Current cells across tiers.
 - **Blocked:** None
-- **Next:** Finish `cleanslate-tier-sweep` → TIERS.md → report
+- **Next:** Pick re-earn targets from durable gaps (see CAMPAIGN) or park
 
 ## Todo
-- [x] Delete templates/global/skills/azg
-- [x] Eval-watch rule in repo AGENTS.md
-- [ ] Tier sweep complete
+- [x] Delete skills/azg
+- [x] Eval-watch in AGENTS.md
 - [x] Commit + push
+- [x] Tier sweep finish
 
 ## Blockers / Notes
-- Camp: `evals/traps/campaigns/cleanslate-tier-sweep`
-- Re-enable skills later only after traps earn them + restore overlay if needed
+- Rates B/C/F: low 71/79/79 · medium 71/64/79 · high 64/71/93
+- Durable-ish Fable>Current: s9 (med), s13 (high only), s14 (low), s3 (high), s10 (high Current miss)
