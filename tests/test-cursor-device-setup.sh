@@ -161,7 +161,7 @@ for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; d
 done
 
 if grep -q 'Failure modes → gate' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
-  grep -q 'TWINS search' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
+  grep -q 'same construct' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
   grep -q 'Classic frauds (Prove)' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md" &&
   grep -q 'Compressed examples' "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"; then
   pass "method-refs failure-mode map + frauds + examples inlined in SKILL.md"

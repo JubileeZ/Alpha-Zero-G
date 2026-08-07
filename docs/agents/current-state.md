@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Process Gate full Fable-method Candidate **in flight** (`TRAP_CANDIDATE_PACK=fable-method`; campaign `evals/traps/campaigns/fable-method-full/`)
+**Active phase:** post-v4 hardening — Process Gate **azg Candidate** ready (Reversible Default · Unattended · losing side · Twin Sweep); re-run pending
 
 ---
 
@@ -33,8 +33,8 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012 live. WFA 2026-08-06: keep gates; WFA≈baseline — not license to full-remove. **2026-08-07:** full Fable-method Candidate runner + campaign running (`fable-method-full`); grill defaults recorded in `task.md` |
-| writing-for-agents lever pass | Packets 1–2 landed; keep for now pending Fable-method Candidate test |
+| Trap Suite Process Gate | ADR 0012. Fable-pack 2026-08-07: baseline 64% · current 79% · Fable 71% → **no promote**. **Next:** azg concept Candidate (Reversible Default · Unattended · losing side · Twin Sweep) — Process Gate pending |
+| writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
 | Skills | full vendor only; `--profile` removed |
@@ -54,7 +54,7 @@
 | Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
 | Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
-| Fable-method distill + re-gate | Pending campaign result — promote if Candidate ≥ current & baseline; distill to azg gates if win (`ROADMAP.md`) |
+| Fable-method distill + re-gate | **Not needed** — Fable pack lost to current. Azg concept Candidate supersedes distill path |
 
 ---
 

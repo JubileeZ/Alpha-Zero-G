@@ -39,9 +39,10 @@ Stack wizard · full GitHub MCP default · blocking PreCompact
 
 Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈ baseline on full Trap Suite).
 
-- [ ] **Candidate = full Fable-method** always-on / method pack (not WFA levers alone) — full Trap Suite 3-arm vs **No-Harness Baseline**
-- [ ] If Candidate **> baseline** on Process Gate → **distill** into azg Intent gates / skills
-- [ ] Re-run Process Gate on distilled Candidate; promote only if ≥ current and ≥ baseline
+- [x] **Candidate = full Fable-method** — run done 2026-08-07; **no promote** (71% < current 79%)
+- [x] Grill: keep azg; concept Candidate (Reversible Default · Unattended · losing side · Twin Sweep) — prose landed
+- [ ] Process Gate 3-arm on azg concept Candidate (`AZG_CANDIDATE_REF=HEAD`, no `TRAP_CANDIDATE_PACK`)
+- [ ] If Candidate ≥ current and ≥ baseline → promote; else ablate
 
 Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.
 

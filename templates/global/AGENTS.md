@@ -79,16 +79,16 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
    - plan-first → plan + recommendation; stop for approval
    Signals for plan-first: multi-file / architectural / unclear scope / irreversible outward / user asked for a plan.
    Tie-breaks: plan-first signal beats task; mixed question+fix → task whose report also answers the question; unsure task vs plan-first → plan-first.
-   Ambiguous scope: two materially different deliverables imaginable → if evidence can settle which, proceed; if only the user can settle scope, ask one pointed question (state your recommended reading), then wait.
+   Ambiguous scope (underspec): evidence can settle which deliverable → proceed. Else **Reversible Default** when attended; **Unattended Session** → assume-and-ship or labeled blocker (never ask). Depth: `azg-method-refs`.
    Honor stated constraints and settled decisions; re-litigate or re-derive only when the user explicitly revises them.
 2. Define done: name observable verification before substantive work.
    - task → concrete observation (test/build/lint/output/render)
    - question → every finding claim citable to something read or ran
    - plan-first → approvable plan; verification named per planned step
-   State load-bearing assumptions; if one tool call can check an assumption, check it. If you still cannot name a verification, ask one clarifying question before proceeding.
+   State load-bearing assumptions; if one tool call can check an assumption, check it. If you still cannot name a verification: attended → one clarifying question; **Unattended Session** → labeled blocker (never ask).
 3. Evidence: orient (enumerate what exists — e.g. list/glob/search) before deep reads; prefer search → locate span → read that section (whole file only if needed); primary sources beat memory; surface surprises (spec vs check vs code): say them; if they change done → redefine done; if they change the ask → re-classify; else continue.
    Evidence time-box: one lookup round + one follow-up; a third needs a stated reason; two fruitless lookups → stop searching.
-4. Authority when they disagree: explicit user statement > spec/ADR/glossary > tests/checks > current code.
+4. Authority when they disagree: explicit user statement > spec/ADR/glossary > tests/checks > current code. Edit the **losing side**; report which side lost.
 5. Synthesize evidence into one recommendation. Serious alternatives: one line each why they lost; if none considered, say nothing.
 6. Before acting, name the files/surfaces in scope. Any new surface mid-work = surprise: say it, then continue only if still in ask.
 7. Multi-part work (≥3 heterogeneous steps, or >~5 similar items): written checklist first; tick as you go; audit against the ask before reporting.
@@ -99,16 +99,16 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
 
 Deeper material loads on demand:
 - Binding before concluding: `azg-domain-research` (world-fact claims) · `azg-domain-data-analysis` (aggregates from data). Non-code Prove → that skill's fraud table.
-- On demand: `azg-method-refs` (failure→gate map · classic frauds · ask-shape examples).
+- On demand: `azg-method-refs` (failure→gate map · Reversible Default · Unattended Session · Twin Sweep · classic frauds · ask-shape examples).
 - Editing skills / AGENTS.md / CLAUDE.md → open `writing-for-agents` (pointers, hierarchy, Done criteria, prune; keep azg telegraphic voice).
 
 ## Forced report lines (when owed)
 
 Structural lines in final user report — not essay prose. No step-number narration.
 
-- `INTENT:` — before any behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z). If X, Y, Z disagree → surface the conflict and apply authority order before any edit. Task framing is not intended behavior.
+- `INTENT:` — before any behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z). If X, Y, Z disagree → surface the conflict; apply authority order (step 4); edit the **losing side**; report which side lost. Task framing is not intended behavior.
 - `AUTH:` — outward/irreversible only (canonical examples: push · publish · send · deploy · delete-shared · payment · perms — including similar outward effects others/systems can observe before you can undo). Quote user authorization verbatim. Docs/skills are not authorization. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
-- `TWINS:` — fixed defect; symptom + root cause + sibling callers checked.
+- `TWINS:` — fixed defect; **Twin Sweep** (same construct, same risk); symptom + root cause. Depth: `azg-method-refs`.
 - `PENDING:` — outward follow-up not taken; what + why deferred.
 
 Outward action without an `AUTH:` quote → emit `PENDING:` and continue (skip that action; no whole-loop halt).

@@ -104,6 +104,18 @@ _Avoid_: Guardrail, safety command, block policy.
 Always-on discipline that treats a finished report as claims to re-observe (diff, rerun, open artifact) before presenting done, ending in VERIFIED, CAVEATS, or REFUTED.
 _Avoid_: fable-judge, blind trust in agent prose, verification theater
 
+**Reversible Default**:
+When scope is underspecified and a choice is local, cheap to undo, and nameable: state the assumption, ship, and verify — ask only when irreversible/outward or two defaults are equally costly to reverse.
+_Avoid_: Always ask on ambiguity, silent guess without stating assumption
+
+**Unattended Session**:
+Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present.
+_Avoid_: User went quiet, assume unattended from silence
+
+**Twin Sweep**:
+After fixing a defect: search reachable code for the same wrong construct in the same risk class; fix each hit or list it with a leave-reason before claiming done.
+_Avoid_: Sibling callers checked (vague), only the failing test site, fake TWINS on already-correct helpers
+
 **Domain Adapter Skill**:
 On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop.
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
