@@ -43,8 +43,8 @@ Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈
 - [x] Host smoke Process Gate (`azg-concept-candidate`) — **not promote-grade** (`isolation=host`)
 - [x] **Eval Isolation** Docker harness (ADR 0013) — trap executor+judge
 - [x] Grill upgrade Candidate **(D)** — impl-equivalent / Intent Tie + Twin fix-or-list (WFA)
-- [ ] Clean Process Gate (`isolation=docker`) on azg concept Candidate
-- [ ] If Candidate ≥ current and ≥ baseline under docker → promote; else ablate
+- [x] Clean Process Gate (`isolation=docker`) on azg concept Candidate — **71/71/71 tie**; `promote=true` (no rate lift)
+- [ ] Decide: adopt Candidate as Current (tie≥) or ablate D delta
 - [ ] Wire Lite Agent arms to `run-agent-isolated.sh` (follow-up)
 
 Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.

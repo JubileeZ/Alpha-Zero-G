@@ -1,25 +1,24 @@
-# Active Task: Docker Process Gate — auto-watch
+# Active Task: Process Gate done — adopt vs ablate
 
-- **Status:** Campaign healthy (~12/42); auto-check every 5m
-- **Objective:** Complete `azg-concept-docker` 42 cells; analyze promote/ablate; update continuity
-- **Acceptance:** 42/42 scored; `isolation=docker`; promote only if Candidate ≥ Current and ≥ Baseline and nulls=0
+- **Status:** Docker Process Gate **complete** (`azg-concept-docker`)
+- **Objective:** Recorded; await human adopt (tie≥) or ablate D delta
+- **Acceptance:** 42/42 · isolation=docker · promote-result written · continuity updated
 - **Issue/Ticket:** Grill-with-docs 2026-08-07 · ADR 0012/0013
 
 ## Work Packet (SFDBN)
 
-- **Status:** Root cause fixed (cells stole scenario-list stdin → early EOF); resumed; loop PID 617213
-- **Files:** `evals/run-trap-campaign.sh` · `evals/analyze-trap.sh` · camp `azg-concept-docker`
-- **Decisions:** Auto: dead+pending → resume; 42/42 → analyze + update CAMPAIGN/task/current-state + report; nulls block promote
-- **Blocked:** None
-- **Next:** Loop ticks until complete (~5m cadence)
+- **Status:** B/C/Cand = 10/14 each (71%); `promote_process_gate=true` (three-way tie, no lift); auto-loop not needed
+- **Files:** `evals/traps/CAMPAIGN.md` · `promote-result.json` (gitignored camp) · ROADMAP · current-state
+- **Decisions:** Mechanical promote on ≥; product choice still open — adopt Candidate as Current or ablate D for no aggregate gain
+- **Blocked:** None (human decision)
+- **Next:** User: adopt or ablate; then Lite Agent `run-agent-isolated` wire
 
 ## Todo
-- [x] Clarity push
-- [x] Fix analyze nulls + PID wait + stdin steal
-- [ ] Docker Process Gate complete (auto-watched)
-- [ ] Report promote/ablate
-- [ ] Lite Agent arms (follow-up)
+- [x] Docker Process Gate 42/42
+- [x] Analyze + continuity
+- [ ] Adopt or ablate Candidate (D)
+- [ ] Lite Agent arms via same helper (follow-up)
 
 ## Blockers / Notes
-- Log: `evals/traps/campaigns/azg-concept-docker/campaign.nohup.log`
-- Loop sentinel: `AGENT_LOOP_TICK_trapgate`
+- All-fail: s2-surprise-trap, s13-twin-fleet
+- Cand beat Current only on s6; Current beat Cand on s11; Baseline beat both on s3

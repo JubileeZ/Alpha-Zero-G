@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Eval Isolation landed; concept Candidate **(D) + WFA clarity glosses** (device-global, no CONTEXT.md assumed); Docker Process Gate pending
+**Active phase:** post-v4 hardening — Docker Process Gate done (`azg-concept-docker` **71/71/71** tie, `promote=true`); decide adopt vs ablate D delta; Lite isolation follow-up
 
 ---
 
@@ -33,7 +33,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012. Fable no promote. Host smoke triage only. ADR 0013 Eval Isolation. Grill locked **(D)**: Candidate patched (Q6 split + losing-side/Twin sharpen under WFA). Docker Process Gate next |
+| Trap Suite Process Gate | ADR 0012+0013. Fable no promote. Host smoke triage only. Clean Docker `azg-concept-docker`: B/C/Cand **10/14 each (71%)** · `promote=true` three-way tie · no rate lift. Hard fails remain s2/s13 |
 | writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |

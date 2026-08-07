@@ -2,15 +2,27 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Docker Process Gate launching** — `azg-concept-docker` (`isolation=docker`); Candidate = HEAD (D + WFA clarity) |
-| Host smoke (`azg-concept-candidate`) | baseline **71%** · current **71%** · candidate **79%** · blocked (`promote_blocked_by_isolation`) — triage only |
-| Last Fable-pack run | `fable-method-full` — baseline 64% · current 79% · Fable 71% · no promote |
-| Next | Wait `azg-concept-docker` → analyze promote |
-| Prior | `pre-wfa-reverse` — current WFA 0.71 = baseline 0.71 |
+| Status | **Docker Process Gate done** — `azg-concept-docker` · B/C/Cand **71%/71%/71%** · `isolation=docker` · `promote_process_gate=true` (**three-way tie**, no rate lift) |
+| Host smoke (`azg-concept-candidate`) | 71/71/79 — blocked (`isolation=host`); triage only |
+| Last Fable-pack run | `fable-method-full` — 64/79/71 · no promote |
+| Next | Human: keep Candidate (D) as new Current (tie≥) or ablate D delta for no lift; Lite Agent isolation follow-up |
+| Prior | `pre-wfa-reverse` — WFA 0.71 = baseline 0.71 |
 
-Do not commit campaign trees under `campaigns/` (gitignored). Full scenario matrix: see prior section in git history / `fable-method-full` local tree.
+Do not commit campaign trees under `campaigns/` (gitignored).
 
-## Verdict
+## Verdict — azg-concept-docker (promote-grade)
+
+| Arm | Pass | Rate |
+|-----|------|------|
+| Baseline (no harness) | 10/14 | **71%** |
+| Current (`d5711c2`) | 10/14 | **71%** |
+| Candidate (HEAD D+clarity) | 10/14 | **71%** |
+
+`promote_process_gate: true` (Candidate ≥ Current and ≥ Baseline). **No Task Success lift** — three-way tie under Docker Eval Isolation. All-fail still: s2, s13. Cand>C: s6. C>Cand: s11. B>C: s3, s6.
+
+---
+
+## Prior verdict — Fable-pack (historical)
 
 | Arm | Pass | Rate |
 |-----|------|------|
@@ -18,7 +30,7 @@ Do not commit campaign trees under `campaigns/` (gitignored). Full scenario matr
 | Current (azg WFA) | 11/14 | **79%** |
 | Candidate (Fable-method) | 10/14 | **71%** |
 
-`promote_process_gate: false` — Fable pack < Current. **Keep azg base; next Candidate = concept gate delta** (not Fable distill).
+`promote_process_gate: false` — Fable pack < Current.
 
 ---
 
