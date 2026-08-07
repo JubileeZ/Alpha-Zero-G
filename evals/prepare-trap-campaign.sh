@@ -7,6 +7,7 @@ source "${ROOT}/lib/common.sh"
 
 CAMP="${1:-${ROOT}/evals/traps/campaigns/default}"
 mkdir -p "${CAMP}"
+CAMP="$(cd "${CAMP}" && pwd)"
 
 # Adopt candidate (upstream fable pack): full corpus unless TRAP_FULL or TRAP_IDS set.
 # Empty TRAP_FULL counts as unset (Windows env -u / blank export quirks).

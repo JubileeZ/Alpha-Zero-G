@@ -44,8 +44,9 @@ Repeat/tier runners emit `AZG_TRAP_CAMPAIGN_FINISHED` after final artifacts; wat
 
 | Camp / note | Where |
 |-------------|--------|
+| Fable vs Current (R=4 luna-xhigh) | `docs/research/2026-08-07-fable-vs-current-4x-repeat-report.md` — B 77%/79%, Cur 79%/79%, Fable 91%/93% (s9, s13 lift) |
 | Think/Prove reject (tier sweep) | local `campaigns/think-prove-candidate/TIERS.md` — Cand 64/79/71 vs Cur 71/79/79 |
 | Tier sweep detail | local `campaigns/cleanslate-tier-sweep/TIERS.md` |
-| Medium×3 majority | `docs/research/2026-08-07-fable-medium-r3-full-report.md` |
+| Medium×3 majority (archived) | `docs/archive/2026-08-07-fable-medium-r3-full-report.md` |
 | Device Home / noise | `docs/research/2026-08-07-eval-device-home-process-gate.md` · noise-policy |
 | Pre-iso / inject-era rates | not comparable — see research + git history |

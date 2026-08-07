@@ -55,7 +55,7 @@ emit_isolation() {
   fi
   # optional fd 3
   if { true >&3; } 2>/dev/null; then
-    printf '%s\n' "${mode}" >&3
+    printf '%s\n' "${mode}" >&3 2>/dev/null || true
   fi
 }
 

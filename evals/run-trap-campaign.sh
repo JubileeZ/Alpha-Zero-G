@@ -18,6 +18,8 @@ while [ $# -gt 0 ]; do
 done
 
 CAMP="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/default}"
+mkdir -p "${CAMP}"
+CAMP="$(cd "${CAMP}" && pwd)"
 [ -f "${CAMP}/selection.json" ] || die "missing ${CAMP}/selection.json — run prepare-trap-campaign.sh"
 LOGDIR="${CAMP}/cell-logs"
 mkdir -p "${LOGDIR}"
