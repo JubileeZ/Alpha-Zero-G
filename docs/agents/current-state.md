@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Process Gate Candidate (D+clarity) **adopted** as Current (`87b4eda`); Lite Agent isolation follow-up
+**Active phase:** post-v4 hardening — **Eval Device Home** landed (fake HOME mimic Device Setup); Docker Process Gate **re-run owed** (inject-era 71% not comparable)
 
 ---
 

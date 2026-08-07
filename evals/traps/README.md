@@ -24,7 +24,7 @@ agent login   # once on host — auth.json or CURSOR_API_KEY used inside eval co
 bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ```
 
-**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge run in `azg-eval-agent` (empty home; no host `~/.cursor`). Cell inject still supplies current/candidate gates into the worktree. `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
+**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules+skills from the arm git ref (`evals/stage-eval-home.sh`) and mount them read-only; Baseline mounts none; worktree = fixture only. `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
 
 ## Default policy
 

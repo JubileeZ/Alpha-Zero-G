@@ -60,11 +60,82 @@ fi
 # restore filled baseline for cleanliness
 jq -n '{scenario_id:"s1",treatment:"baseline",task_success:1,score_override:null,correct_action:null,notes:null,model:null}' \
   >"${tmp}/s1/baseline/scorecard.json"
+
 section "4. Dockerfile never copies host .cursor"
 if grep -Eiq 'COPY.*\.cursor|ADD.*\.cursor' "${ROOT}/evals/docker/azg-eval-agent/Dockerfile"; then
   fail "Dockerfile must not COPY host .cursor" ""
 else
   pass "no .cursor COPY in Dockerfile"
 fi
+
+section "5. fake HOME staging (device-core)"
+assert_file_exists "stage-eval-home.sh" "${ROOT}/evals/stage-eval-home.sh"
+if grep -q -- '--home' "${ROOT}/evals/run-agent-isolated.sh"; then pass "isolated runner accepts --home"; else fail "missing --home" ""; fi
+if grep -q 'stage-eval-home' "${ROOT}/evals/run-trap-cell.sh"; then pass "trap cell stages eval home"; else fail "trap cell missing stage-eval-home" ""; fi
+# Current/Candidate must not worktree-inject azg rules (Baseline never did)
+if grep -q 'inject_azg_ref' "${ROOT}/evals/run-trap-cell.sh"; then
+  fail "worktree inject_azg_ref must be removed (fake HOME replaces it)" ""
+else
+  pass "no worktree inject_azg_ref"
+fi
+
+home_tmp=$(azg_mktemp_d "tmp_azg_home-XXXXXX")
+ref="$(git -C "${ROOT}" rev-parse HEAD)"
+if bash "${ROOT}/evals/stage-eval-home.sh" "${ref}" "${home_tmp}/staged" >/dev/null; then
+  pass "stage-eval-home exits 0"
+else
+  fail "stage-eval-home failed" ""
+fi
+staged="${home_tmp}/staged"
+for f in azg-ponytail.mdc azg-agent-instructions.mdc; do
+  if [ -f "${staged}/.cursor/rules/${f}" ]; then pass "staged ${f}"; else fail "missing ${f}" ""; fi
+done
+for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
+  if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ]; then pass "staged skill ${sk}"; else fail "missing skill ${sk}" ""; fi
+done
+if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Impl-Equivalent Default\|Reversible Default\|Intent gates\|INTENT:' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions body present"
+else
+  fail "agent-instructions body weak" ""
+fi
+if grep -q 'PONYTAIL\|lazy senior\|YAGNI' "${staged}/.cursor/rules/azg-ponytail.mdc"; then
+  pass "ponytail body present"
+else
+  fail "ponytail body missing" ""
+fi
+# idempotent restage
+bash "${ROOT}/evals/stage-eval-home.sh" "${ref}" "${staged}" >/dev/null
+if [ -f "${staged}/.azg-eval-home-ref" ] && [ "$(cat "${staged}/.azg-eval-home-ref")" = "${ref}" ]; then
+  pass "home ref marker"
+else
+  fail "home ref marker" ""
+fi
+
+# Baseline path never stages/mounts Eval Device Home
+bl="$(awk '/baseline\)/{f=1;next} f&&/current\)/{exit} f' "${ROOT}/evals/run-trap-cell.sh")"
+if echo "${bl}" | grep -qE 'stage-eval-home|EVAL_HOME='; then
+  fail "baseline must not stage EVAL_HOME" ""
+else
+  pass "baseline omits Eval Device Home"
+fi
+if grep -q '\.cursor/rules:/home/azg-eval/.cursor/rules:ro' "${ROOT}/evals/run-agent-isolated.sh"; then
+  pass "rules mount is :ro"
+else
+  fail "rules mount should be :ro" ""
+fi
+if grep -q '\.cursor/rules' "${ROOT}/evals/run-agent-isolated.sh"; then
+  pass "mounts staged .cursor/rules"
+else
+  fail "runner should mount staged rules dir" ""
+fi
+# no vendor tree in staged home
+if [ -d "${staged}/.cursor/skills/vendor" ] || [ -d "${staged}/skills/vendor" ]; then
+  fail "staged home must not include vendor skills" ""
+else
+  pass "no vendor skills in staged home"
+fi
+
+if grep -q '^\*\*Eval Device Home\*\*:' "${ROOT}/CONTEXT.md"; then pass "CONTEXT Eval Device Home"; else fail "CONTEXT Eval Device Home" ""; fi
 
 test_summary

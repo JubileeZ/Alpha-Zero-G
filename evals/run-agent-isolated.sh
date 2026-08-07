@@ -13,19 +13,25 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${ROOT}/lib/common.sh"
 
 WORKSPACE=""
+EVAL_HOME=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --workspace) WORKSPACE="$2"; shift 2 ;;
+    --home) EVAL_HOME="$2"; shift 2 ;;
     --) shift; break ;;
     -h|--help)
       cat <<'EOF'
-Usage: run-agent-isolated.sh [--workspace DIR] -- [agent args...]
+Usage: run-agent-isolated.sh [--workspace DIR] [--home DIR] -- [agent args...]
 
 Env:
   AZG_EVAL_DOCKER=1|0   default 1 (Docker). 0 = host agent (isolation=host).
   AZG_EVAL_AGENT_IMAGE  default azg-eval-agent:<VERSION> from evals/docker/azg-eval-agent/VERSION
   CURSOR_API_KEY        preferred auth in Docker
   AZG_EVAL_AUTH_JSON    override path to auth.json (default ~/.cursor-agent/auth.json)
+
+--home DIR  Eval Device Home (azg-owned rules/skills). Mounted read-only under
+            container $HOME/.cursor/{rules,skills} and $HOME/.agents/skills.
+            Never mount host ~/.cursor. Baseline omits --home.
 EOF
       exit 0
       ;;
@@ -100,6 +106,18 @@ if [ -n "${WORKSPACE}" ]; then
   [ -d "${WORKSPACE}" ] || die "workspace not a directory: ${WORKSPACE}"
   # Bind at same absolute path so --workspace args match host paths
   DOCKER_ARGS+=(-v "${WORKSPACE}:${WORKSPACE}" -w "${WORKSPACE}")
+fi
+
+# Eval Device Home (grill): mount staged rules/skills only — keep image $HOME/.local/agent
+if [ -n "${EVAL_HOME}" ]; then
+  [ -d "${EVAL_HOME}/.cursor/rules" ] || die "eval home missing .cursor/rules: ${EVAL_HOME}"
+  DOCKER_ARGS+=(-v "${EVAL_HOME}/.cursor/rules:/home/azg-eval/.cursor/rules:ro")
+  if [ -d "${EVAL_HOME}/.cursor/skills" ]; then
+    DOCKER_ARGS+=(-v "${EVAL_HOME}/.cursor/skills:/home/azg-eval/.cursor/skills:ro")
+  fi
+  if [ -d "${EVAL_HOME}/.agents/skills" ]; then
+    DOCKER_ARGS+=(-v "${EVAL_HOME}/.agents/skills:/home/azg-eval/.agents/skills:ro")
+  fi
 fi
 
 # Safety: refuse if someone exported a cursor mount hint

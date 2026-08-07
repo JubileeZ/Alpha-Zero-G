@@ -18,7 +18,11 @@ _Avoid_: Historical baseline, default setup
 
 **Eval Isolation**:
 Running eval Agent CLI calls so host Device Setup (`~/.cursor` rules/skills) cannot leak into any arm — default Docker `azg-eval-agent` empty home; required for promote-grade 3-arm Trap/Lite agent campaigns.
-_Avoid_: Clean HOME ritual only, trust cell inject alone, Docker for SWE-bench scoring (different concern)
+_Avoid_: Clean HOME ritual only, trust host ~/.cursor, Docker for SWE-bench scoring (different concern)
+
+**Eval Device Home**:
+Staged per-arm fake `$HOME` fragment (azg-owned Ponytail + AGENT-INSTRUCTIONS + azg skills from a git ref) mounted read-only into the Docker eval agent — mimics Device Setup without host leakage. Baseline omits it.
+_Avoid_: Worktree inject of global rules, mounting host ~/.cursor, full vendor skill forest in eval home
 
 **Current Treatment**:
 Evaluation arm with the shipped Alpha-Zero-G harness as of the run (no Candidate changes).

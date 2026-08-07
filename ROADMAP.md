@@ -45,6 +45,8 @@ Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈
 - [x] Grill upgrade Candidate **(D)** — impl-equivalent / Intent Tie + Twin fix-or-list (WFA)
 - [x] Clean Process Gate (`isolation=docker`) on azg concept Candidate — **71/71/71 tie**; `promote=true` (no rate lift)
 - [x] **Adopt** Candidate (D+clarity) as Current Treatment — default `AZG_CURRENT_REF=87b4eda` (tie≥; take for now)
+- [x] **Eval Device Home** — fake HOME mimic Device Setup (azg-owned core; no WT inject)
+- [ ] Re-run Docker Process Gate under Eval Device Home (inject-era 71% not comparable)
 - [ ] Wire Lite Agent arms to `run-agent-isolated.sh` (follow-up)
 
 Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.
