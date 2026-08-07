@@ -65,7 +65,8 @@ flush_batch() {
 while IFS= read -r line; do
   id="${line%% *}"
   arm="${line#* }"
-  run_one "${id}" "${arm}" &
+  # stdin must not be the scenario list FD — background cells would consume it (early EOF)
+  run_one "${id}" "${arm}" </dev/null &
   pids+=("$!")
   if [ "${#pids[@]}" -ge "${JOBS}" ]; then
     flush_batch
