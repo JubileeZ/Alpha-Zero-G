@@ -1,14 +1,10 @@
-# Session handoff — Think/Prove Candidate
+# Session handoff (SFDBN)
 
-## Work Packet (SFDBN)
+**When:** 2026-08-05
+**Branch:** main
 
-- **Status:** Candidate on disk; continue with Trap eval on this device
-- **Files:** See `task.md`; live camp under `evals/traps/campaigns/` (gitignored)
-- **Decisions:** ADR 0014; `AZG_EVAL_AZG_SKILLS=1` for Candidate Device Home; Current=`a9a68ff`
+- **Status:** Done — AGENTS.md always-on budget grill closed
+- **Files:** `docs/research/2026-08-05-agents-md-always-on-budget.md` · `docs/agents/current-state.md` · templates unchanged
+- **Decisions:** Token/context pain; no invented tok cap (D); no AGENTS edits (D); caveman not vendored; absolute lean always-on as windows grow; revisit on adherence failure only
 - **Blocked:** None
-- **Next:** Pull main → prepare camp → tier sweep or run-repeats → report rates + update CAMPAIGN.md / task.md
-
-## Device notes
-
-- Windows: run trap scripts in Git Bash; use `azg_python` if Store `python3` stub.
-- Agent owns the watch until camp finishes (see repo `AGENTS.md` eval-watch).
+- **Next:** Idle. Prior fpl SubagentStart Checkpoint still PENDING AUTH/downstream if needed

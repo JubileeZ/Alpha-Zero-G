@@ -132,10 +132,11 @@ _Avoid_: User went quiet, assume unattended from silence
 After fixing a defect: search reachable code for the same wrong construct in the same risk class; fix each hit or list it with a leave-reason before claiming done.
 _Avoid_: Sibling callers checked (vague), only the failing test site, fake TWINS on already-correct helpers
 
-**Orchestrate Skill**:
-On-demand Act skill (`azg-orchestrate`) for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, attackers). Shipped in Device Setup with Think/Prove Candidate (ADR 0014).
-_Avoid_: fable-loop product name, Act as always-on default
-
 **Domain Adapter Skill**:
-On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop. Family pack: research, data-analysis, marketing, business-ops, finance, legal, design, devops (ADR 0014).
+On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop.
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
+
+**Orchestrate Skill** *(deferred — not shipped)*:
+Future on-demand Act skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, attackers). Not in Device Setup until needed.
+_Avoid_: azg-orchestrate (removed), azg-loop, fable-loop, Act as always-on default
+

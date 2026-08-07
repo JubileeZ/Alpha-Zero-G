@@ -10,7 +10,7 @@
 
 Reliable Delivery: higher Task Success per Delivery Cost than No-Harness Baseline, with Minimal Setup, across devices and Cursor/Antigravity. Repo-native gates own guarantees; IDE hooks are thin adapters.
 
-ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0007` Lite — superseded](docs/adr/0007-swe-bench-lite-adoption-gate.md) · [`0008` ownership](docs/adr/0008-global-ownership-boundary.md) · [`0009`/`0010` — superseded by 0014](docs/adr/0014-think-prove-candidate-block-order.md) · [`0012` Trap sole gate](docs/adr/0012-trap-suite-process-gate.md) · [`0014` Think/Prove Candidate](docs/adr/0014-think-prove-candidate-block-order.md)
+ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0007` Lite — superseded](docs/adr/0007-swe-bench-lite-adoption-gate.md) · [`0008` ownership](docs/adr/0008-global-ownership-boundary.md) · [`0009` distilled intent-gates](docs/adr/0009-distilled-intent-gates.md) · [`0012` Trap sole gate](docs/adr/0012-trap-suite-process-gate.md)
 
 ---
 
@@ -31,8 +31,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Trap Eval Isolation + Device Home (ADR 0013)
 - [x] Clean slate always-on + delete `skills/azg/`
 - [x] Default trap path = **tier sweep** low/medium/high + `run-repeats` for majority
-- [x] Think/Prove Candidate draft (ADR 0014: crumbs + precedence + block order + family skills)
-- [ ] Trap re-earn: Candidate ≥ Current (then chase Fable parity)
+- [ ] Re-earn distill from durable Fable>Current gaps (see `evals/traps/CAMPAIGN.md`) or park
 
 Live notes: `evals/traps/CAMPAIGN.md`.
 

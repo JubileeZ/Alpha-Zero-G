@@ -142,66 +142,35 @@ else
   fail "ownership missing cursor_rules azg-agent-instructions.mdc"
 fi
 
-section "1b. Think/Prove Candidate — azg skills ship + always-on rules"
+section "1b. clean slate — azg distill skills removed + no Prove in always-on"
 
-for azg_skill in azg-orchestrate azg-method-refs azg-domain-research azg-domain-devops; do
-  assert_file_exists "Cursor azg skill ${azg_skill} installed" \
+for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; do
+  assert_file_not_exists "Cursor azg skill ${azg_skill} not installed" \
     "${TEMP_HOME}/.cursor/skills/${azg_skill}/SKILL.md"
-  assert_file_exists "Cursor azg skill ${azg_skill} has AZG-OWNED.md" \
-    "${TEMP_HOME}/.cursor/skills/${azg_skill}/AZG-OWNED.md"
+  assert_file_not_exists "Gemini azg skill ${azg_skill} not installed" \
+    "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/SKILL.md"
 done
 
 if [ -d "${TEMP_REPO}/templates/global/skills/azg" ]; then
-  pass "azg distill skill sources present"
+  fail "templates/global/skills/azg must be deleted (clean slate)"
 else
-  fail "templates/global/skills/azg missing"
+  pass "azg distill skill sources removed"
 fi
 
-if grep -q 'Prove Stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'INTENT:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Precedence' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions has Think/Prove rules + precedence"
+if grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Temporary File Cleanup' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'INTENT:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions clean slate (cleanup+telegraphic only)"
 else
-  fail "agent-instructions missing Think/Prove rules"
+  fail "agent-instructions not clean slate"
 fi
 
-# Global AGENTS block order after setup
-ga="${TEMP_HOME}/.gemini/config/AGENTS.md"
-a_line="$(awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{print NR; exit}' "${ga}")"
-p_line="$(awk '/<!-- PONYTAIL:MANAGED:START -->/{print NR; exit}' "${ga}")"
-if [ -n "${a_line}" ] && [ -n "${p_line}" ] && [ "${a_line}" -lt "${p_line}" ]; then
-  pass "installed AGENTS.md: AGENT-INSTRUCTIONS before PONYTAIL"
-else
-  fail "installed AGENTS.md block order wrong (a=${a_line:-?} p=${p_line:-?})"
-fi
-
-# Reorder migration: Ponytail-first owned file → AGENT-INSTRUCTIONS first on sync
-REORDER_SRC="${TEMP_HOME}/AGENTS-ponytail-first.md"
-{
-  awk '/<!-- PONYTAIL:MANAGED:START -->/,/<!-- PONYTAIL:MANAGED:END -->/' \
-    "${TEMP_REPO}/templates/global/AGENTS.md"
-  printf '\n'
-  awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/,/<!-- AZG:AGENT-INSTRUCTIONS:END -->/' \
-    "${TEMP_REPO}/templates/global/AGENTS.md"
-} > "${REORDER_SRC}"
-# DESTRUCTIVE: install ponytail-first owned AGENTS for reorder migrate
-cp "${REORDER_SRC}" "${TEMP_HOME}/.gemini/config/AGENTS.md"
-# Force block sync by touching a difference outside markers? Content of blocks matches
-# template but order differs — whole-file diff triggers sync path.
-assert_exit "setup reorders AGENT-INSTRUCTIONS before PONYTAIL" 0 \
-  env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
-a_line="$(awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{print NR; exit}' "${ga}")"
-p_line="$(awk '/<!-- PONYTAIL:MANAGED:START -->/{print NR; exit}' "${ga}")"
-if [ -n "${a_line}" ] && [ -n "${p_line}" ] && [ "${a_line}" -lt "${p_line}" ]; then
-  pass "setup migrated block order (${a_line} < ${p_line})"
-else
-  fail "setup did not migrate block order (a=${a_line:-?} p=${p_line:-?})"
-fi
-
+# Smart-sync skip must not resurrect retired skills
 assert_exit "second setup (smart sync) exits 0" 0 \
   env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
-assert_file_exists "azg-method-refs remains after smart sync" \
+assert_file_not_exists "azg-method-refs stays absent after smart sync" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 
 assert_marker_rejected() {
@@ -269,7 +238,7 @@ assert_exit "azg uninstall exits 0" 0 \
 
 assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
-assert_file_not_exists "uninstall removed azg-method-refs" \
+assert_file_not_exists "uninstall removed azg-method-refs (already parked)" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
 assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
