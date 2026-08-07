@@ -7,11 +7,11 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** Implemented Candidate text in templates; glossary + CAMPAIGN notes; **not** yet Process-Gated
-- **Files:** `templates/global/AGENTS.md` · `templates/global/skills/azg/azg-method-refs/SKILL.md` · `CONTEXT.md` · `tests/test-intent-gates-candidate.sh` · `tests/run-all.sh` · `evals/traps/CAMPAIGN.md` · `docs/agents/current-state.md` · `ROADMAP.md`
-- **Decisions:** Combined Candidate; thin always-on + JIT refs; Reversible Default + Unattended; INTENT losing side; Twin Sweep same construct/same risk; anti-memorization (no fixture IDs)
-- **Blocked:** None
-- **Next:** `TRAP_CANDIDATE_PACK=` unset / `AZG_CANDIDATE_REF=HEAD` full Trap Suite vs current `d5711c2` + baseline; promote only if ≥ both
+- **Status:** Process Gate **running** — `evals/traps/campaigns/azg-concept-candidate/`
+- **Files:** (unchanged Candidate prose) · campaign tree gitignored
+- **Decisions:** `TRAP_CANDIDATE_PACK=none` (azg overlay @ HEAD); current `d5711c2`; full S1–S14
+- **Blocked:** None — wall-clock ~15–20 min
+- **Next:** Wait for 42 cells → `analyze-trap.sh` → promote or ablate
 
 ## Todo
 - [x] Grill concepts locked

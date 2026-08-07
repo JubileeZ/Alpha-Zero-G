@@ -2,9 +2,9 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Candidate ready** 2026-08-07 — azg gate delta (not Fable pack); Process Gate re-run pending |
-| Last Fable-pack run | `fable-method-full` — baseline **64%** · current **79%** · Fable **71%** · `promote_process_gate: false` → keep azg |
-| Next Candidate | HEAD `AZG:AGENT-INSTRUCTIONS` + method-refs: Reversible Default · Unattended · losing side · Twin Sweep (concept prose) |
+| Status | **Running** 2026-08-07 — azg concept Candidate Process Gate (`azg-concept-candidate`) |
+| Last Fable-pack run | `fable-method-full` — baseline **64%** · current **79%** · Fable **71%** · no promote |
+| Live Candidate | `AZG_CANDIDATE_REF=HEAD` (Reversible Default · Unattended · losing side · Twin Sweep); current `d5711c2`; `TRAP_CANDIDATE_PACK=none` |
 | Prior | `pre-wfa-reverse` — current WFA 0.71 = baseline 0.71 |
 
 Do not commit campaign trees under `campaigns/` (gitignored). Full scenario matrix: see prior section in git history / `fable-method-full` local tree.
