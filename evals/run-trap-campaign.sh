@@ -49,28 +49,29 @@ jq -r '.scenarios[]' "${CAMP}/selection.json" | while IFS= read -r id; do
 done >"${list}"
 
 fail=0
-batch=0
+pids=()
+flush_batch() {
+  local pid wec=0
+  for pid in "${pids[@]+"${pids[@]}"}"; do
+    set +e
+    wait "${pid}"
+    wec=$?
+    set -e
+    [ "${wec}" -eq 0 ] || fail=1
+  done
+  pids=()
+}
+
 while IFS= read -r line; do
   id="${line%% *}"
   arm="${line#* }"
   run_one "${id}" "${arm}" &
-  batch=$((batch + 1))
-  if [ "${batch}" -ge "${JOBS}" ]; then
-    set +e
-    wait
-    wec=$?
-    set -e
-    [ "${wec}" -eq 0 ] || fail=1
-    batch=0
+  pids+=("$!")
+  if [ "${#pids[@]}" -ge "${JOBS}" ]; then
+    flush_batch
   fi
 done <"${list}"
-if [ "${batch}" -gt 0 ]; then
-  set +e
-  wait
-  wec=$?
-  set -e
-  [ "${wec}" -eq 0 ] || fail=1
-fi
+flush_batch
 
 bash "${ROOT}/evals/analyze-trap.sh" "${CAMP}" || true
 [ "${fail}" -eq 0 ] || warn "some cells failed — see ${LOGDIR}"

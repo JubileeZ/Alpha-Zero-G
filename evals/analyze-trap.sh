@@ -38,8 +38,11 @@ for arm in arms:
     }
 
 cand, cur, base = rates["candidate"]["rate"], rates["current"]["rate"], rates["baseline"]["rate"]
+nulls_left = sum(rates[a]["nulls"] for a in arms)
 promote = None
-if all(x is not None for x in (cand, cur, base)):
+if nulls_left > 0:
+    promote = False
+elif all(x is not None for x in (cand, cur, base)):
     promote = cand >= cur and cand >= base
 
 selection = {}
@@ -50,6 +53,9 @@ isolation = selection.get("isolation") or "host"
 # ADR 0013: host isolation is not promote-grade
 promote_blocked = isolation != "docker"
 note = "Process Gate (ADR 0012). Not Lite Evaluation Suite promote."
+if nulls_left > 0:
+    promote = False
+    note += f" Incomplete campaign: {nulls_left} null scorecard(s)."
 if promote_blocked:
     promote = False
     note += f" Eval Isolation={isolation} (ADR 0013) — promote requires isolation=docker."

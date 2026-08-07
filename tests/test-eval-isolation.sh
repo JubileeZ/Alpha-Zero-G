@@ -46,6 +46,20 @@ else
   fail "docker promote" "pr=${pr} blocked=${blocked}"
 fi
 
+# incomplete campaign (nulls) must not promote
+jq -n '{scenario_id:"s1",treatment:"baseline",task_success:null,score_override:null,correct_action:null,notes:null,model:null}' \
+  >"${tmp}/s1/baseline/scorecard.json"
+bash "${ROOT}/evals/analyze-trap.sh" "${tmp}" >/dev/null
+pr=$(jq -r '.promote_process_gate' "${tmp}/promote-result.json")
+note=$(jq -r '.note' "${tmp}/promote-result.json")
+if [ "${pr}" = "false" ] && echo "${note}" | grep -qi 'Incomplete'; then
+  pass "null scorecards block promote"
+else
+  fail "nulls should block promote" "pr=${pr} note=${note}"
+fi
+# restore filled baseline for cleanliness
+jq -n '{scenario_id:"s1",treatment:"baseline",task_success:1,score_override:null,correct_action:null,notes:null,model:null}' \
+  >"${tmp}/s1/baseline/scorecard.json"
 section "4. Dockerfile never copies host .cursor"
 if grep -Eiq 'COPY.*\.cursor|ADD.*\.cursor' "${ROOT}/evals/docker/azg-eval-agent/Dockerfile"; then
   fail "Dockerfile must not COPY host .cursor" ""
