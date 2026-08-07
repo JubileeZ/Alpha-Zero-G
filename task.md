@@ -7,18 +7,18 @@
 
 ## Work Packet (SFDBN)
 
-- **Status:** Patch done (AGENTS + method-refs + CONTEXT + tests + research note); commit next; Docker gate after
-- **Files:** `templates/global/AGENTS.md` · `templates/global/skills/azg/azg-method-refs/SKILL.md` · `CONTEXT.md` · `tests/test-intent-gates-candidate.sh` · `docs/research/2026-08-07-unattended-tied-defaults-loop-engineering.md`
-- **Decisions:** (D) all three classes; Q6 impl-equivalent/Intent Tie; Twin fix-or-list always-on bar; WFA thin+JIT; host smoke triage only
+- **Status:** Candidate (D) patched + committed (`397c3da`); Docker Process Gate pending
+- **Files:** `templates/global/AGENTS.md` · `azg-method-refs` · `CONTEXT.md` · `tests/test-intent-gates-candidate.sh` · research note
+- **Decisions:** (D) all three classes; Impl-Equivalent Default / Intent Tie; Twin fix-or-list; WFA thin+JIT; host smoke triage only
 - **Blocked:** None
-- **Next:** Commit → Docker Process Gate (`TRAP_CANDIDATE_PACK=none` `AZG_CANDIDATE_REF=HEAD` `AZG_EVAL_DOCKER=1`)
+- **Next:** Docker Process Gate (`TRAP_CANDIDATE_PACK=none` `AZG_CANDIDATE_REF=HEAD` `AZG_CURRENT_REF=d5711c2` `AZG_EVAL_DOCKER=1`)
 
 ## Todo
 - [x] Grill Q1–Q10
 - [x] Research Unattended tied defaults
 - [x] Candidate patch (D/Q9)
 - [x] Structural tests green
-- [ ] Commit
+- [x] Commit (`397c3da`)
 - [ ] Clean Docker Process Gate re-run
 - [ ] Lite Agent arms via same helper (follow-up)
 
