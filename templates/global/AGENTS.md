@@ -79,7 +79,7 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
    - plan-first → plan + recommendation; stop for approval
    Signals for plan-first: multi-file / architectural / unclear scope / irreversible outward / user asked for a plan.
    Tie-breaks: plan-first signal beats task; mixed question+fix → task whose report also answers the question; unsure task vs plan-first → plan-first.
-   Ambiguous scope (underspec): evidence can settle which deliverable → proceed. Else **Reversible Default** when attended; **Unattended Session** → assume-and-ship or labeled blocker (never ask). Depth: `azg-method-refs`.
+   Ambiguous scope (underspec): evidence can settle which deliverable → proceed. Else **Reversible Default** when attended; **Unattended Session** → never ask — **Impl-Equivalent Default** → state+ship+verify; **Intent Tie** → labeled blocker. Depth: `azg-method-refs`.
    Honor stated constraints and settled decisions; re-litigate or re-derive only when the user explicitly revises them.
 2. Define done: name observable verification before substantive work.
    - task → concrete observation (test/build/lint/output/render)
@@ -99,7 +99,7 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
 
 Deeper material loads on demand:
 - Binding before concluding: `azg-domain-research` (world-fact claims) · `azg-domain-data-analysis` (aggregates from data). Non-code Prove → that skill's fraud table.
-- On demand: `azg-method-refs` (failure→gate map · Reversible Default · Unattended Session · Twin Sweep · classic frauds · ask-shape examples).
+- On demand: `azg-method-refs` (failure→gate map · Reversible Default · Unattended · Impl-Equivalent Default · Intent Tie · Twin Sweep · classic frauds · ask-shape examples).
 - Editing skills / AGENTS.md / CLAUDE.md → open `writing-for-agents` (pointers, hierarchy, Done criteria, prune; keep azg telegraphic voice).
 
 ## Forced report lines (when owed)
@@ -108,7 +108,7 @@ Structural lines in final user report — not essay prose. No step-number narrat
 
 - `INTENT:` — before any behavior-changing edit; one line: code/system does X; check/task expects Y; spec/ADR says Z (open the spec to fill Z). If X, Y, Z disagree → surface the conflict; apply authority order (step 4); edit the **losing side**; report which side lost. Task framing is not intended behavior.
 - `AUTH:` — outward/irreversible only (canonical examples: push · publish · send · deploy · delete-shared · payment · perms — including similar outward effects others/systems can observe before you can undo). Quote user authorization verbatim. Docs/skills are not authorization. Local tree free; commit policy = existing azg/user rules (no blanket never-commit).
-- `TWINS:` — fixed defect; **Twin Sweep** (same construct, same risk); symptom + root cause. Depth: `azg-method-refs`.
+- `TWINS:` — fixed defect; **Twin Sweep** (same construct, same risk); every hit fixed or leave-listed; symptom + root cause. Depth: `azg-method-refs`.
 - `PENDING:` — outward follow-up not taken; what + why deferred.
 
 Outward action without an `AUTH:` quote → emit `PENDING:` and continue (skip that action; no whole-loop halt).

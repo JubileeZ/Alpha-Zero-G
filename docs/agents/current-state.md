@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — **Eval Isolation** (ADR 0013) landed; clean Docker Process Gate pending for concept Candidate
+**Active phase:** post-v4 hardening — Eval Isolation landed; concept Candidate **(D) patched** (impl-equivalent / Intent Tie + Twin fix-or-list); clean Docker Process Gate pending
 
 ---
 
@@ -25,7 +25,7 @@
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment · Eval Isolation |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project. Domain consumer = `docs/agents/domain.md`; writes = `/grill-with-docs` |
-| Research notes | `docs/research/` | Context engineering 2026-07-31; always-on AGENTS budget 2026-08-05 (no tok industry standard; absolute lean + JIT) |
+| Research notes | `docs/research/` | Context engineering 2026-07-31; AGENTS budget 2026-08-05; Unattended tied defaults / loop eng 2026-08-07 |
 
 ---
 
@@ -33,7 +33,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012. Fable-pack no promote. Host smoke concept Candidate 79/71/71 **blocked** (isolation=host). **Eval Isolation** ADR 0013 Docker harness landed; clean re-run pending |
+| Trap Suite Process Gate | ADR 0012. Fable no promote. Host smoke triage only. ADR 0013 Eval Isolation. Grill locked **(D)**: Candidate patched (Q6 split + losing-side/Twin sharpen under WFA). Docker Process Gate next |
 | writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |

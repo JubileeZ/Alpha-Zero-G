@@ -42,6 +42,7 @@ Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈
 - [x] Grill: keep azg; concept Candidate prose landed
 - [x] Host smoke Process Gate (`azg-concept-candidate`) — **not promote-grade** (`isolation=host`)
 - [x] **Eval Isolation** Docker harness (ADR 0013) — trap executor+judge
+- [x] Grill upgrade Candidate **(D)** — impl-equivalent / Intent Tie + Twin fix-or-list (WFA)
 - [ ] Clean Process Gate (`isolation=docker`) on azg concept Candidate
 - [ ] If Candidate ≥ current and ≥ baseline under docker → promote; else ablate
 - [ ] Wire Lite Agent arms to `run-agent-isolated.sh` (follow-up)

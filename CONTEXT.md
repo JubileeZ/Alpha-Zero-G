@@ -109,11 +109,19 @@ Always-on discipline that treats a finished report as claims to re-observe (diff
 _Avoid_: fable-judge, blind trust in agent prose, verification theater
 
 **Reversible Default**:
-When scope is underspecified and a choice is local, cheap to undo, and nameable: state the assumption, ship, and verify — ask only when irreversible/outward or two defaults are equally costly to reverse.
+When scope is underspecified and a choice is local, cheap to undo, and nameable: state the assumption, ship, and verify. Ask when irreversible/outward or **Intent Tie**; **Impl-Equivalent Default** → state+ship+verify without asking.
 _Avoid_: Always ask on ambiguity, silent guess without stating assumption
 
+**Impl-Equivalent Default**:
+Two underspec choices in the same risk class that are local and trivially reversible (naming, format, path under repo). Unattended: pick one, state, ship, verify.
+_Avoid_: Coin-flip product behavior, treat format choice as Intent Tie
+
+**Intent Tie**:
+Two competent product or requirement readings that code cannot settle. Unattended: labeled blocker — never ask, never coin-flip intent.
+_Avoid_: Assume-and-ship on requirement meaning, "equally costly" as always-ask for format/path
+
 **Unattended Session**:
-Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present.
+Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present. Dispatch: see **Impl-Equivalent Default** and **Intent Tie**.
 _Avoid_: User went quiet, assume unattended from silence
 
 **Twin Sweep**:
