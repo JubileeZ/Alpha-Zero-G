@@ -40,12 +40,12 @@ Then follow gate README. Do **not** commit under `*/campaigns/` or `*/worktrees/
 ```bash
 # Trap Process Gate (N=5 default)
 bash evals/prepare-trap-campaign.sh
-bash evals/run-trap-campaign.sh --jobs 3
+bash evals/run-trap-campaign.sh --jobs 12
 bash evals/analyze-trap.sh
 
 # Lite adopt gate — see lite/README.md
 bash evals/prepare-lite-campaign.sh evals/lite/campaigns/<id>
-bash evals/run-lite-composer-campaign.sh --score --jobs 6
+bash evals/run-lite-composer-campaign.sh --score --jobs 12
 
 bash tests/test-traps.sh
 bash tests/test-lite.sh

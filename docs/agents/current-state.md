@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — **Eval Device Home** landed (fake HOME mimic Device Setup); Docker Process Gate **re-run owed** (inject-era 71% not comparable)
+**Active phase:** post-v4 hardening — Device Home Gate done; **keep Current=`87b4eda`** (no promote); next = s9 triage or Lite isolation arms
 
 ---
 
@@ -17,7 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` | ADR 0012 + **0013** Eval Isolation; default Docker agent; `TRAP_CANDIDATE_PACK`; traps model `luna-low` |
+| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` + `evals/stage-eval-home.sh` | ADR 0012 + **0013** Eval Isolation + Eval Device Home; default Docker; `TRAP_JOBS` default **12**; `TRAP_CANDIDATE_PACK`; model `luna-low` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -25,7 +25,7 @@
 | Glossary | `CONTEXT.md` | Current/Candidate Treatment · Eval Isolation |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project. Domain consumer = `docs/agents/domain.md`; writes = `/grill-with-docs` |
-| Research notes | `docs/research/` | Context engineering 2026-07-31; AGENTS budget 2026-08-05; Unattended tied defaults / loop eng 2026-08-07 |
+| Research notes | `docs/research/` | Context engineering 2026-07-31; AGENTS budget 2026-08-05; Unattended tied defaults 2026-08-07; **Device Home Gate log** 2026-08-07 |
 
 ---
 
@@ -33,7 +33,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Docker `azg-concept-docker`: **71/71/71** tie · promote · **adopted** Current=`87b4eda` (D+clarity). Hard fails remain s2/s13 |
+| Trap Suite Process Gate | ADR 0012+0013. **Device Home** `azg-concept-device-home`: **71/86/79** · `promote=false` · keep Current=`87b4eda`. Inject-era docker 71/71/71 historical only. Hard fails: s2/s13 |
 | writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
@@ -66,7 +66,7 @@
 | `bash tests/test-lite.sh` | Lite suite structural tests |
 | `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare one Lite arm workdir |
 | `bash evals/prepare-lite-campaign.sh [dir]` | Stub all N×3 scorecards into portable campaign dir |
-| `bash evals/run-lite-composer-campaign.sh --score --jobs 6` | Proven parallel Composer Lite campaign (skips filled scorecards) |
+| `bash evals/run-lite-composer-campaign.sh --score --jobs 12` | Parallel Composer Lite campaign (skips filled scorecards; `LITE_JOBS` default 12) |
 | `bash evals/analyze-lite-promote.sh <camp>` | Write `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
 | `bash evals/traps/run-full-first.sh` | Full S1–S14 Process Gate (default Candidate = fable-method pack) |

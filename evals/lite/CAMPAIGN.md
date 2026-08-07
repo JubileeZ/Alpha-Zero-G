@@ -26,7 +26,7 @@ Parallel runs: **apply-only** into `worktrees/cells/<id>/<arm>/` — do **not** 
 
 ```bash
 bash evals/prepare-lite-campaign.sh evals/lite/campaigns/adr0009-20260801-n5
-bash evals/run-lite-composer-campaign.sh --score --jobs 6
+bash evals/run-lite-composer-campaign.sh --score --jobs 12
 bash evals/analyze-lite-promote.sh evals/lite/campaigns/adr0009-20260801-n5
 ```
 

@@ -2,15 +2,30 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Adopted** — Docker Gate `azg-concept-docker` 71/71/71 tie · `promote=true` · Candidate (D+clarity) = new Current (`87b4eda`) |
+| Status | **Done** — Device Home Gate `azg-concept-device-home` · **71 / 86 / 79** · `promote=false` (Cand < Current) |
 | Host smoke (`azg-concept-candidate`) | 71/71/79 — blocked (`isolation=host`); triage only |
 | Last Fable-pack run | `fable-method-full` — 64/79/71 · no promote |
-| Next | Lite Agent arms → `run-agent-isolated.sh` |
+| Last inject-era Docker | `azg-concept-docker` — 71/71/71 tie · adopted Current=`87b4eda` (**not comparable**) |
+| Next | Keep Current=`87b4eda`; triage Device Home splits; Lite Agent arms → `run-agent-isolated.sh` |
 | Prior | `pre-wfa-reverse` — WFA 0.71 = baseline 0.71 |
 
 Do not commit campaign trees under `campaigns/` (gitignored).
 
-## Verdict — azg-concept-docker (promote-grade)
+## Verdict — azg-concept-device-home (promote-grade, Eval Device Home)
+
+| Arm | Pass | Rate |
+|-----|------|------|
+| Baseline (empty HOME) | 10/14 | **71%** |
+| Current (`87b4eda` via Eval Device Home) | 12/14 | **86%** |
+| Candidate (`HEAD` / `f632a20` via Eval Device Home) | 11/14 | **79%** |
+
+`isolation=docker` · `promote_process_gate: false` — Candidate (79%) < Current (86%). **No promote.** Current Treatment stays `87b4eda`.
+
+All-fail: **s2**, **s13**. Current-only win: **s9** (B0 C1 Cand0), **s14** (B0 C1 Cand1 — Cand also). Harness lift vs baseline: Current +2 (s9, s14).
+
+---
+
+## Prior verdict — azg-concept-docker (inject-era; historical)
 
 | Arm | Pass | Rate |
 |-----|------|------|

@@ -8,7 +8,7 @@
 #
 # Usage:
 #   bash evals/run-lite-composer-campaign.sh [--score] [--jobs N] [--arm ARM] [--force]
-# Env: LITE_JOBS (default 6)
+# Env: LITE_JOBS (default 12)
 
 set -euo pipefail
 
@@ -19,7 +19,7 @@ source "${ROOT}/lib/common.sh"
 SCORE=0
 FORCE=0
 ONLY_ARM=""
-JOBS="${LITE_JOBS:-6}"
+JOBS="${LITE_JOBS:-12}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --score) SCORE=1; shift ;;

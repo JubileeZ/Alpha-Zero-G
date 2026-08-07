@@ -49,7 +49,9 @@ esac
 emit_isolation() {
   local mode="$1"
   if [ -n "${AZG_EVAL_ISOLATION_FILE:-}" ]; then
-    printf '%s\n' "${mode}" >"${AZG_EVAL_ISOLATION_FILE}"
+    # Parent dir may be gone (stale env from a prior probe) — never fail the agent for this.
+    mkdir -p "$(dirname "${AZG_EVAL_ISOLATION_FILE}")" 2>/dev/null || true
+    printf '%s\n' "${mode}" >"${AZG_EVAL_ISOLATION_FILE}" 2>/dev/null || true
   fi
   # optional fd 3
   if { true >&3; } 2>/dev/null; then

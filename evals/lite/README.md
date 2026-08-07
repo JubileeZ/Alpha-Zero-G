@@ -66,7 +66,7 @@ bash evals/prepare-lite-campaign.sh evals/lite/campaigns/<campaign-id>
   --max_workers 1 --run_id validate-gold
 
 # 3) All cells (parallel; skips already-scored scorecards)
-bash evals/run-lite-composer-campaign.sh --score --jobs 6
+bash evals/run-lite-composer-campaign.sh --score --jobs 12
 # one cell: bash evals/run-lite-composer-cell.sh <instance_id> <arm> --score
 
 # 4) Promote
@@ -244,7 +244,7 @@ Unfilled `task_success: null` scorecards are stubs, not evidence.
 bash evals/prepare-lite-campaign.sh
 
 # proven parallel Composer run + score
-bash evals/run-lite-composer-campaign.sh --score --jobs 6
+bash evals/run-lite-composer-campaign.sh --score --jobs 12
 
 # prepare (single arm stub only)
 bash evals/run-lite-arm.sh <id> baseline|current|candidate

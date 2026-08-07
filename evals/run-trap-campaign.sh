@@ -7,7 +7,7 @@ source "${ROOT}/lib/common.sh"
 
 FORCE=0
 ONLY_ARM=""
-JOBS="${TRAP_JOBS:-3}"
+JOBS="${TRAP_JOBS:-12}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --force) FORCE=1; shift ;;

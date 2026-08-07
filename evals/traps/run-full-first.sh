@@ -12,7 +12,7 @@ export TRAP_CAMP="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/full-first}"
 export AZG_CURRENT_REF="${AZG_CURRENT_REF:-87b4eda}"
 export TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-fable-method}"
 export AZG_CANDIDATE_REF="${AZG_CANDIDATE_REF:-HEAD}"
-export TRAP_JOBS="${TRAP_JOBS:-3}"
+export TRAP_JOBS="${TRAP_JOBS:-12}"
 
 FORCE_FLAG=""
 for a in "$@"; do

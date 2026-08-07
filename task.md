@@ -1,24 +1,21 @@
-# Active Task: Eval Device Home landed — re-gate next
+# Active Task: (next) s9 triage or Lite isolation
 
-- **Status:** Fake HOME (device-core) implemented; Process Gate re-run still owed
-- **Objective:** Real-world Device Setup mimic under Docker; then full `isolation=docker` Process Gate
-- **Acceptance:** stage-eval-home + --home mounts; no WT inject; tests green; re-gate campaign analyzed
-- **Issue/Ticket:** Grill Eval Device Home 2026-08-07 · ADR 0013 amend
+- **Status:** Ready — Device Home arc closed; Current=`87b4eda`
+- **Objective:** Pick next Candidate theme or ROADMAP follow-up
+- **Acceptance:** New Work Packet scoped after user picks recommended path
+- **Issue/Ticket:** See `docs/research/2026-08-07-eval-device-home-process-gate.md`
 
 ## Work Packet (SFDBN)
 
-- **Status:** Harness done; re-gate pending
-- **Files:** `evals/stage-eval-home.sh` · `evals/run-agent-isolated.sh` · `evals/run-trap-cell.sh` · `tests/test-eval-isolation.sh` · ADR 0013 · CONTEXT
-- **Decisions:** Per-arm fake HOME; azg-owned core only; once per ref; no WT inject; re-gate required
-- **Blocked:** None
-- **Next:** Commit → Docker Process Gate re-run (new camp; Current=`87b4eda` Candidate=`HEAD`)
+- **Status:** Idle — prior packet complete
+- **Files:** research note above · `evals/traps/CAMPAIGN.md`
+- **Decisions:** No promote; stay on Current Treatment `87b4eda`
+- **Blocked:** Awaiting user pick of next step
+- **Next:** **Recommended** — triage s9 (Cand fail vs Current pass). Alt A: s2/s13 hard fails. Alt B: Lite → `run-agent-isolated.sh`
 
 ## Todo
-- [x] Grill fake HOME
-- [x] Implement + structural tests
-- [ ] Commit
-- [ ] Docker Process Gate re-run
-- [ ] Lite Agent arms (follow-up)
+- [ ] User picks next: s9 / s2+s13 / Lite arms
+- [ ] Open scoped packet + implement
 
 ## Blockers / Notes
-- Prior 71/71/71 was worktree-inject era — not comparable after this change
+- Prior camp evidence: `evals/traps/campaigns/azg-concept-device-home/promote-result.json`
