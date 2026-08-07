@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Lite gate live; aggressive lean landed (Unicode statusline, shared checkpoint scan, spawn concurrent-only, lib/hook hygiene, archive trim)
+**Active phase:** post-v4 hardening — Process Gate full Fable-method Candidate **in flight** (`TRAP_CANDIDATE_PACK=fable-method`; campaign `evals/traps/campaigns/fable-method-full/`)
 
 ---
 
@@ -17,7 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` | Vendored Fable S1–S14 (MIT); ADR 0012; default N=5; traps model `luna-low`; Lite `luna-medium`. Parked: full Fable-method Candidate vs baseline → distill if wins (`ROADMAP.md`) |
+| Trap Suite / Process Gate | `evals/traps/` + `evals/trap-fable-pack.sh` | Vendored Fable S1–S14 (MIT); ADR 0012; `TRAP_CANDIDATE_PACK=fable-method` injects upstream `AGENTS.md` + four skills @ `VENDOR.lock`; default N=5; full corpus via `run-full-first.sh`; traps model `luna-low` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -33,7 +33,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012 live. Findings 2026-08-06: WFA keep (pre-WFA reverse no-promote); WFA≈baseline on full corpus — **not** license to full-remove. Next parked on `ROADMAP.md`: full Fable-method Candidate → distill if > baseline |
+| Trap Suite Process Gate | ADR 0012 live. WFA 2026-08-06: keep gates; WFA≈baseline — not license to full-remove. **2026-08-07:** full Fable-method Candidate runner + campaign running (`fable-method-full`); grill defaults recorded in `task.md` |
 | writing-for-agents lever pass | Packets 1–2 landed; keep for now pending Fable-method Candidate test |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |
@@ -54,7 +54,7 @@
 | Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
 | Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
 | Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
-| Full Fable-method as Process Gate Candidate | Parked — see `ROADMAP.md` (Candidate > baseline → distill → re-gate) |
+| Fable-method distill + re-gate | Pending campaign result — promote if Candidate ≥ current & baseline; distill to azg gates if win (`ROADMAP.md`) |
 
 ---
 
@@ -69,6 +69,8 @@
 | `bash evals/run-lite-composer-campaign.sh --score --jobs 6` | Proven parallel Composer Lite campaign (skips filled scorecards) |
 | `bash evals/analyze-lite-promote.sh <camp>` | Write `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
+| `bash evals/traps/run-full-first.sh` | Full S1–S14 Process Gate (default Candidate = fable-method pack) |
+| `bash evals/analyze-trap.sh <camp>` | `promote-result.json` for trap campaign |
 
 ---
 

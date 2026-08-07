@@ -10,6 +10,7 @@ export TRAP_FULL=1
 export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-low}"
 export TRAP_CAMP="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/full-first}"
 export AZG_CURRENT_REF="${AZG_CURRENT_REF:-d5711c2}"
+export TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-fable-method}"
 export AZG_CANDIDATE_REF="${AZG_CANDIDATE_REF:-HEAD}"
 export TRAP_JOBS="${TRAP_JOBS:-3}"
 

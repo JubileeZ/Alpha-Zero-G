@@ -56,7 +56,7 @@ bash evals/analyze-trap.sh "$TRAP_CAMP"
 
 Resume skips cells with `task_success` set; `--force` re-runs all.
 
-Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`.
+Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream `AGENTS.md` + four skills at `VENDOR.lock`; default for `run-full-first.sh`; else candidate arm uses `AZG_CANDIDATE_REF` azg overlay).
 
 ## Cleanup (local)
 

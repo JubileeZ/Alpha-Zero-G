@@ -69,33 +69,48 @@ git init -q
 git -c user.email=azg@test -c user.name=azg add -A
 git -c user.email=azg@test -c user.name=azg commit -qm "trap fixture ${SID}" >/dev/null
 
-azg_ref=""
-case "${ARM}" in
-  baseline) azg_ref="" ;;
-  current) azg_ref="$(git -C "${ROOT}" rev-parse "${CURRENT_REF}^{commit}")" ;;
-  candidate) azg_ref="$(git -C "${ROOT}" rev-parse "${CANDIDATE_REF}^{commit}")" ;;
-  *) die "bad arm" ;;
-esac
-
-if [ -n "${azg_ref}" ]; then
+inject_azg_ref() {
+  local ref="$1"
   mkdir -p .cursor/rules .agents/skills .cursor/skills
   {
     echo '---'
     echo 'description: AZG agent instructions (trap cell)'
     echo 'alwaysApply: true'
     echo '---'
-    git -C "${ROOT}" show "${azg_ref}:templates/global/AGENTS.md" \
+    git -C "${ROOT}" show "${ref}:templates/global/AGENTS.md" \
       | awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{f=1; next} /<!-- AZG:AGENT-INSTRUCTIONS:END -->/{f=0; next} f'
   } >.cursor/rules/azg-agent-instructions.mdc
   for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-    if git -C "${ROOT}" cat-file -e "${azg_ref}:templates/global/skills/azg/${sk}/SKILL.md" 2>/dev/null; then
+    if git -C "${ROOT}" cat-file -e "${ref}:templates/global/skills/azg/${sk}/SKILL.md" 2>/dev/null; then
       mkdir -p ".agents/skills/${sk}" ".cursor/skills/${sk}"
-      git -C "${ROOT}" show "${azg_ref}:templates/global/skills/azg/${sk}/SKILL.md" \
+      git -C "${ROOT}" show "${ref}:templates/global/skills/azg/${sk}/SKILL.md" \
         >".agents/skills/${sk}/SKILL.md"
       cp ".agents/skills/${sk}/SKILL.md" ".cursor/skills/${sk}/SKILL.md"
     fi
   done
-  echo "${azg_ref}" >.trap-azg-ref
+  echo "${ref}" >.trap-azg-ref
+}
+
+injected=0
+case "${ARM}" in
+  baseline) ;;
+  current)
+    inject_azg_ref "$(git -C "${ROOT}" rev-parse "${CURRENT_REF}^{commit}")"
+    injected=1
+    ;;
+  candidate)
+    if [ "${TRAP_CANDIDATE_PACK:-}" = "fable-method" ]; then
+      bash "${ROOT}/evals/trap-fable-pack.sh" inject "${WT}"
+      injected=1
+    else
+      inject_azg_ref "$(git -C "${ROOT}" rev-parse "${CANDIDATE_REF}^{commit}")"
+      injected=1
+    fi
+    ;;
+  *) die "bad arm" ;;
+esac
+
+if [ "${injected}" -eq 1 ]; then
   git add -A
   git -c user.email=azg@test -c user.name=azg commit -qm "inject azg ${ARM}" >/dev/null || true
 fi
