@@ -78,6 +78,63 @@ _render_cursor_rule() {
   rm -f "${render_tmp}"
 }
 
+# Rebuild owned AGENTS.md so AZG:AGENT-INSTRUCTIONS precedes PONYTAIL:MANAGED.
+# Preserves prose outside both blocks. No-op when already ordered.
+_reorder_agents_blocks_azg_first() {
+  local target="${1}"
+  local tmp="${target}.azg.reorder.tmp"
+  local a_start='<!-- AZG:AGENT-INSTRUCTIONS:START -->'
+  local a_end='<!-- AZG:AGENT-INSTRUCTIONS:END -->'
+  local p_start='<!-- PONYTAIL:MANAGED:START -->'
+  local p_end='<!-- PONYTAIL:MANAGED:END -->'
+  local a_line p_line a_body p_body remainder
+
+  [ -f "${target}" ] || return 1
+  a_line="$(awk -v m="${a_start}" '$0 == m { print NR; exit }' "${target}")" || true
+  p_line="$(awk -v m="${p_start}" '$0 == m { print NR; exit }' "${target}")" || true
+  [ -n "${a_line}" ] && [ -n "${p_line}" ] || return 1
+  if [ "${a_line}" -lt "${p_line}" ]; then
+    return 0
+  fi
+
+  a_body="$(extract_managed_block "${target}" "${a_start}" "${a_end}")" || return 1
+  p_body="$(extract_managed_block "${target}" "${p_start}" "${p_end}")" || return 1
+  remainder="$(awk -v a_start="${a_start}" -v a_end="${a_end}" \
+    -v p_start="${p_start}" -v p_end="${p_end}" '
+    BEGIN { skip = 0 }
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == a_start || line == p_start { skip = 1; next }
+    line == a_end || line == p_end { skip = 0; next }
+    skip { next }
+    { print line }
+  ' "${target}")" || true
+
+  {
+    printf '%s\n' "${a_start}"
+    printf '%s\n' "${a_body}"
+    printf '%s\n' "${a_end}"
+    printf '\n'
+    printf '%s\n' "${p_start}"
+    printf '%s\n' "${p_body}"
+    printf '%s\n' "${p_end}"
+    if [ -n "$(printf '%s' "${remainder}" | tr -d '[:space:]')" ]; then
+      printf '\n'
+      printf '%s\n' "${remainder}"
+    fi
+  } > "${tmp}" || {
+    rm -f "${tmp}"
+    return 1
+  }
+  if ! mv "${tmp}" "${target}"; then
+    rm -f "${tmp}"
+    return 1
+  fi
+  return 0
+}
+
 _migrate_agent_instruction_try() {
   local target="${1}"
   local start_heading="${2}"
@@ -355,6 +412,11 @@ cmd_setup() {
         rm -f "${agents_sync_tmp}"
         die "Failed to update AGENTS.md managed blocks"
       fi
+      if ! _reorder_agents_blocks_azg_first "${agents_sync_tmp}"; then
+        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        rm -f "${agents_sync_tmp}"
+        die "Failed to reorder AGENTS.md managed blocks (AGENT-INSTRUCTIONS before PONYTAIL)"
+      fi
       # DESTRUCTIVE: replace owned global AGENTS.md with synchronized blocks
       if ! atomic_copy "${agents_sync_tmp}" "${AZG_GLOBAL_AGENTS}"; then
         # DESTRUCTIVE: remove failed AGENTS.md sync temporary
@@ -461,11 +523,10 @@ cmd_setup() {
     info "Tip: run 'azg update --vendor' to vendor skills"
   fi
 
-  # First-party azg distill skills — removed clean slate 2026-08-07 (re-earn via traps).
-  # Prune any leftover device installs from older releases.
+  # First-party azg distill skills — ship when templates/global/skills/azg present (ADR 0014).
   local azg_skills_copied=0
   local azg_cursor_skills_copied=0
-  if [ -d "${azg_skills_dir}" ] && [ "${AZG_SHIP_AZG_SKILLS:-0}" = "1" ]; then
+  if [ -d "${azg_skills_dir}" ]; then
     if [ ! -f "${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl" ]; then
       die "azg skill overlay missing: ${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
     fi
@@ -479,24 +540,7 @@ cmd_setup() {
         azg_skills_copied azg_cursor_skills_copied
     done
   else
-    info "azg distill skills absent/parked (no templates/global/skills/azg ship)"
-    local parked_sk
-    for parked_sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-      if [ -d "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}" ] \
-        && { [ -f "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}/AZG-OWNED.md" ] \
-          || azg_ownership_list_owns cursor_skills "${parked_sk}"; }; then
-        # DESTRUCTIVE: remove retired distill skill from Cursor
-        rm -rf "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}"
-        azg_ownership_list_remove cursor_skills "${parked_sk}"
-      fi
-      if [ -d "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}" ] \
-        && { [ -f "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}/ANTIGRAVITY-NOTE.md" ] \
-          || azg_ownership_list_owns skills "${parked_sk}"; }; then
-        # DESTRUCTIVE: remove retired distill skill from Gemini
-        rm -rf "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}"
-        azg_ownership_list_remove skills "${parked_sk}"
-      fi
-    done
+    info "azg distill skills absent (no templates/global/skills/azg)"
   fi
 
   # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)

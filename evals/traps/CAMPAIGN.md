@@ -2,14 +2,15 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Done** — clean-slate tier sweep `cleanslate-tier-sweep` |
-| Rates B/C/Fable | low **71/79/79** · med **71/64/79** · high **64/71/93** |
+| Status | **Candidate ready** — Think/Prove distill (ADR 0014) on main; Trap re-earn pending |
+| Rates B/C/Fable | low **71/79/79** · med **71/64/79** · high **64/71/93** (cleanslate-tier-sweep) |
 | Sole gate | Trap Process Gate (ADR 0012); Lite deleted |
 | Default models | `gpt-5.6-luna-{low,medium,high}` via `run-tier-sweep.sh` |
 | Single-model default | `gpt-5.6-luna-medium` |
-| Current Treatment | clean slate @ `a9a68ff` / HEAD worktree for new camps; pin `AZG_CURRENT_REF` as needed |
-| Next | Re-earn distill from durable Fable>Current gaps **or park** |
-| Shipped | `a9a68ff` clean slate + eval-watch |
+| Current Treatment | pin `AZG_CURRENT_REF=a9a68ff` (clean slate) unless CAMPAIGN updated |
+| Candidate | HEAD after ADR 0014 Think/Prove + family skills; **`AZG_EVAL_AZG_SKILLS=1`** |
+| Next | Trap campaign: Candidate ≥ Current (then chase Fable). See `task.md` handoff. |
+| Shipped | Think/Prove Candidate draft (ADR 0014); clean-slate history `a9a68ff` |
 
 Do not commit `campaigns/` / `worktrees/` / `homes/` (gitignored).
 

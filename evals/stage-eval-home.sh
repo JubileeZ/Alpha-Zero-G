@@ -2,8 +2,8 @@
 # evals/stage-eval-home.sh — stage azg-owned Device Setup core into a fake HOME (ADR 0013).
 # Usage: bash evals/stage-eval-home.sh <git-ref> <dest-dir>
 # Contents: Ponytail + AGENT-INSTRUCTIONS .mdc (Eval Device Home core).
-# Clean slate: azg distill skills NOT staged unless AZG_EVAL_AZG_SKILLS=1
-# (and templates/global/skills/azg/<name> exist at ref).
+# Azg distill skills staged when AZG_EVAL_AZG_SKILLS=1 and
+# templates/global/skills/azg/<name>/SKILL.md exist at ref (glob all azg-*).
 # When ref resolves to HEAD, prefer worktree templates (uncommitted Candidate OK).
 # Idempotent when dest/.azg-eval-home-ref matches fingerprint.
 set -euo pipefail
@@ -95,8 +95,10 @@ render_rule azg-ponytail.mdc '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MA
 render_rule azg-agent-instructions.mdc '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
 
 if [ "${SHIP_SKILLS}" -eq 1 ]; then
-  for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-    sk_wt="${ROOT}/templates/global/skills/azg/${sk}/SKILL.md"
+  _stage_one_azg_skill() {
+    local sk="$1"
+    local sk_wt="${ROOT}/templates/global/skills/azg/${sk}/SKILL.md"
+    local ref_src
     mkdir -p "${TMP}/.cursor/skills/${sk}" "${TMP}/.agents/skills/${sk}"
     if [ "${USE_WT}" -eq 1 ] && [ -f "${sk_wt}" ]; then
       cp "${sk_wt}" "${TMP}/.cursor/skills/${sk}/SKILL.md"
@@ -107,7 +109,33 @@ if [ "${SHIP_SKILLS}" -eq 1 ]; then
       die "missing azg skill at ${SHA}: ${sk}"
     fi
     cp "${TMP}/.cursor/skills/${sk}/SKILL.md" "${TMP}/.agents/skills/${sk}/SKILL.md"
-  done
+    ref_src="${ROOT}/templates/global/skills/azg/${sk}/references/failure-modes.md"
+    if [ "${USE_WT}" -eq 1 ] && [ -f "${ref_src}" ]; then
+      mkdir -p "${TMP}/.cursor/skills/${sk}/references" "${TMP}/.agents/skills/${sk}/references"
+      cp "${ref_src}" "${TMP}/.cursor/skills/${sk}/references/failure-modes.md"
+      cp "${ref_src}" "${TMP}/.agents/skills/${sk}/references/failure-modes.md"
+    elif git -C "${ROOT}" cat-file -e \
+      "${SHA}:templates/global/skills/azg/${sk}/references/failure-modes.md" 2>/dev/null; then
+      mkdir -p "${TMP}/.cursor/skills/${sk}/references" "${TMP}/.agents/skills/${sk}/references"
+      git -C "${ROOT}" show \
+        "${SHA}:templates/global/skills/azg/${sk}/references/failure-modes.md" \
+        >"${TMP}/.cursor/skills/${sk}/references/failure-modes.md"
+      cp "${TMP}/.cursor/skills/${sk}/references/failure-modes.md" \
+        "${TMP}/.agents/skills/${sk}/references/failure-modes.md"
+    fi
+  }
+  if [ "${USE_WT}" -eq 1 ] && [ -d "${ROOT}/templates/global/skills/azg" ]; then
+    for sk_dir in "${ROOT}/templates/global/skills/azg"/*/; do
+      [ -f "${sk_dir}/SKILL.md" ] || continue
+      _stage_one_azg_skill "$(basename "${sk_dir}")"
+    done
+  else
+    while IFS= read -r sk_path; do
+      [ -n "${sk_path}" ] || continue
+      _stage_one_azg_skill "$(basename "$(dirname "${sk_path}")")"
+    done < <(git -C "${ROOT}" ls-tree -r --name-only "${SHA}" \
+      | grep '^templates/global/skills/azg/.*/SKILL.md$' || true)
+  fi
 fi
 
 printf '%s\n' "${FINGERPRINT}" >"${TMP}/.azg-eval-home-ref"

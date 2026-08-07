@@ -15,8 +15,8 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | **Clean slate:** cleanup + telegraphic only; distill **parked** (re-earn from traps) |
-| Azg-owned skills | *(deleted)* | Distill skills removed clean slate 2026-08-07; re-create under `templates/global/skills/azg/` only when Trap Suite re-earns |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | Think/Prove crumbs + precedence; block **before** Ponytail (ADR 0014) |
+| Azg-owned skills | `templates/global/skills/azg/` | Family pack: orchestrate · method-refs · 8 domains; setup ships when present |
 | Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **tier sweep** low/medium/high full corpus R=1; promote needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -33,7 +33,7 @@
 | Gap | Done |
 |-----|------|
 | Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. Default **tier sweep** + medium/`run-repeats` for majority |
-| Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
+| Fable-method distill + re-gate | ADR 0014 Candidate shipped (crumbs + family pack); Trap re-earn TBD |
 | Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
 | Intent-gates form | ADR 0009 — historical Lite adopt; clean slate parked distill |
@@ -45,7 +45,7 @@
 
 | Item | Notes |
 |------|-------|
-| Fable-method distill + re-gate | Re-earn from durable gaps only; or park |
+| Fable-method distill + re-gate | Candidate on disk (ADR 0014); **Trap campaign** to beat Current still open |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
 Delivery Cost auto-capture: parked / out of scope for now (never a promote input).

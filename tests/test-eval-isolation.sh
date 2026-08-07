@@ -90,19 +90,40 @@ staged="${home_tmp}/staged"
 for f in azg-ponytail.mdc azg-agent-instructions.mdc; do
   if [ -f "${staged}/.cursor/rules/${f}" ]; then pass "staged ${f}"; else fail "missing ${f}" ""; fi
 done
-for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
+for sk in azg-domain-research azg-domain-data-analysis azg-method-refs azg-orchestrate; do
   if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ]; then
-    fail "clean slate must not stage skill ${sk}" ""
+    fail "default stage must not ship skill ${sk} (set AZG_EVAL_AZG_SKILLS=1)" ""
   else
-    pass "skill ${sk} not staged"
+    pass "skill ${sk} not staged by default"
   fi
 done
 if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Telegraphic Writing Style\|Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && ! grep -qE 'Intent gates|INTENT:|Prove stance' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions clean-slate body"
+  && grep -q 'Prove Stance\|INTENT:\|Precedence' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Telegraphic Writing Style\|Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions Think/Prove body"
 else
   fail "agent-instructions body unexpected" ""
+fi
+# With AZG_EVAL_AZG_SKILLS=1, skills stage from worktree when ref=HEAD
+home_sk=$(azg_mktemp_d "tmp_azg_home-sk-XXXXXX")
+if AZG_EVAL_AZG_SKILLS=1 bash "${ROOT}/evals/stage-eval-home.sh" "${ref}" "${home_sk}/staged" >/dev/null; then
+  pass "stage-eval-home with skills exits 0"
+else
+  fail "stage-eval-home with skills failed" ""
+fi
+if [ -f "${home_sk}/staged/.cursor/skills/azg-orchestrate/SKILL.md" ] \
+  && [ -f "${home_sk}/staged/.cursor/skills/azg-domain-devops/SKILL.md" ]; then
+  pass "AZG_EVAL_AZG_SKILLS=1 stages family pack skills"
+else
+  fail "skills not staged under AZG_EVAL_AZG_SKILLS=1" ""
+fi
+# order in staged rules is per-file; check source AGENTS order
+a_line="$(awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{print NR; exit}' "${ROOT}/templates/global/AGENTS.md")"
+p_line="$(awk '/<!-- PONYTAIL:MANAGED:START -->/{print NR; exit}' "${ROOT}/templates/global/AGENTS.md")"
+if [ -n "${a_line}" ] && [ -n "${p_line}" ] && [ "${a_line}" -lt "${p_line}" ]; then
+  pass "template AGENTS.md AGENT-INSTRUCTIONS before PONYTAIL"
+else
+  fail "template AGENTS.md block order" ""
 fi
 if grep -q 'PONYTAIL\|lazy senior\|YAGNI' "${staged}/.cursor/rules/azg-ponytail.mdc"; then
   pass "ponytail body present"
