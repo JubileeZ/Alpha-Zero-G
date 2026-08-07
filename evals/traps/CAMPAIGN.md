@@ -2,9 +2,10 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Running** 2026-08-07 — azg concept Candidate Process Gate (`azg-concept-candidate`) |
-| Last Fable-pack run | `fable-method-full` — baseline **64%** · current **79%** · Fable **71%** · no promote |
-| Live Candidate | `AZG_CANDIDATE_REF=HEAD` (Reversible Default · Unattended · losing side · Twin Sweep); current `d5711c2`; `TRAP_CANDIDATE_PACK=none` |
+| Status | **Host smoke done** — concept Candidate **not promote-grade** (`isolation=host`); Docker Eval Isolation landed (ADR 0013) |
+| Host smoke (`azg-concept-candidate`) | baseline **71%** · current **71%** · candidate **79%** · raw promote would be true → **blocked** (`promote_blocked_by_isolation`) |
+| Last Fable-pack run | `fable-method-full` — baseline 64% · current 79% · Fable 71% · no promote |
+| Next | Clean Process Gate with default Docker isolation (`AZG_EVAL_DOCKER=1`) |
 | Prior | `pre-wfa-reverse` — current WFA 0.71 = baseline 0.71 |
 
 Do not commit campaign trees under `campaigns/` (gitignored). Full scenario matrix: see prior section in git history / `fable-method-full` local tree.

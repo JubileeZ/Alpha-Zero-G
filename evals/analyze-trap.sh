@@ -42,12 +42,26 @@ promote = None
 if all(x is not None for x in (cand, cur, base)):
     promote = cand >= cur and cand >= base
 
+selection = {}
+sel_path = camp / "selection.json"
+if sel_path.exists():
+    selection = json.loads(sel_path.read_text())
+isolation = selection.get("isolation") or "host"
+# ADR 0013: host isolation is not promote-grade
+promote_blocked = isolation != "docker"
+note = "Process Gate (ADR 0012). Not Lite Evaluation Suite promote."
+if promote_blocked:
+    promote = False
+    note += f" Eval Isolation={isolation} (ADR 0013) — promote requires isolation=docker."
+
 result = {
     "campaign": str(camp),
     "scenarios": scenarios,
     "pass_rate": rates,
+    "isolation": isolation,
     "promote_process_gate": promote,
-    "note": "Process Gate (ADR 0012). Not Lite Evaluation Suite promote.",
+    "promote_blocked_by_isolation": promote_blocked,
+    "note": note,
 }
 out.write_text(json.dumps(result, indent=2) + "\n")
 print(json.dumps(result, indent=2))

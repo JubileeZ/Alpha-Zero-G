@@ -19,11 +19,12 @@ Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
-command -v agent jq git python3
-agent login   # once per machine
+command -v docker jq git python3
+agent login   # once on host — auth.json or CURSOR_API_KEY used inside eval container
+bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ```
 
-No Docker. Cells call Cursor Agent CLI (`agent -p`). Current/candidate arms inject azg instructions from `AZG_CURRENT_REF` / `AZG_CANDIDATE_REF` into the cell worktree only (no global `azg setup` required for the gate).
+**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge run in `azg-eval-agent` (empty home; no host `~/.cursor`). Cell inject still supplies current/candidate gates into the worktree. `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
 
 ## Default policy
 
@@ -31,7 +32,7 @@ No Docker. Cells call Cursor Agent CLI (`agent -p`). Current/candidate arms inje
 - **Full corpus** — `TRAP_FULL=1` (first campaign / deep runs)
 - **Model** — `TRAP_MODEL` default `gpt-5.6-luna-low`
 - **Jobs** — `TRAP_JOBS` / `--jobs N` (parallel cells; default 3)
-- **Promote** — Candidate rate ≥ Current and ≥ Baseline (`task_success` binary; Process Gate — not Lite)
+- **Promote** — Candidate rate ≥ Current and ≥ Baseline **and** `isolation=docker` (Process Gate — not Lite)
 
 ## One-shot
 
@@ -56,7 +57,7 @@ bash evals/analyze-trap.sh "$TRAP_CAMP"
 
 Resume skips cells with `task_success` set; `--force` re-runs all.
 
-Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream `AGENTS.md` + four skills at `VENDOR.lock`; default for `run-full-first.sh`; else candidate arm uses `AZG_CANDIDATE_REF` azg overlay).
+Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream pack; else azg overlay), `AZG_EVAL_DOCKER` (default `1`).
 
 ## Cleanup (local)
 

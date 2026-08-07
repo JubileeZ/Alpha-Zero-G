@@ -16,6 +16,10 @@ _Avoid_: Done, completed run, blind-judge pass
 Evaluation arm using the same task, repository state, model, IDE, permissions, and budget as harness arms, with only Alpha-Zero-G configuration removed.
 _Avoid_: Historical baseline, default setup
 
+**Eval Isolation**:
+Running eval Agent CLI calls so host Device Setup (`~/.cursor` rules/skills) cannot leak into any arm — default Docker `azg-eval-agent` empty home; required for promote-grade 3-arm Trap/Lite agent campaigns.
+_Avoid_: Clean HOME ritual only, trust cell inject alone, Docker for SWE-bench scoring (different concern)
+
 **Current Treatment**:
 Evaluation arm with the shipped Alpha-Zero-G harness as of the run (no Candidate changes).
 _Avoid_: Production harness, old core, control with azg

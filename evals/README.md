@@ -26,7 +26,11 @@ agent login          # or export CURSOR_API_KEY=...
 
 # Repo tooling
 command -v jq git bash
-# Trap Suite: no Docker. Lite: Docker + swebench venv — see lite/README.md
+# Trap Suite + Lite agent cells: Docker Eval Isolation (ADR 0013)
+command -v docker
+bash evals/docker/azg-eval-agent/build.sh
+# Lite SWE-bench scoring: separate Docker + swebench venv — see lite/README.md
+# Escape hatch (not promote-grade): AZG_EVAL_DOCKER=0
 ```
 
 Then follow gate README. Do **not** commit under `*/campaigns/` or `*/worktrees/`.

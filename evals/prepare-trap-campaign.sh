@@ -18,7 +18,12 @@ LIST="$(mktemp)"
 trap 'rm -f "${LIST}"' EXIT
 bash "${ROOT}/evals/select-trap-scenarios.sh" >"${LIST}"
 
-# record selection
+# record selection + Eval Isolation (ADR 0013)
+ISOLATION=docker
+case "${AZG_EVAL_DOCKER:-1}" in
+  0|false|FALSE|no|NO|off|OFF) ISOLATION=host ;;
+esac
+
 {
   echo "{"
   echo "  \"trap_full\": ${TRAP_FULL:-0},"
@@ -26,6 +31,7 @@ bash "${ROOT}/evals/select-trap-scenarios.sh" >"${LIST}"
   echo "  \"trap_change_type\": \"${TRAP_CHANGE_TYPE:-general}\","
   echo "  \"trap_seed\": \"${TRAP_SEED:-}\","
   echo "  \"model_default\": \"${TRAP_MODEL:-gpt-5.6-luna-low}\","
+  echo "  \"isolation\": \"${ISOLATION}\","
   echo "  \"scenarios\": ["
   first=1
   while IFS= read -r id; do

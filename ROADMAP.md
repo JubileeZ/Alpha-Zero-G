@@ -39,10 +39,12 @@ Stack wizard · full GitHub MCP default · blocking PreCompact
 
 Parked 2026-08-06 after WFA Process Gate findings (keep WFA; no reverse; WFA ≈ baseline on full Trap Suite).
 
-- [x] **Candidate = full Fable-method** — run done 2026-08-07; **no promote** (71% < current 79%)
-- [x] Grill: keep azg; concept Candidate (Reversible Default · Unattended · losing side · Twin Sweep) — prose landed
-- [ ] Process Gate 3-arm on azg concept Candidate (`AZG_CANDIDATE_REF=HEAD`, no `TRAP_CANDIDATE_PACK`)
-- [ ] If Candidate ≥ current and ≥ baseline → promote; else ablate
+- [x] Grill: keep azg; concept Candidate prose landed
+- [x] Host smoke Process Gate (`azg-concept-candidate`) — **not promote-grade** (`isolation=host`)
+- [x] **Eval Isolation** Docker harness (ADR 0013) — trap executor+judge
+- [ ] Clean Process Gate (`isolation=docker`) on azg concept Candidate
+- [ ] If Candidate ≥ current and ≥ baseline under docker → promote; else ablate
+- [ ] Wire Lite Agent arms to `run-agent-isolated.sh` (follow-up)
 
 Until then: keep WFA-era `AZG:AGENT-INSTRUCTIONS`; do not full-remove global rules on the WFA≈baseline tie alone. Live notes: `evals/traps/CAMPAIGN.md`.
 

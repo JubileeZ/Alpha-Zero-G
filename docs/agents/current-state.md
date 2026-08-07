@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Process Gate **azg Candidate** ready (Reversible Default · Unattended · losing side · Twin Sweep); re-run pending
+**Active phase:** post-v4 hardening — **Eval Isolation** (ADR 0013) landed; clean Docker Process Gate pending for concept Candidate
 
 ---
 
@@ -17,12 +17,12 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | ADR 0009 + **0010**: Think + Prove + Router (domains/method-refs); placeholder fill moved to project `AZG:MANAGED` |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-research` · `azg-domain-data-analysis` · `azg-method-refs` (failure map inlined in `SKILL.md`); always install (not VENDOR.lock-gated); vendor prune skips if source dir exists under this path; Act/orchestrate deferred |
-| Trap Suite / Process Gate | `evals/traps/` + `evals/trap-fable-pack.sh` | Vendored Fable S1–S14 (MIT); ADR 0012; `TRAP_CANDIDATE_PACK=fable-method` injects upstream `AGENTS.md` + four skills @ `VENDOR.lock`; default N=5; full corpus via `run-full-first.sh`; traps model `luna-low` |
+| Trap Suite / Process Gate | `evals/traps/` + `evals/run-agent-isolated.sh` + `evals/docker/azg-eval-agent/` | ADR 0012 + **0013** Eval Isolation; default Docker agent; `TRAP_CANDIDATE_PACK`; traps model `luna-low` |
 | Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows shellcheck from GitHub zip (not choco) |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains |
-| Glossary | `CONTEXT.md` | Current/Candidate Treatment |
+| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains · **0013** Eval Isolation |
+| Glossary | `CONTEXT.md` | Current/Candidate Treatment · Eval Isolation |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project. Domain consumer = `docs/agents/domain.md`; writes = `/grill-with-docs` |
 | Research notes | `docs/research/` | Context engineering 2026-07-31; always-on AGENTS budget 2026-08-05 (no tok industry standard; absolute lean + JIT) |
@@ -33,7 +33,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012. Fable-pack 2026-08-07: baseline 64% · current 79% · Fable 71% → **no promote**. **Next:** azg concept Candidate (Reversible Default · Unattended · losing side · Twin Sweep) — Process Gate pending |
+| Trap Suite Process Gate | ADR 0012. Fable-pack no promote. Host smoke concept Candidate 79/71/71 **blocked** (isolation=host). **Eval Isolation** ADR 0013 Docker harness landed; clean re-run pending |
 | writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
 | Ownership | selective setup/uninstall |
 | Checkpoint | unified Stop accept set |

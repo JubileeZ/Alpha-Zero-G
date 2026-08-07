@@ -123,7 +123,8 @@ info "trap model=${MODEL} arm=${ARM} scenario=${SID}"
 set +e
 (
   cd "${WT}"
-  agent -p --force --trust --model "${MODEL}" \
+  bash "${ROOT}/evals/run-agent-isolated.sh" --workspace "${WT}" -- \
+    -p --force --trust --model "${MODEL}" \
     --workspace "${WT}" \
     --output-format json \
     -- "${PROMPT}"
@@ -166,7 +167,8 @@ $(cat "${CELL}/agent.log")
 $(cd "${WT}" && find . -type f ! -path './.git/*' | head -50)
 "
   set +e
-  agent -p --force --trust --model "${MODEL}" --output-format json -- "${JUDGE_PROMPT}" \
+  bash "${ROOT}/evals/run-agent-isolated.sh" -- \
+    -p --force --trust --model "${MODEL}" --output-format json -- "${JUDGE_PROMPT}" \
     >"${CELL}/judge.json" 2>"${CELL}/judge.stderr.log"
   set -e
   if [ -f "${CELL}/judge.json" ]; then
