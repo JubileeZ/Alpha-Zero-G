@@ -4,7 +4,7 @@
 
 | Gate | Path | Role | Default models |
 |------|------|------|----------------|
-| **Trap Suite** | [`traps/`](traps/) | Intent/Prove / Treatment adopt | `gpt-5.6-luna-{low,medium,high}` tier sweep; else `luna-medium` |
+| **Trap Suite** | [`traps/`](traps/) | Intent/Prove / Treatment adopt | `gpt-5.6-luna-xhigh` × 4 full-corpus repeats; tier sweep optional |
 
 Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agent-isolated.sh` + `stage-eval-home.sh`.
 
@@ -39,7 +39,10 @@ bash evals/docker/azg-eval-agent/build.sh
 ## Quick links
 
 ```bash
-# Default decision grid: full S1–S14 × low/medium/high (R=1)
+# Default decision run: full S1–S14 × 4 repeats at luna-xhigh
+bash evals/traps/run-repeats.sh
+
+# Optional model-tier diagnostic: full S1–S14 × low/medium/high (R=1)
 bash evals/traps/run-tier-sweep.sh
 
 # Routine N=5 Process Gate (single model)
@@ -47,11 +50,8 @@ TRAP_CANDIDATE_PACK=none TRAP_CHANGE_TYPE=intent_gates bash evals/prepare-trap-c
 bash evals/run-trap-campaign.sh --jobs 12
 bash evals/analyze-trap.sh
 
-# Durable majority (R× full corpus, usually medium)
-bash evals/traps/run-repeats.sh
-
 bash tests/test-traps.sh
 bash tests/test-eval-isolation.sh
 ```
 
-**Recommend:** scenarios **14 (full)** for tier sweeps; **R=1** across three tiers; **R=3** at medium (or harness-lift IDs) for gap claims. Do not commit under `traps/campaigns/` or `worktrees/`.
+**Recommend:** scenarios **14 (full)** × **R=4** at `luna-xhigh` for decision claims; low/medium/high tier sweep remains diagnostic. Do not commit under `traps/campaigns/` or `worktrees/`.

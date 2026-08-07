@@ -8,7 +8,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "${ROOT}"
 export PATH="${HOME}/.local/bin:${PATH}"
 export TRAP_FULL=1
-export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-medium}"
+export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-xhigh}"
 # Device Home–era camp (pre-isolation fable-method-full is not comparable)
 export TRAP_CAMP="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/fable-method-device-home}"
 export AZG_CURRENT_REF="${AZG_CURRENT_REF:-87b4eda}"
@@ -29,4 +29,6 @@ bash evals/prepare-trap-campaign.sh "${TRAP_CAMP}"
 mkdir -p "${TRAP_CAMP}"
 echo $$ >"${TRAP_CAMP}/campaign.pid"
 # shellcheck disable=SC2086
-exec bash evals/run-trap-campaign.sh --jobs "${TRAP_JOBS}" ${FORCE_FLAG}
+bash evals/run-trap-campaign.sh --jobs "${TRAP_JOBS}" ${FORCE_FLAG}
+rm -f "${TRAP_CAMP}/campaign.pid"
+printf 'AZG_TRAP_CAMPAIGN_FINISHED parent=%s artifact=%s\n' "${TRAP_CAMP}" "${TRAP_CAMP}/REPORT.md"

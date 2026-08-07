@@ -2,11 +2,12 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Done** — clean-slate tier sweep `cleanslate-tier-sweep` |
+| Status | **Clean slate Current** — Think/Prove Candidate **rejected** (reverted `bd94663`; Trap Cand 64/79/71 vs Cur 71/79/79) |
 | Rates B/C/Fable | low **71/79/79** · med **71/64/79** · high **64/71/93** |
 | Sole gate | Trap Process Gate (ADR 0012); Lite deleted |
-| Default models | `gpt-5.6-luna-{low,medium,high}` via `run-tier-sweep.sh` |
-| Single-model default | `gpt-5.6-luna-medium` |
+| Default decision run | `run-repeats.sh`: 4× full corpus at `gpt-5.6-luna-xhigh` → majority `AGGREGATE.md` |
+| Optional diagnostic | `run-tier-sweep.sh`: low/medium/high, R=1 → `TIERS.md` |
+| Single-model default | `gpt-5.6-luna-xhigh` |
 | Current Treatment | clean slate @ `a9a68ff` / HEAD worktree for new camps; pin `AZG_CURRENT_REF` as needed |
 | Next | Re-earn distill from durable Fable>Current gaps **or park** |
 | Shipped | `a9a68ff` clean slate + eval-watch |
@@ -30,17 +31,20 @@ All-fail by design (not distill targets from N=1 alone): **s2**, **s6**, **s13**
 ## Reproduce
 
 ```bash
-# Default decision grid: full S1–S14 × low/medium/high (R=1)
-bash evals/traps/run-tier-sweep.sh
-
-# Majority gap check (usually medium)
+# Default decision run: full S1–S14 × 4 at luna-xhigh
 bash evals/traps/run-repeats.sh
+
+# Optional model-tier diagnostic
+bash evals/traps/run-tier-sweep.sh
 ```
+
+Repeat/tier runners emit `AZG_TRAP_CAMPAIGN_FINISHED` after final artifacts; watch that event first, then use fixed 120-second checks.
 
 ## History (pointers only)
 
 | Camp / note | Where |
 |-------------|--------|
+| Think/Prove reject (tier sweep) | local `campaigns/think-prove-candidate/TIERS.md` — Cand 64/79/71 vs Cur 71/79/79 |
 | Tier sweep detail | local `campaigns/cleanslate-tier-sweep/TIERS.md` |
 | Medium×3 majority | `docs/research/2026-08-07-fable-medium-r3-full-report.md` |
 | Device Home / noise | `docs/research/2026-08-07-eval-device-home-process-gate.md` · noise-policy |

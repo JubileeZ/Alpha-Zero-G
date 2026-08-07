@@ -17,7 +17,7 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | **Clean slate:** cleanup + telegraphic only; distill **parked** (re-earn from traps) |
 | Azg-owned skills | *(deleted)* | Distill skills removed clean slate 2026-08-07; re-create under `templates/global/skills/azg/` only when Trap Suite re-earns |
-| Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **tier sweep** low/medium/high full corpus R=1; promote needs `isolation=docker` |
+| Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **4× full corpus at luna-xhigh** with majority; tier sweep = optional diagnostic; promote needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
@@ -32,7 +32,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. Default **tier sweep** + medium/`run-repeats` for majority |
+| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. Default **4× full corpus at luna-xhigh** + majority; tier sweep optional diagnostic |
 | Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
 | Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
@@ -57,8 +57,8 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 | Command | What it does |
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
-| `bash evals/traps/run-tier-sweep.sh` | Full S1–S14 × low/medium/high → `TIERS.md` |
-| `bash evals/traps/run-repeats.sh` | R× full Process Gate → `AGGREGATE.md` |
+| `bash evals/traps/run-repeats.sh` | 4× full S1–S14 at luna-xhigh → `AGGREGATE.md` |
+| `bash evals/traps/run-tier-sweep.sh` | Optional full S1–S14 × low/medium/high diagnostic → `TIERS.md` |
 | `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop |
 | `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |
 | `bash evals/run-trap-campaign.sh --jobs 12` | Parallel trap cells |

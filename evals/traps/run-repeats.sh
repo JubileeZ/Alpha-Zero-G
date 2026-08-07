@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # evals/traps/run-repeats.sh — R full Trap Suite loops, then majority aggregate.
 # Usage: bash evals/traps/run-repeats.sh [--force]
-# Env: TRAP_REPEATS (default 3), TRAP_CAMP (parent dir), TRAP_MODEL, TRAP_CANDIDATE_PACK, …
+# Env: TRAP_REPEATS (default 4), TRAP_CAMP (parent dir), TRAP_MODEL, TRAP_CANDIDATE_PACK, …
 # Durable: run via setsid; each repeat is a child camp under $TRAP_CAMP/rN.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -10,15 +10,15 @@ cd "${ROOT}"
 source "${ROOT}/lib/common.sh"
 
 export PATH="${HOME}/.local/bin:${PATH}"
-REPEATS="${TRAP_REPEATS:-3}"
+REPEATS="${TRAP_REPEATS:-4}"
 export TRAP_FULL="${TRAP_FULL:-1}"
-export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-medium}"
+export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-xhigh}"
 export TRAP_JOBS="${TRAP_JOBS:-12}"
 export AZG_CURRENT_REF="${AZG_CURRENT_REF:-87b4eda}"
 export TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-fable-method}"
 export AZG_CANDIDATE_REF="${AZG_CANDIDATE_REF:-HEAD}"
 export AZG_EVAL_DOCKER="${AZG_EVAL_DOCKER:-1}"
-PARENT="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/fable-medium-r${REPEATS}}"
+PARENT="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/luna-xhigh-r${REPEATS}}"
 
 FORCE_FLAG=""
 for a in "$@"; do
@@ -55,3 +55,4 @@ done
 bash "${ROOT}/evals/analyze-trap-repeats.sh" "${PARENT}"
 info "trap repeats finished → ${PARENT}/AGGREGATE.md"
 rm -f "${PARENT}/campaign.pid"
+printf 'AZG_TRAP_CAMPAIGN_FINISHED parent=%s artifact=%s\n' "${PARENT}" "${PARENT}/AGGREGATE.md"

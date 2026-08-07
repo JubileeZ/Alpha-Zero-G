@@ -58,8 +58,21 @@ section "5. docs + retirement"
 if grep -q 'Trap Suite' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Trap Suite"; else fail "CONTEXT"; fi
 assert_file_exists "ADR 0012" "${REPO_ROOT}/docs/adr/0012-trap-suite-process-gate.md"
 if [ ! -d "${REPO_ROOT}/evals/adherence" ]; then pass "adherence retired"; else fail "adherence still present"; fi
-if grep -q 'gpt-5.6-luna-medium' "${REPO_ROOT}/evals/run-trap-cell.sh"; then pass "Trap default luna-medium"; else fail "Trap model default"; fi
+if grep -q 'gpt-5.6-luna-xhigh' "${REPO_ROOT}/evals/run-trap-cell.sh"; then pass "Trap default luna-xhigh"; else fail "Trap model default"; fi
 if grep -q 'gpt-5.6-luna-low' "${REPO_ROOT}/evals/traps/run-tier-sweep.sh"; then pass "tier sweep includes luna-low"; else fail "tier sweep models"; fi
+if grep -q 'TRAP_REPEATS:-4' "${REPO_ROOT}/evals/traps/run-repeats.sh" \
+  && grep -q 'gpt-5.6-luna-xhigh' "${REPO_ROOT}/evals/traps/run-repeats.sh"; then
+  pass "default repeats luna-xhigh ×4"
+else
+  fail "default repeats/model" ""
+fi
+if grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-repeats.sh" \
+  && grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-tier-sweep.sh" \
+  && grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-full-first.sh"; then
+  pass "campaign completion events"
+else
+  fail "campaign completion events" ""
+fi
 assert_file_exists "run-repeats" "${REPO_ROOT}/evals/traps/run-repeats.sh"
 assert_file_exists "analyze-trap-repeats" "${REPO_ROOT}/evals/analyze-trap-repeats.sh"
 if [ ! -e "${REPO_ROOT}/evals/lite" ] && [ ! -f "${REPO_ROOT}/tests/test-lite.sh" ]; then

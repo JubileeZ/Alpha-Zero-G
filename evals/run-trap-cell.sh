@@ -16,7 +16,7 @@ command -v agent >/dev/null || die "agent CLI missing"
 command -v jq >/dev/null || die "jq required"
 
 CAMP="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/default}"
-MODEL="${TRAP_MODEL:-gpt-5.6-luna-medium}"
+MODEL="${TRAP_MODEL:-gpt-5.6-luna-xhigh}"
 CURRENT_REF="${AZG_CURRENT_REF:-87b4eda}"
 CANDIDATE_REF="${AZG_CANDIDATE_REF:-HEAD}"
 VENDOR="${ROOT}/evals/traps/vendor/fable-method/scenarios/${SID}"

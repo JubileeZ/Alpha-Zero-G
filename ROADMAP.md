@@ -30,7 +30,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Distilled Think+Prove + analyst domains (ADR 0010; later clean-slated)
 - [x] Trap Eval Isolation + Device Home (ADR 0013)
 - [x] Clean slate always-on + delete `skills/azg/`
-- [x] Default trap path = **tier sweep** low/medium/high + `run-repeats` for majority
+- [x] Default trap path = **4× full-corpus repeats at `luna-xhigh`**; low/medium/high tier sweep optional diagnostic
 - [ ] Re-earn distill from durable Fable>Current gaps (see `evals/traps/CAMPAIGN.md`) or park
 
 Live notes: `evals/traps/CAMPAIGN.md`.

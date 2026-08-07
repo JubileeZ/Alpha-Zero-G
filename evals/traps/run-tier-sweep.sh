@@ -63,3 +63,4 @@ done
 bash "${ROOT}/evals/analyze-trap-tiers.sh" "${PARENT}"
 info "tier sweep finished → ${PARENT}/TIERS.md"
 rm -f "${PARENT}/campaign.pid"
+printf 'AZG_TRAP_CAMPAIGN_FINISHED parent=%s artifact=%s\n' "${PARENT}" "${PARENT}/TIERS.md"
