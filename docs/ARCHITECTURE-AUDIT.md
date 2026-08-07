@@ -22,7 +22,7 @@ Alpha-Zero-G is an **outer agent harness installer and template system** for sol
 - Record audit date, commit SHA, `git status`, and host/version assumptions.
 - Classify proposals as IDE-native, OS-native, repo-native, or out of scope.
 - Report conflicts explicitly. Prefer observed implementation + accepted ADRs over stale secondary docs; `docs/SPEC.md` remains product intent.
-- Adopt / promote decisions use SWE-bench Lite 3-arm (baseline / current / candidate) with automated Task Success; no Blind Judge claim path.
+- Adopt / promote decisions use Trap Suite 3-arm Process Gate (baseline / current / candidate) with Docker Eval Isolation; SWE-bench Lite path removed (ADR 0007 superseded).
 
 ---
 

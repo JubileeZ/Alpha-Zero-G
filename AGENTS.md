@@ -35,7 +35,7 @@ VERSION           # release version
 | `bash tests/run-all.sh --list` | Suite order when unsure |
 | `bash tests/run-verify-docs.sh` | Docs-only link check (python3 / python / `py -3`) |
 
-**Diff → suite:** setup/common/Cursor device → `test-cursor-device-setup.sh` · scaffold/apply → `test-azg.sh` + `test-phase*.sh` · `templates/project/` → `test-phase10.sh` + `test-mutation-verify.sh` · `evals/lite/` → `test-lite.sh` · hooks → `host-contract-smoke.sh` + `test-phase5.sh`
+**Diff → suite:** setup/common/Cursor device → `test-cursor-device-setup.sh` · scaffold/apply → `test-azg.sh` + `test-phase*.sh` · `templates/project/` → `test-phase10.sh` + `test-mutation-verify.sh` · `evals/traps/` → `test-traps.sh` + `test-eval-isolation.sh` · hooks → `host-contract-smoke.sh` + `test-phase5.sh`
 
 **Commit readiness:** run the smallest applicable checks for the touched area (see Diff → suite); confirm they pass before proposing a commit. Pre-PR / CI parity: `bash tests/run-all.sh` (or `AZG_STRICT=1` when matching CI).
 
@@ -66,7 +66,7 @@ VERSION           # release version
 
 ### Eval campaigns — agent owns the watch
 
-When this agent **starts** or **inherits** a Trap Suite / Lite / tier-sweep campaign (setsid, background `run-*-campaign`, `run-repeats`, `run-tier-sweep`):
+When this agent **starts** or **inherits** a Trap Suite / tier-sweep / repeats campaign (setsid, background `run-trap-campaign`, `run-repeats`, `run-tier-sweep`):
 
 1. **Do not** leave the user to `tail -f` / poll alone. Agent watches until finish or hard block.
 2. Poll: filled scorecards vs expected · `campaign.log` / `campaign.pid` · terminal artifacts (`TIERS.md`, `AGGREGATE.md`, `REPORT.md`, `promote-result.json`, `LAST-GATE.md`).

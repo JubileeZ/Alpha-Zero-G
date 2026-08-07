@@ -187,7 +187,7 @@ User:        git pull              →  get new Alpha-Zero-G
 4. `azg setup` installs all vendored skills + ponytail block; refuses `--profile`.
 5. `azg setup` skips skill copy when `VENDOR.lock` commit unchanged.
 6. Cold-start agent reading only onboarding docs produces the same build plan (validated by subagent test).
-7. Lite 3-arm promote gate exists (`evals/lite/`, ADR 0007).
+7. Trap Suite Process Gate exists (`evals/traps/`, ADR 0012); Lite suite removed (ADR 0007 superseded).
 
 ---
 

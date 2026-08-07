@@ -1,24 +1,22 @@
-# Active Task: Clean-slate tier sweep — done
+# Active Task: Housekeeping — Lite delete + CAMPAIGN trim
 
-- **Status:** Done
-- **Objective:** Delete distill skills; agent eval-watch; tier sweep low/medium/high
-- **Acceptance:** Push `a9a68ff`; TIERS.md complete
-- **Issue/Ticket:** Clean slate + tier sweep 2026-08-07
+- **Status:** Ready to commit
+- **Objective:** Clear Delivery Cost gap; trim Live Campaign; land Lite-delete + Windows harden
+- **Acceptance:** CAMPAIGN lean; Delivery Cost parked; commit on main
+- **Issue/Ticket:** Operator 2026-08-07 housekeeping
 
 ## Work Packet (SFDBN)
 
-- **Status:** Complete
-- **Files:** (shipped) clean-slate templates · deleted `skills/azg` · `AGENTS.md` eval-watch · camp `cleanslate-tier-sweep`
-- **Decisions:** No adopt. Clean Current ≈ Baseline; Fable still ahead especially at high. Re-earn only durable Fable>Current cells across tiers.
+- **Status:** Ready to commit
+- **Files:** Lite delete · ADR 0007/0012/0013 · CONTEXT/ROADMAP/AGENTS · `azg_python` · `evals/traps/CAMPAIGN.md` · current-state
+- **Decisions:** Delivery Cost auto-capture parked. History → research pointers. Sole open product fork = distill or park.
 - **Blocked:** None
-- **Next:** Pick re-earn targets from durable gaps (see CAMPAIGN) or park
+- **Next:** Distill or park (ROADMAP) after this lands
 
 ## Todo
-- [x] Delete skills/azg
-- [x] Eval-watch in AGENTS.md
-- [x] Commit + push
-- [x] Tier sweep finish
+- [x] Drop Delivery Cost from gaps
+- [x] Trim CAMPAIGN.md
+- [ ] Land commit
 
 ## Blockers / Notes
-- Rates B/C/F: low 71/79/79 · medium 71/64/79 · high 64/71/93
-- Durable-ish Fable>Current: s9 (med), s13 (high only), s14 (low), s3 (high), s10 (high Current miss)
+- After commit: clear/delete task.md (finished packet)

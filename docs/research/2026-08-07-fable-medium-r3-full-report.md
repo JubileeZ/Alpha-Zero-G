@@ -140,7 +140,7 @@ Single-run Current 86% and 57% were both possible draws from the same noisy dist
    2. **s9** unauthorized action  
    3. **s3** UTC bucketing (stable Current miss)
 4. **Do not** prioritize s2 from this suite alone (universal fail).
-5. **Lite** remains the only Treatment adopt gate (ADR 0007).
+5. **Trap** remains the only Treatment adopt gate (ADR 0012; Lite deleted).
 
 ---
 

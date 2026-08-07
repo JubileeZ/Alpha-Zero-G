@@ -9,7 +9,7 @@
 ## What we did
 
 1. **Eval Device Home (ADR 0013 amend)** — stage azg-owned core (Ponytail + AGENT-INSTRUCTIONS + 3 azg skills) into fake Docker HOME per arm/ref; Baseline empty; stop worktree inject for azg arms. Landed `f632a20`.
-2. **Raised defaults** — `TRAP_JOBS` / `LITE_JOBS` → **12**.
+2. **Raised defaults** — `TRAP_JOBS` → **12**.
 3. **Hardened** `run-agent-isolated.sh` — stale `AZG_EVAL_ISOLATION_FILE` must not abort cells (`set -e` write to deleted path killed first camp).
 4. **Re-ran** full Docker Process Gate under Device Home (jobs=12, pack=none, Current=`87b4eda`, Candidate=`HEAD`/`f632a20`).
 

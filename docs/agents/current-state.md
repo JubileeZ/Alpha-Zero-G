@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 — clean slate shipped (`a9a68ff`); tier sweep **done** (see CAMPAIGN); re-earn TBD
+**Active phase:** post-v4 — Lite suite **deleted**; Trap Process Gate = sole Evaluation Suite (ADR 0012); clean slate + tier sweep done; re-earn TBD
 
 ---
 
@@ -10,22 +10,21 @@
 
 | Area | Path | Notes |
 |------|------|-------|
-| CLI | `azg`, `lib/` | setup (full skills), new, apply, update, selective uninstall |
+| CLI | `azg`, `lib/` | setup (full skills), new, apply, update, selective uninstall; **`azg_python`** for real Py3 |
 | Ownership | `azg-ownership.json` under global dir | ADR 0008 |
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
-| Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; `templates/global/AGENTS.md` canonical prose source; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | **Clean slate:** cleanup + telegraphic only; Process Gate distill **parked** (re-earn from traps) |
+| Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
+| Intent-gates Candidate | `templates/global/AGENTS.md` `AZG:AGENT-INSTRUCTIONS` | **Clean slate:** cleanup + telegraphic only; distill **parked** (re-earn from traps) |
 | Azg-owned skills | *(deleted)* | Distill skills removed clean slate 2026-08-07; re-create under `templates/global/skills/azg/` only when Trap Suite re-earns |
-| Trap Suite / Process Gate | `evals/traps/` + `run-agent-isolated.sh` + docker + `stage-eval-home.sh` + **`run-repeats.sh`** | ADR 0012+0013; default model **`gpt-5.6-luna-medium`**; `TRAP_JOBS` 12; repeats → `AGGREGATE.md` |
-| Evaluation Suite | `evals/lite/` | SWE-bench Lite **N=5** · 3-arm Task Success (ADR 0007); how-to `README.md` (**Proven automation**); Live Campaign `CAMPAIGN.md`; drivers `evals/run-lite-composer-{cell,campaign}.sh`; prep `prepare-lite-campaign.sh` |
-| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | includes `test-lite.sh`; Windows: shellcheck from GitHub zip; jq choco→direct fallback; flatten nested `shellcheck.exe`; accept `python` if no `python3` |
+| Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **tier sweep** low/medium/high full corpus R=1; promote needs `isolation=docker` |
+| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0004 · 0006 · 0007 Lite · 0008 ownership · 0009 intent-gates **adopted** · **0010** Think+Prove/domains · **0013** Eval Isolation |
-| Glossary | `CONTEXT.md` | Current/Candidate Treatment · Eval Isolation |
-| Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set; Cursor duplicate `work-state-continuity.mdc` **retired** — apply removes orphan |
-| Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable; mirrors templates/project. Domain consumer = `docs/agents/domain.md`; writes = `/grill-with-docs` |
-| Research notes | `docs/research/` | Context engineering 2026-07-31; AGENTS budget 2026-08-05; Unattended tied defaults 2026-08-07; **Device Home Gate log** 2026-08-07 |
+| ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
+| Glossary | `CONTEXT.md` | Evaluation Suite = Trap Process Gate |
+| Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
+| Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
+| Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
 
 ---
 
@@ -33,18 +32,12 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Default model **luna-medium**; use **R≥3 majority** for gap claims (`run-repeats.sh`). N=1 low camps historical only |
-| Fable-method distill + re-gate | **Gaps confirmed** (maj) — s13/s9/s3; Current mean still noisy (3 flips); distill optional next; never adopt upstream pack |
-| writing-for-agents lever pass | Packets 1–2 landed; Candidate prose used WFA levers (thin always-on + JIT; leading words) |
-| Ownership | selective setup/uninstall |
-| Checkpoint | unified Stop accept set |
-| Skills | full vendor only; `--profile` removed |
-| Eval | Lite scaffolded; legacy Blind Judge / pilot claim **deleted** |
-| Intent-gates form | ADR 0009 — **adopted** 2026-08-01 (`promote=true`); gates in `AZG:AGENT-INSTRUCTIONS` |
-| Think+Prove + domains | ADR 0010 — Prove stance + fit/recall + research/data domain skills + method-refs (orchestrate removed until needed) |
-| Azg skill prune ownership | Source dir under `templates/global/skills/azg/` (not ANTIGRAVITY-NOTE prose); shared `_install_skill_pair` in setup |
-| Project telegraphic policy | Soft-dup removed from project Overrides; global `AZG:AGENT-INSTRUCTIONS` sole always-on source; Placeholder fill how-to word kept |
-| AGENTS always-on budget | No invented tok cap; soft vendor line targets + progressive disclosure; absolute lean as windows grow; no template cut 2026-08-05 (`docs/research/2026-08-05-agents-md-always-on-budget.md`); revisit on adherence fail only |
+| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. Default **tier sweep** + medium/`run-repeats` for majority |
+| Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
+| Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
+| Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
+| Intent-gates form | ADR 0009 — historical Lite adopt; clean slate parked distill |
+| AGENTS always-on budget | No invented tok cap; absolute lean |
 
 ---
 
@@ -52,10 +45,10 @@
 
 | Item | Notes |
 |------|-------|
-| Full SWE-bench Docker wiring | Operator harness via Docker + `.venv-swebench`; drivers automate agent+score |
-| Delivery Cost auto-capture | Optional scorecard field; not a promote gate; CLI has no per-cell $ |
-| Intent-gates Lite adopt/revert | **Adopted** — [#88](https://github.com/JubileeZ/alpha-zero-g/issues/88)–[#90](https://github.com/JubileeZ/alpha-zero-g/issues/90); map [#85](https://github.com/JubileeZ/alpha-zero-g/issues/85) |
-| Fable-method distill + re-gate | **Deleted** always-on + `skills/azg/` — re-earn from clean-slate tier sweep; never vendor upstream pack |
+| Fable-method distill + re-gate | Re-earn from durable gaps only; or park |
+| SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
+
+Delivery Cost auto-capture: parked / out of scope for now (never a promote input).
 
 ---
 
@@ -64,15 +57,13 @@
 | Command | What it does |
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
-| `bash tests/test-lite.sh` | Lite suite structural tests |
-| `bash evals/run-lite-arm.sh <id> baseline\|current\|candidate` | Prepare one Lite arm workdir |
-| `bash evals/prepare-lite-campaign.sh [dir]` | Stub all N×3 scorecards into portable campaign dir |
-| `bash evals/run-lite-composer-campaign.sh --score --jobs 12` | Parallel Composer Lite campaign (skips filled scorecards; `LITE_JOBS` default 12) |
-| `bash evals/analyze-lite-promote.sh <camp>` | Write `promote-result.json` |
+| `bash evals/traps/run-tier-sweep.sh` | Full S1–S14 × low/medium/high → `TIERS.md` |
+| `bash evals/traps/run-repeats.sh` | R× full Process Gate → `AGGREGATE.md` |
+| `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop |
+| `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |
+| `bash evals/run-trap-campaign.sh --jobs 12` | Parallel trap cells |
+| `bash evals/analyze-trap.sh <camp>` | `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
-| `bash evals/traps/run-repeats.sh` | R× full Process Gate (default R=3, model medium, Candidate=fable pack); writes `AGGREGATE.md` |
-| `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop (default medium + fable pack camp) |
-| `bash evals/analyze-trap.sh <camp>` | `promote-result.json` for trap campaign |
 
 ---
 
@@ -80,12 +71,13 @@
 
 1. Mock `HOME` in tests — setup writes under `~/.gemini/`.
 2. Foreign MCP/AGENTS/custom skills skipped unless `--force`.
-3. New adopts: Lite 3-arm (except explicit preference exceptions already taken).
-4. Subagent fan-out limits are host-default only (spawn-budget retired ADR 0011).
-5. Harness counters do not cross Bash subshells.
-6. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
-7. **CI macOS bash 3.2:** GHA `macos-latest` default `bash` is `/bin/bash` 3.2. Do **not** add Bash 4-only builtins in `lib/` (`mapfile`/`readarray`, `declare -A`, `${var,,}`). Recurring main-branch red was `mapfile` in `setup.sh` → exit 127 → phase3/8/9 cascade. Prefer Homebrew bash locally if desired; CI intentionally stays on system bash so regressions surface.
-8. **CI Windows shellcheck:** Do not install shellcheck via Chocolatey in GHA (CDN 503 flakes). Workflow downloads `shellcheck-v*.zip` from GitHub Releases into `$RUNNER_TEMP/azg-tools`. After Expand-Archive, move nested `shellcheck.exe` to tools bin root if needed. **WIP:** jq choco-fail → direct `jq-win64.exe` download; verify `python3` or `python`.
-9. Smart sync skips **vendor** skill copy when `VENDOR.lock` stamp unchanged — azg-owned skills still refresh; empty `~/.cursor/skills` still needs `./azg setup --force`.
-10. **Windows `azg apply`:** may touch harness files with CRLF-only diffs (no content change). `git restore` those paths if working tree is clean aside from line endings.
-11. Vendor prune: first-party azg skills identified by `templates/global/skills/azg/<name>/` existing under `AZG_ROOT` — do not rely on note wording.
+3. Subagent fan-out limits are host-default only (spawn-budget retired ADR 0011).
+4. Harness counters do not cross Bash subshells.
+5. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
+6. **CI macOS bash 3.2:** no Bash 4-only builtins in `lib/`.
+7. **CI Windows shellcheck:** GitHub zip — not Chocolatey.
+8. Smart sync skips vendor skill copy when `VENDOR.lock` unchanged — empty skills need `./azg setup --force`.
+9. **Windows `azg apply`:** CRLF-only diffs possible — `git restore` if needed.
+10. Vendor prune: azg skills = dirs under `templates/global/skills/azg/`.
+11. **Windows eval Python:** Store `python3` stub → use `azg_python`. Empty `TRAP_FULL` = unset for fable full default.
+12. **No Lite** — `evals/lite/` gone; Trap only.

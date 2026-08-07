@@ -13,7 +13,7 @@ PR="${CAMP}/promote-result.json"
 REPORT="${CAMP}/REPORT.md"
 LAST="${ROOT}/evals/traps/LAST-GATE.md"
 
-python3 - "${CAMP}" "${PR}" "${REPORT}" "${LAST}" <<'PY'
+azg_python - "${CAMP}" "${PR}" "${REPORT}" "${LAST}" <<'PY'
 import json, pathlib, sys, datetime
 camp, pr_path, report_path, last_path = map(pathlib.Path, sys.argv[1:])
 pr = json.loads(pr_path.read_text())

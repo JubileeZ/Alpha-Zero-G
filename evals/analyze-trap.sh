@@ -8,7 +8,7 @@ source "${ROOT}/lib/common.sh"
 CAMP="${1:-${ROOT}/evals/traps/campaigns/default}"
 OUT="${CAMP}/promote-result.json"
 
-python3 - "${CAMP}" "${OUT}" <<'PY'
+azg_python - "${CAMP}" "${OUT}" <<'PY'
 import json, pathlib, sys
 camp = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
@@ -52,7 +52,7 @@ if sel_path.exists():
 isolation = selection.get("isolation") or "host"
 # ADR 0013: host isolation is not promote-grade
 promote_blocked = isolation != "docker"
-note = "Process Gate (ADR 0012). Not Lite Evaluation Suite promote."
+note = "Process Gate (ADR 0012) — sole Evaluation Suite promote."
 if nulls_left > 0:
     promote = False
     note += f" Incomplete campaign: {nulls_left} null scorecard(s)."

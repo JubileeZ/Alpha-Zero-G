@@ -17,11 +17,11 @@ Evaluation arm using the same task, repository state, model, IDE, permissions, a
 _Avoid_: Historical baseline, default setup
 
 **Eval Isolation**:
-Running eval Agent CLI calls so host Device Setup (`~/.cursor` rules/skills) cannot leak into any arm — default Docker `azg-eval-agent` empty home; required for promote-grade 3-arm Trap/Lite agent campaigns.
-_Avoid_: Clean HOME ritual only, trust host ~/.cursor, Docker for SWE-bench scoring (different concern)
+Running eval Agent CLI calls so host Device Setup (`~/.cursor` rules/skills) cannot leak into any arm — default Docker `azg-eval-agent` empty home; required for promote-grade 3-arm Trap campaigns.
+_Avoid_: Clean HOME ritual only, trust host ~/.cursor
 
 **Eval Device Home**:
-Staged per-arm fake `$HOME` fragment (azg-owned Ponytail + AGENT-INSTRUCTIONS + azg skills from a git ref) mounted read-only into the Docker eval agent — mimics Device Setup without host leakage. Baseline omits it.
+Staged per-arm fake `$HOME` fragment (azg-owned Ponytail + AGENT-INSTRUCTIONS + optional azg skills from a git ref) mounted read-only into the Docker eval agent — mimics Device Setup without host leakage. Baseline omits it.
 _Avoid_: Worktree inject of global rules, mounting host ~/.cursor, full vendor skill forest in eval home
 
 **Current Treatment**:
@@ -33,11 +33,11 @@ Evaluation arm with Current Treatment plus one proposed change under test for ad
 _Avoid_: Experimental profile, feature flag arm, core+addon
 
 **Delivery Cost**:
-Native model token usage or spend for a task run when available. Reported on Lite scorecards when present; **never a 3-arm promote gate** (ADR 0007) — promote uses Task Success only. Wall time and human interventions are separate reported measures, not blended into this value.
+Native model token usage or spend for a task run when available. Optional on trap notes; **never a Process Gate promote input** (ADR 0012) — promote uses trap pass rates + isolation=docker. Wall time and human interventions are separate reported measures.
 _Avoid_: Composite efficiency score, elapsed time as cost
 
 **Long-Horizon Task**:
-Task completed across forced fresh-context sessions and a clean-device clone before acceptance (optional continuity drill; not part of the Lite adopt gate).
+Task completed across forced fresh-context sessions and a clean-device clone before acceptance (optional continuity drill; not part of the Trap Process Gate).
 _Avoid_: Long chat, large task
 
 **Minimal Setup**:
@@ -61,23 +61,23 @@ Pushed Checkpoint fetched on another device to resume same Work Packet from iden
 _Avoid_: Chat transfer, synchronized folder
 
 **Evaluation Suite**:
-Frozen SWE-bench Lite instance list scored by automated tests; adoption runs three arms (No-Harness Baseline, Current Treatment, Candidate Treatment) and promotes only on hard quantitative rules.
-_Avoid_: Homemade fixtures as claim, blind-rubric suite, human-calibrated judge, full SWE-bench Verified by default, Trap Suite as adopt gate
+Trap Suite Process Gate (ADR 0012) — sole in-repo adopt/eval path after Lite removal (ADR 0007 superseded).
+_Avoid_: SWE-bench Lite harness, homemade Blind Judge claim suite
 
 **Trap Suite**:
-Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Process Gate corpus. Not Task Success.
-_Avoid_: Evaluation Suite, adherence mini-campaign, full Fable product paste
+Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Evaluation Suite / Process Gate corpus.
+_Avoid_: Adherence mini-campaign, full Fable product paste as shipped Treatment
 
 **Process Gate**:
-3-arm trap campaign promoting Intent/Prove/Domain Candidates when Candidate pass rate ≥ Current and ≥ Baseline on the selected scenario subset (default N=5; relevance map + random-fill).
-_Avoid_: Lite promote, always-run-all-traps as default
+3-arm trap campaign promoting Candidates when Candidate pass rate ≥ Current and ≥ Baseline on the selected scenario subset (default N=5; full corpus for tier sweeps) **and** `isolation=docker`.
+_Avoid_: Host-isolation promote, always-run-all-traps as only mode
 
 **Live Campaign**:
-The Candidate Treatment (and arm checkouts) under test for the current Evaluation Suite run. Recorded in `evals/lite/CAMPAIGN.md`; procedure stays in `evals/lite/README.md`.
-_Avoid_: Operator runbook, map-only eval notes, OPERATOR.md as framework
+Candidate Treatment (and arm checkouts / packs) under test for the current Trap run. Recorded in `evals/traps/CAMPAIGN.md`; procedure in `evals/traps/README.md` + `evals/README.md`.
+_Avoid_: Operator runbook, map-only eval notes
 
 **Campaign cost envelope**:
-Order-of-magnitude operator resources to run a Lite campaign (disk, wall-clock, Docker compute, approximate agent spend). Informational planning only — not a promote input and not Delivery Cost.
+Order-of-magnitude operator resources for a trap campaign (e.g. full×3-tier ≈ 126 cells). Informational planning only — not a promote input and not Delivery Cost.
 _Avoid_: Delivery Cost, promote budget, efficiency score
 
 **Statusline**:

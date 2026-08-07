@@ -3,6 +3,8 @@
 # Env: TRAP_FULL=1 | TRAP_IDS=a,b | TRAP_CHANGE_TYPE=general TRAP_N=5 TRAP_SEED=...
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=lib/common.sh
+source "${ROOT}/lib/common.sh"
 CORPUS="${ROOT}/evals/traps/corpus.json"
 MAP="${ROOT}/evals/traps/relevance-map.json"
 
@@ -24,7 +26,7 @@ if [ -z "${SEED}" ]; then
 fi
 export TRAP_SEED_EFFECTIVE="${SEED}"
 
-python3 - "${CORPUS}" "${MAP}" "${CTYPE}" "${N}" "${SEED}" <<'PY'
+azg_python - "${CORPUS}" "${MAP}" "${CTYPE}" "${N}" "${SEED}" <<'PY'
 import json, random, sys
 corpus = json.load(open(sys.argv[1]))["scenarios"]
 amap = json.load(open(sys.argv[2]))

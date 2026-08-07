@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # evals/stage-eval-home.sh — stage azg-owned Device Setup core into a fake HOME (ADR 0013).
 # Usage: bash evals/stage-eval-home.sh <git-ref> <dest-dir>
-# Contents: Ponytail + AGENT-INSTRUCTIONS .mdc.
-# Clean slate (2026-08-07): azg distill skills NOT staged unless AZG_EVAL_AZG_SKILLS=1.
+# Contents: Ponytail + AGENT-INSTRUCTIONS .mdc (Eval Device Home core).
+# Clean slate: azg distill skills NOT staged unless AZG_EVAL_AZG_SKILLS=1
+# (and templates/global/skills/azg/<name> exist at ref).
 # When ref resolves to HEAD, prefer worktree templates (uncommitted Candidate OK).
 # Idempotent when dest/.azg-eval-home-ref matches fingerprint.
 set -euo pipefail

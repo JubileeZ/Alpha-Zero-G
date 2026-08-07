@@ -1,6 +1,6 @@
 # Trap Suite / Process Gate
 
-Vendored Fable-method trap fixtures + azg 3-arm runner. **Not** the Evaluation Suite (Lite / Task Success). See ADR 0012.
+Vendored Fable-method trap fixtures + azg 3-arm runner. **Sole Evaluation Suite** (Lite deleted; ADR 0007 superseded). See ADR 0012.
 
 Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 
@@ -12,20 +12,23 @@ Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 | `relevance-map.json` | change-type → preferred scenario IDs | tracked |
 | `corpus.json` | Full S1–S14 id list | tracked |
 | `campaigns/<id>/` | selection, scorecards, logs, `promote-result.json`, **`REPORT.md`** (auto) | **ignored** |
+| `homes/` | staged Eval Device Homes (`stage-eval-home.sh`) | **ignored** |
 | `LAST-GATE.md` | Pointer copy of latest `REPORT.md` after analyze | **ignored** |
-| `worktrees/` | pristine + per-cell agent trees | **ignored** |
-| `../{prepare,run,select,score,analyze}-trap*.sh` | runners (repo `evals/`) | tracked |
+| `worktrees/` | pristine + per-cell agent trees + fable-pack cache | **ignored** |
+| `run-{full-first,repeats,tier-sweep}.sh` | operator entrypoints | tracked |
+| `../{prepare,run,select,score,analyze,report}-trap*.sh` + `trap-fable-pack.sh` | runners (repo `evals/`) | tracked |
 
 ## Device prereqs
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
-command -v docker jq git python3
+command -v docker jq git
+# Python 3 required for N=5 select + analyze (python3 / python / py -3; not Store stub)
 agent login   # once on host — auth.json or CURSOR_API_KEY used inside eval container
 bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ```
 
-**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules+skills from the arm git ref (`evals/stage-eval-home.sh`) and mount them read-only; Baseline mounts none; worktree = fixture only. `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
+**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
 
 ## Default policy
 

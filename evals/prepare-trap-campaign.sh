@@ -8,8 +8,9 @@ source "${ROOT}/lib/common.sh"
 CAMP="${1:-${ROOT}/evals/traps/campaigns/default}"
 mkdir -p "${CAMP}"
 
-# Adopt candidate (upstream fable pack): full corpus unless TRAP_FULL or TRAP_IDS set
-if [ "${TRAP_CANDIDATE_PACK:-}" = "fable-method" ] && [ -z "${TRAP_FULL+x}" ] && [ -z "${TRAP_IDS:-}" ]; then
+# Adopt candidate (upstream fable pack): full corpus unless TRAP_FULL or TRAP_IDS set.
+# Empty TRAP_FULL counts as unset (Windows env -u / blank export quirks).
+if [ "${TRAP_CANDIDATE_PACK:-}" = "fable-method" ] && [ -z "${TRAP_FULL:-}" ] && [ -z "${TRAP_IDS:-}" ]; then
   export TRAP_FULL=1
   info "TRAP_CANDIDATE_PACK=fable-method → default TRAP_FULL=1 (override: TRAP_FULL=0)"
 fi
@@ -30,29 +31,33 @@ case "${AZG_EVAL_DOCKER:-1}" in
   0|false|FALSE|no|NO|off|OFF) ISOLATION=host ;;
 esac
 
-{
-  echo "{"
-  echo "  \"trap_full\": ${TRAP_FULL:-0},"
-  echo "  \"trap_n\": ${TRAP_N:-5},"
-  echo "  \"trap_change_type\": \"${TRAP_CHANGE_TYPE:-general}\","
-  echo "  \"trap_seed\": \"${TRAP_SEED:-}\","
-  echo "  \"model_default\": \"${TRAP_MODEL:-gpt-5.6-luna-medium}\","
-  echo "  \"isolation\": \"${ISOLATION}\","
-  echo "  \"candidate_pack\": \"${TRAP_CANDIDATE_PACK:-}\","
-  echo "  \"current_ref\": \"${AZG_CURRENT_REF:-87b4eda}\","
-  echo "  \"scenarios\": ["
-  first=1
-  while IFS= read -r id; do
-    [ -n "${id}" ] || continue
-    if [ "${first}" -eq 1 ]; then first=0; else echo ","; fi
-    printf '    "%s"' "${id}"
-  done <"${LIST}"
-  echo ""
-  echo "  ]"
-  echo "}"
-} >"${CAMP}/selection.json"
+# jq build — strip CR; avoid hand-echo JSON (Windows control-char failures)
+SCENARIOS_JSON="$(awk '{ sub(/\r$/, ""); if (NF) print }' "${LIST}" | jq -R -s -c 'split("\n") | map(select(length>0))')"
+[ "$(jq 'length' <<<"${SCENARIOS_JSON}")" -gt 0 ] || die "select-trap-scenarios returned no IDs"
+jq -n \
+  --argjson trap_full "${TRAP_FULL:-0}" \
+  --argjson trap_n "${TRAP_N:-5}" \
+  --arg trap_change_type "${TRAP_CHANGE_TYPE:-general}" \
+  --arg trap_seed "${TRAP_SEED:-}" \
+  --arg model_default "${TRAP_MODEL:-gpt-5.6-luna-medium}" \
+  --arg isolation "${ISOLATION}" \
+  --arg candidate_pack "${TRAP_CANDIDATE_PACK:-}" \
+  --arg current_ref "${AZG_CURRENT_REF:-87b4eda}" \
+  --argjson scenarios "${SCENARIOS_JSON}" \
+  '{
+    trap_full: $trap_full,
+    trap_n: $trap_n,
+    trap_change_type: $trap_change_type,
+    trap_seed: $trap_seed,
+    model_default: $model_default,
+    isolation: $isolation,
+    candidate_pack: $candidate_pack,
+    current_ref: $current_ref,
+    scenarios: $scenarios
+  }' >"${CAMP}/selection.json"
 
 while IFS= read -r id; do
+  id="${id%$'\r'}"
   [ -n "${id}" ] || continue
   for arm in baseline current candidate; do
     dir="${CAMP}/${id}/${arm}"

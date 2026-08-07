@@ -414,3 +414,26 @@ azg_cursor_skill_is_foreign() {
   [ -f "${dest}/AZG-OWNED.md" ] && return 1
   return 0
 }
+
+# Run real Python 3 (ignore Windows Store stubs). Usage: azg_python - arg… <<'PY'
+azg_python() {
+  local _azg_py_ok
+  _azg_py_ok() {
+    local cmd="${1}"
+    shift
+    "${cmd}" "$@" -c 'import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)' 2>/dev/null
+  }
+  if _azg_py_ok python3; then
+    python3 "$@"
+    return
+  fi
+  if _azg_py_ok python; then
+    python "$@"
+    return
+  fi
+  if command -v py >/dev/null 2>&1 && _azg_py_ok py -3; then
+    py -3 "$@"
+    return
+  fi
+  die "No Python 3 found (tried python3, python, py -3)"
+}

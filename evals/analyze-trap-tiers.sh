@@ -10,7 +10,7 @@ PARENT="${1:-}"
 [ -n "${PARENT}" ] || die "usage: analyze-trap-tiers.sh <parent_camp>"
 [ -d "${PARENT}" ] || die "missing ${PARENT}"
 
-python3 - "${PARENT}" "${ROOT}/evals/traps/LAST-GATE.md" "${ROOT}/evals/analyze-trap.sh" <<'PY'
+azg_python - "${PARENT}" "${ROOT}/evals/traps/LAST-GATE.md" "${ROOT}/evals/analyze-trap.sh" <<'PY'
 import json, pathlib, sys, datetime, subprocess
 parent = pathlib.Path(sys.argv[1])
 last_path = pathlib.Path(sys.argv[2])

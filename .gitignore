@@ -3,10 +3,8 @@
 /tmp_azg*
 
 # --- evals ---
-# Shared (tracked): runners, README/CAMPAIGN, lite instances.json, trap vendor + maps.
-# Local only (ignored): campaign scorecards/logs, cell worktrees, swebench venv.
-evals/lite/campaigns/
-evals/lite/worktrees/
+# Shared (tracked): trap runners, README/CAMPAIGN, vendor + maps.
+# Local only (ignored): campaign scorecards/logs, cell worktrees, staged homes.
 evals/traps/campaigns/
 evals/traps/worktrees/
 evals/traps/homes/
@@ -14,9 +12,10 @@ evals/traps/LAST-GATE.md
 # Retired / session-local — never commit
 evals/adherence/
 evals/pilot/
-.venv-swebench/
+evals/lite/
 
-# SWE-bench harness local artifacts (repo root)
+# Legacy Lite harness local artifacts (repo root) — keep ignore if leftovers
+.venv-swebench/
 /logs/
 /*.validate-*.json
 /*azg-lite-*.json

@@ -37,7 +37,7 @@ Headline rates (71/86/79 vs 71/57/71) are **not comparable claims** about Treatm
    - cell is in harness-lift set, **and**
    - Current fails while Fable passes on **≥2** independent runs (or one run on ≥`luna-medium`).
 4. **Ignore promote_process_gate** when Candidate is upstream fable (gap bar, not adopt).
-5. **Lite** remains the only adopt gate (ADR 0007).
+5. **Trap Suite** is the only Treatment adopt gate (ADR 0012; Lite/ADR 0007 deleted).
 
 ### Immediate next (pick)
 
