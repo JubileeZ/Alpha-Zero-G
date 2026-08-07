@@ -66,10 +66,10 @@ When unsure → treat as not trivial; run the full gates.
 Where does the answer live?
 - Openable sources (spec, code, data, docs) → continue with Intent gates below (classify → … Prove).
 - Unknown technique → research first (bounded lookups), then Intent gates.
-- Only own inference → say so; no costume rigor; ask or label low-confidence.
-- Recurring specialized procedure missing from base model → prefer a Domain Adapter Skill over inventing process.
+- Only own inference → say so; no fake rigor; ask or label low-confidence.
+- Recurring specialized procedure missing from base model → prefer an azg domain skill (`azg-domain-research` / `azg-domain-data-analysis`) over inventing process.
 
-If Fit does not route to Intent gates (research-first, inference-only, or Domain Adapter), name that choice in the report — silent detour ≡ skipped step.
+If Fit does not route to Intent gates (research-first, inference-only, or domain skill), name that choice in the report — silent detour ≡ skipped step.
 
 ## Non-trivial
 
@@ -79,7 +79,12 @@ If Fit does not route to Intent gates (research-first, inference-only, or Domain
    - plan-first → plan + recommendation; stop for approval
    Signals for plan-first: multi-file / architectural / unclear scope / irreversible outward / user asked for a plan.
    Tie-breaks: plan-first signal beats task; mixed question+fix → task whose report also answers the question; unsure task vs plan-first → plan-first.
-   Ambiguous scope (underspec): evidence can settle which deliverable → proceed. Else **Reversible Default** when attended; **Unattended Session** → never ask — **Impl-Equivalent Default** → state+ship+verify; **Intent Tie** → labeled blocker. Depth: `azg-method-refs`.
+   Ambiguous scope (underspec): evidence can settle which deliverable → proceed. Else:
+   - **Reversible Default** (attended; local; cheap undo; named choice): state it, ship, verify.
+   - **Unattended Session** (prompt offline / don't-ask / unattended, **or** non-interactive runner): never ask.
+     - **Impl-Equivalent Default** (same risk; naming / format / local path): state+ship+verify.
+     - **Intent Tie** (two product meanings code cannot settle): labeled blocker.
+   Depth: `azg-method-refs`.
    Honor stated constraints and settled decisions; re-litigate or re-derive only when the user explicitly revises them.
 2. Define done: name observable verification before substantive work.
    - task → concrete observation (test/build/lint/output/render)

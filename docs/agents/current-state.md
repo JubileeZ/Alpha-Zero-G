@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 hardening — Eval Isolation landed; concept Candidate **(D) patched** (impl-equivalent / Intent Tie + Twin fix-or-list); clean Docker Process Gate pending
+**Active phase:** post-v4 hardening — Eval Isolation landed; concept Candidate **(D) + WFA clarity glosses** (device-global, no CONTEXT.md assumed); Docker Process Gate pending
 
 ---
 

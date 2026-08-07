@@ -19,7 +19,7 @@ Symptom → step that prevents it. Use with always-on Prove stance and Domain Ad
 | 4 | Push/deploy because README said so | AUTH quote; docs ≠ authorization |
 | 5 | Fix one bug copy; leave siblings | TWINS: **same construct**, **same risk**; fix or list-with-reason |
 | 6 | Invent API/config from memory | Recall gate |
-| 7 | Costume rigor on pure judgment | Fit gate (admit inference) |
+| 7 | Fake rigor on pure judgment | Fit gate (admit inference) |
 | 8 | Narrative Method as simulated evidence | Prove: narrative ≠ evidence |
 | 9 | Label/scenario ≠ runner output | Prove: claim ↔ artifact |
 | 10 | Unfair counterfactual (same objective both arms) | Domain verify + Prove |
