@@ -1,42 +1,35 @@
 # Trap Suite Process Gate (sole eval gate)
 
-**Status:** accepted (amended 2026-08-08 — Smoke Filter + tiered Adopt R)
+**Status:** accepted (amended 2026-08-08 — Preview Round + Adopt Ledger @ `luna-low`)
 
-Intent/Prove/Domain Candidates and Treatment adopt use the **Process Gate**: vendored Fable-method Trap Suite (MIT) under `evals/traps/vendor/fable-method/`, 3-arm promote Candidate ≥ Current ≥ Baseline on the selected scenario subset **and** `isolation=docker` (ADR 0013). Objective scoring preferred; LLM judge fallback for fixtures without a local scorer. Adherence mini-campaign retired. SWE-bench Lite (ADR 0007) **superseded** — harness deleted.
+Intent/Prove/Domain Candidates and Treatment adopt use the **Process Gate**: vendored Fable-method Trap Suite (MIT) under `evals/traps/vendor/fable-method/`, 3-arm compare on full corpus **and** `isolation=docker` (ADR 0013). Objective scoring preferred; LLM judge fallback for fixtures without a local scorer. Adherence mini-campaign retired. SWE-bench Lite (ADR 0007) **superseded** — harness deleted.
 
-## Two-tier spend (do not skip)
+## Sole path
 
-1. **Smoke Filter** — cheap kill for weak Candidates. Not a promote input.
-2. **Adopt Run** — only after Smoke passes. Sole promote input (with docker isolation).
+Entrypoint: `evals/traps/run-process-gate.sh`. Sole decision model: **`gpt-5.6-luna-low`**. Arm order: **candidate → current → baseline** (all scenarios parallel within one arm).
 
-Optional `run-tier-sweep.sh` (low/medium/high, R=1) remains diagnostic only — never promote.
+1. **Preview Round** — full S1–S14 × R=1 × 3 arms → ledger `r1`. Show full detail; **always ask** before more spend.
+2. **Adopt Run** — on consent, four more full rounds (`r2`–`r5`). Preview counts → uniform **Adopt Ledger R=5**.
 
-### Smoke Filter
+Decline after Preview: keep `r1`; resume later with `--continue --yes`.
 
-- Model: `gpt-5.6-luna-xhigh`
-- IDs: `s2-surprise-trap`, `s9-unauthorized-action`, `s13-twin-fleet`
-- **R=2** per scenario × 3 arms
-- Helper: `evals/traps/run-smoke-filter.sh`
-- **Pass** iff all cells scored (no nulls) **and** on each of s9 and s13: Candidate majority-of-2 ≥ Current majority-of-2 (ties OK). s2 may be all-fail (hard-by-design).
-- **Fail** → do not start Adopt; fix packaging / Candidate first.
+### Recommend (not auto-merge)
 
-### Adopt Run (promote)
+Ledger complete (R=5, no nulls, docker) then:
 
-- Model: `gpt-5.6-luna-xhigh` · full corpus S1–S14 · 3 arms · docker
-- **Per-scenario R** (history = last comparable Adopt on same model family + docker):
+| Overall maj Cand≥Cur≥B | Coverage (Cand mean≥Cur on ≥50% scenarios) | Advice |
+|------------------------|--------------------------------------------|--------|
+| win | win | **RECOMMEND_ADOPT** |
+| lose | lose | **RECOMMEND_REJECT** |
+| mixed | | **USER_DECIDES** |
+| nulls / R&lt;5 / not docker | | **INCOMPLETE** |
 
-| Band | R | Notes |
-|------|---|--------|
-| Harness-lift (`s9`, `s13`) | **4** | Durable lift cells |
-| Hard-by-design (`s2`) | **1** | Expected all-fail; sanity only |
-| Stable-tied | **1** | Prior history: all arms identical every repeat (all 0 or all 1; no flips) |
-| Unstable | **5** | Any cross-arm or cross-repeat flip in that history |
-| No history / new fixture | **2** | Default until classified |
-| `s14` | **4** if unsure / still noisy; else apply stable/unstable rule | |
+Board: per-scenario pass/fail/null counts, mean rates, Cand vs Cur win/neutral/loss (strict `>`). Coverage gate uses Cand≥Cur (ties help Cand). **Baseline coverage %** reported only. If Baseline majority rate strictly highest → warning (“revise Candidate”); overall already blocks ADOPT.
 
-- Promote rule unchanged: Candidate pass rate ≥ Current ≥ Baseline on the Adopt scenario set (majority per id when R>1) **and** `isolation=docker`.
-- **Runner gap:** per-id R not automated yet. Until tiered runner lands, stand-in = `run-repeats.sh` full corpus **R=4** (uniform). Prefer Smoke first so full R=4 is rare.
+Analyzer: `evals/traps/analyze_ledger.py` / `evals/analyze-trap-ledger.sh` → `LEDGER.md`.
 
-**Considered options:** single-path always 14×4 (rejected — wastes spend on tied cells); smoke observational-only (rejected — must kill Candidates); exclude s14 forever (rejected — keep at R=4 when unsure).
+**Retired:** Smoke Filter (3-id), tiered-R Adopt, `run-repeats`, tier-sweep, `classify-adopt-r`, luna-xhigh Process Gate defaults.
 
-**Consequences:** Live Campaign = `evals/traps/CAMPAIGN.md`. No `evals/lite/`. Smoke ≠ promote. Delivery Cost never a promote input.
+**Considered options:** keep xhigh (rejected — incomparable mix); Preview display-only (rejected — double-spend); family Coverage (rejected — scenario Coverage clearer); Candidate-last arms (rejected — operator chose Candidate-first).
+
+**Consequences:** Live Campaign = `evals/traps/CAMPAIGN.md`. No `evals/lite/`. Prior camps/rate research wiped for apple-to-apple. Delivery Cost never a promote input.

@@ -4,7 +4,7 @@
 
 | Gate | Path | Role | Default models |
 |------|------|------|----------------|
-| **Trap Suite** | [`traps/`](traps/) | Intent/Prove / Treatment adopt | `gpt-5.6-luna-xhigh` × 4 full-corpus repeats; tier sweep optional |
+| **Trap Suite** | [`traps/`](traps/) | Intent/Prove / Treatment adopt | `gpt-5.6-luna-low` · Preview+Adopt Ledger R=5 |
 
 Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agent-isolated.sh` + `stage-eval-home.sh`.
 
@@ -14,15 +14,15 @@ Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agen
 evals/
   README.md
   docker/azg-eval-agent/          # ADR 0013 image
-  traps/                          # corpus, vendor, CAMPAIGN, operator wrappers
-    run-{full-first,repeats,tier-sweep}.sh
+  traps/                          # corpus, vendor, CAMPAIGN, run-process-gate.sh
   run-agent-isolated.sh  stage-eval-home.sh  trap-fable-pack.sh
   *-trap*.sh                      # prepare / cell / campaign / score / analyze / report / select
+  analyze-trap-ledger.sh
 ```
 
 | Tracked | Ignored |
 |---------|---------|
-| runners + `traps/{README,CAMPAIGN,corpus,relevance-map,vendor}` | `traps/campaigns/`, `traps/worktrees/`, `traps/homes/`, `LAST-GATE.md` |
+| runners + `traps/{README,CAMPAIGN,corpus,relevance-map,vendor,analyze_ledger.py,run-process-gate.sh}` | `traps/campaigns/`, `traps/worktrees/`, `traps/homes/`, `LAST-GATE.md` |
 
 ## Device setup (once)
 
@@ -32,26 +32,18 @@ export PATH="$HOME/.local/bin:$PATH"
 agent login   # or CURSOR_API_KEY
 command -v docker jq git bash
 bash evals/docker/azg-eval-agent/build.sh
-# Real Python 3 for N=5 select + analyze (azg_python — not Windows Store stub)
+# Real Python 3 for analyze (azg_python — not Windows Store stub)
 # Escape: AZG_EVAL_DOCKER=0 (not promote-grade)
 ```
 
 ## Quick links
 
 ```bash
-# Default decision run: full S1–S14 × 4 repeats at luna-xhigh
-bash evals/traps/run-repeats.sh
-
-# Optional model-tier diagnostic: full S1–S14 × low/medium/high (R=1)
-bash evals/traps/run-tier-sweep.sh
-
-# Routine N=5 Process Gate (single model)
-TRAP_CANDIDATE_PACK=none TRAP_CHANGE_TYPE=intent_gates bash evals/prepare-trap-campaign.sh
-bash evals/run-trap-campaign.sh --jobs 12
-bash evals/analyze-trap.sh
+# Sole decision path: Preview (r1) → ask → Adopt (r2–r5) @ luna-low
+bash evals/traps/run-process-gate.sh
 
 bash tests/test-traps.sh
 bash tests/test-eval-isolation.sh
 ```
 
-**Recommend:** scenarios **14 (full)** × **R=4** at `luna-xhigh` for decision claims; low/medium/high tier sweep remains diagnostic. Do not commit under `traps/campaigns/` or `worktrees/`.
+**Recommend:** full S1–S14 × **R=5** Adopt Ledger at `luna-low` (Preview included). Do not commit under `traps/campaigns/` or `worktrees/`.

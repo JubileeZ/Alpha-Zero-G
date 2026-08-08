@@ -1,27 +1,29 @@
-# Trap spend policy (Smoke → Adopt)
+# Process Gate reset — luna-low Adopt Ledger
 
-**Objective:** Record two-tier Trap spend (ADR 0012 amend): Smoke Filter + tiered Adopt R; ship `run-smoke-filter.sh`.
+**Objective:** Sole Process Gate = Preview Round + Adopt Ledger R=5 @ `gpt-5.6-luna-low`; wipe incomparable history; retire old runners.
 
-**Acceptance:** ADR 0012 documents Smoke/Adopt; CONTEXT terms; CAMPAIGN/README/current-state updated; `evals/traps/run-smoke-filter.sh` runnable.
+**Acceptance:** `run-process-gate.sh` + `analyze_ledger.py`; test-traps green; ADR 0012 amended; old camps/rate research gone.
 
 ## Work Packet (SFDBN)
 
-**Status:** done — policy saved; smoke helper landed
+**Status:** done — Process Gate reset shipped (Preview+Ledger R=5 @ luna-low; old path wiped)
 
 **Files:**
+- `evals/traps/run-process-gate.sh`
+- `evals/traps/analyze_ledger.py`
+- `evals/analyze-trap-ledger.sh`
+- `evals/traps/{README,CAMPAIGN}.md` · `evals/README.md`
 - `docs/adr/0012-trap-suite-process-gate.md`
-- `CONTEXT.md` (Smoke Filter, Adopt Run)
-- `evals/traps/run-smoke-filter.sh`
-- `evals/traps/{README,CAMPAIGN}.md`
-- `docs/agents/current-state.md`
+- `CONTEXT.md` · `docs/agents/current-state.md` · `ROADMAP.md` · `AGENTS.md`
+- `tests/test-traps.sh`
 - `task.md`
 
 **Decisions:**
-- Smoke: s2,s9,s13 × R=2; pass = no nulls + Cand≥Cur maj on s9/s13
-- Adopt: tiered R (lift 4 · s2 1 · stable 1 · unstable 5 · no-hist 2 · s14→4 if unsure)
-- Stand-in until per-id runner: full `run-repeats.sh` R=4
-- Q8=C: policy + smoke helper
+- Model luna-low only; Preview=r1 full corpus; Adopt r2–r5; arm order Cand→Cur→B
+- Coverage = Cand mean≥Cur on ≥50% scenarios; Baseline coverage display-only
+- Recommend matrix ADOPT / REJECT / USER_DECIDES / INCOMPLETE
+- Hard wipe prior camps + rate research/archive
 
 **Blocked:** none
 
-**Next:** Optional — run official Smoke for unified-pipeline; tiered-R runner later
+**Next:** Operator runs `run-process-gate.sh` for Candidate; human confirm after Preview

@@ -40,7 +40,7 @@ jq -n \
   --argjson trap_n "${TRAP_N:-5}" \
   --arg trap_change_type "${TRAP_CHANGE_TYPE:-general}" \
   --arg trap_seed "${TRAP_SEED:-}" \
-  --arg model_default "${TRAP_MODEL:-gpt-5.6-luna-xhigh}" \
+  --arg model_default "${TRAP_MODEL:-gpt-5.6-luna-low}" \
   --arg isolation "${ISOLATION}" \
   --arg candidate_pack "${TRAP_CANDIDATE_PACK:-}" \
   --arg current_ref "${AZG_CURRENT_REF:-87b4eda}" \

@@ -30,10 +30,9 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Distilled Think+Prove + analyst domains (ADR 0010; later clean-slated)
 - [x] Trap Eval Isolation + Device Home (ADR 0013)
 - [x] Clean slate always-on + delete `skills/azg/`
-- [x] Default trap path = **4× full-corpus repeats at `luna-xhigh`**; low/medium/high tier sweep optional diagnostic
-- [ ] Re-earn distill from durable Fable>Current gaps (see `evals/traps/CAMPAIGN.md`) or park
-- [ ] Tiered-R Adopt runner (per-id repeats per ADR 0012); until then `run-repeats.sh` R=4 stand-in
-- [x] Smoke Filter helper + ADR 0012 two-tier spend (2026-08-08)
+- [x] Process Gate = Preview + Adopt Ledger **R=5** @ `luna-low` (`run-process-gate.sh`); prior xhigh/Smoke/tiered path retired
+- [ ] Re-earn distill from durable gaps (see `evals/traps/CAMPAIGN.md`) or park — re-baseline after clean ledger
+- [x] Wipe incomparable camps + rate research (apple-to-apple)
 
 Live notes: `evals/traps/CAMPAIGN.md`.
 

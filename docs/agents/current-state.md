@@ -17,9 +17,9 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/unified-pipeline/` | Pipeline AGENTS (nested ponytail) + `orchestrate`/`judge` + compressed refs; `TRAP_CANDIDATE_PACK=unified-pipeline` → `stage-unified-pipeline-home.sh`; **not** promoted to `templates/global/` yet (ADR 0014) |
+| Intent-gates Candidate | `templates/candidates/unified-pipeline/` | Pipeline AGENTS **no nested ponytail** (ablation); prior xhigh rates wiped; **re-gate via Process Gate @ luna-low** (ADR 0014 promote TBD) |
 | Azg-owned skills | *(deleted from global)* | Distill skills removed clean slate 2026-08-07; candidate skills isolated in `templates/candidates/` |
-| Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **4× full corpus at luna-xhigh** with majority; tier sweep = optional diagnostic; promote needs `isolation=docker` |
+| Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
@@ -34,7 +34,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. **Smoke Filter** → **Adopt Run**; default model luna-xhigh; tier sweep optional diagnostic |
+| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. **Preview Round** → ask → **Adopt Ledger R=5** @ `luna-low` |
 | Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
 | Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
@@ -60,12 +60,10 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 | Command | What it does |
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
-| `bash evals/traps/run-smoke-filter.sh` | Smoke Filter (s2/s9/s13 × R=2) — not promote |
-| `bash evals/traps/run-repeats.sh` | Adopt stand-in: 4× full S1–S14 at luna-xhigh → `AGGREGATE.md` |
-| `bash evals/traps/run-tier-sweep.sh` | Optional full S1–S14 × low/medium/high diagnostic → `TIERS.md` |
-| `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop |
+| `bash evals/traps/run-process-gate.sh` | Sole Process Gate (Preview → ask → Adopt Ledger R=5) |
+| `bash evals/analyze-trap-ledger.sh <parent>` | `LEDGER.md` + recommend |
 | `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |
-| `bash evals/run-trap-campaign.sh --jobs 12` | Parallel trap cells |
+| `bash evals/run-trap-campaign.sh --jobs 14 --arm ARM` | Parallel scenarios for one arm |
 | `bash evals/analyze-trap.sh <camp>` | `promote-result.json` |
 | `./azg setup --dry-run` | Preview global install (needs `jq`) |
 
@@ -84,4 +82,4 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 9. **Windows `azg apply`:** CRLF-only diffs possible — `git restore` if needed.
 10. Vendor prune: azg skills = dirs under `templates/global/skills/azg/`.
 11. **Windows eval Python:** Store `python3` stub → use `azg_python`. Empty `TRAP_FULL` = unset for fable full default.
-12. **No Lite** — `evals/lite/` gone; Trap only.
+12. **No Lite** — `evals/lite/` gone; Trap only. Process Gate = `run-process-gate.sh` @ luna-low (not xhigh / Smoke / tiered-R).

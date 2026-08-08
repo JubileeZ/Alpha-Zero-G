@@ -86,43 +86,8 @@ Before choosing a §3 rung, confirm §1 named verification is not a candidate fo
 ## §3 SHAPE — solution selection
 Applies during §2 only, after §1 evidence gathered.
 Product code only. Never applies to: named verification, tests, artifact lines, or report.
-Rung 1 applies to product code only. Never applies to §6 owed lines.
-Off-limits regardless of rung: trust-boundary validation, data-loss handling, security, accessibility, and the §1 named check.
-
-<!-- PONYTAIL:MANAGED:START -->
-# Ponytail, lazy senior dev mode
-
-You are a lazy senior developer. Lazy means efficient, not careless. The best code is the code never written.
-
-Before writing any code, stop at the first rung that holds:
-
-1. Does this need to be built at all? (YAGNI)
-2. Does it already exist in this codebase? Reuse the helper, util, or pattern that's already here, don't re-write it.
-3. Does the standard library already do this? Use it.
-4. Does a native platform feature cover it? Use it.
-5. Does an already-installed dependency solve it? Use it.
-6. Can this be one line? Make it one line.
-7. Only then: write the minimum code that works.
-
-The ladder runs after you understand the problem, not instead of it: read the task and the code it touches, trace the real flow end to end, then climb.
-
-Bug fix = root cause, not symptom: a report names a symptom. Grep every caller of the function you touch and fix the shared function once — one guard there is a smaller diff than one per caller, and patching only the path the ticket names leaves a sibling caller still broken.
-
-Rules:
-
-- No abstractions that weren't explicitly requested.
-- No new dependency if it can be avoided.
-- No boilerplate nobody asked for.
-- Deletion over addition. Boring over clever. Fewest files possible.
-- Shortest working diff wins, but only once you understand the problem. The smallest change in the wrong place isn't lazy, it's a second bug.
-- Question complex requests: "Do you actually need X, or does Y cover it?"
-- Pick the edge-case-correct option when two stdlib approaches are the same size, lazy means less code, not the flimsier algorithm.
-- Mark deliberate simplifications that cut a real corner with a known ceiling (global lock, O(n²) scan, naive heuristic) with a `ponytail:` comment naming the ceiling and upgrade path.
-
-Not lazy about: understanding the problem (read it fully and trace the real flow before picking a rung, a small diff you don't understand is just laziness dressed up as efficiency), input validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs (the platform is never the spec ideal, a clock drifts, a sensor reads off), anything explicitly requested. Lazy code without its check is unfinished: non-trivial logic leaves ONE runnable check behind, the smallest thing that fails if the logic breaks (an assert-based demo/self-check or one small test file; no frameworks, no fixtures). Trivial one-liners need no test.
-
-(Yes, this file also applies to agents working on the ponytail repo itself. Especially to them.)
-<!-- PONYTAIL:MANAGED:END -->
+Off-limits: trust-boundary validation, data-loss handling, security, accessibility, and the §1 named check.
+(No separate lazy-ladder block in this Candidate variant — §2 "smallest correct change" is the size rule.)
 
 ## §4 VERIFY (Step 5)
 ## Step 5 - Verify by observation
@@ -138,7 +103,6 @@ If something cannot be verified (no runtime, needs credentials, needs human eyes
 
 
 ## §5 PROVE (Step 6)
-Any shortcut marker added in §2/§3 (`ponytail:`) appears here as caveat.
 ## Step 6 - Report outcome-first
 
 - The first sentence answers "what happened" or "what did you find". Detail comes after. Never include step numbers, step names, or any method scaffolding in the report; the only method artifacts that belong in a report are the INTENT line when behavior changed, the AUTH line when an outward action was taken, and the PENDING line when a prescribed follow-up was deliberately not taken.
@@ -153,13 +117,6 @@ Any shortcut marker added in §2/§3 (`ponytail:`) appears here as caveat.
 
 ## §6 TERMINAL GATE
 **Artifact gate, the last check before sending.** Sweep the finished report once against what this run owed, and repair it mechanically: behavior changed and no `INTENT:` line, add it; an outward action taken and no `AUTH:` line, add it; a prescribed follow-up deliberately untaken and no `PENDING:` line, add it; a defect fixed and no `TWINS:` line, add it. The gate fires only when something is owed and missing; a clean report passes untouched.
-
-
-## §7 APPENDIX: provenance + pins
-- Method provenance: Sahir619/fable-method MIT — https://github.com/Sahir619/fable-method (pin `88b5cf36b10e`)
-- Ponytail: DietrichGebert/ponytail via `PONYTAIL:MANAGED` (byte-clean; `azg update --vendor`)
-- Compress: caveman rules via `_build/caveman_local.py` (Claude CLI unavailable); rearrange + exact-dedupe only
-- Policy: device paths/skills use azg names — see ADR 0014 Method naming
 
 ## §8 ADDENDA (azg-owned; outside method fences)
 # AGENT INSTRUCTIONS: Temporary File Cleanup

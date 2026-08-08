@@ -2,7 +2,7 @@
 # evals/stage-unified-pipeline-home.sh — stage Candidate Treatment from
 # templates/candidates/unified-pipeline/ into a fake HOME (Eval Device Home).
 # Usage: bash evals/stage-unified-pipeline-home.sh <dest-dir>
-# Single always-on rule (pipeline + nested ponytail) + orchestrate/judge + references.
+# Single always-on rule (pipeline AGENTS; ponytail optional/absent) + orchestrate/judge + references.
 # Does NOT read templates/global/ — Candidate-only until Trap promote.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -57,7 +57,7 @@ trap cleanup_lock EXIT
 TMP="$(mktemp -d "${TMPDIR:-/tmp}/azg-upipe-home-XXXXXX")"
 mkdir -p "${TMP}/.cursor/rules" "${TMP}/.cursor/skills" "${TMP}/.agents/skills"
 
-# Single always-on rule: stub frontmatter + full AGENT-INSTRUCTIONS (nested ponytail)
+# Single always-on rule: stub frontmatter + full AGENT-INSTRUCTIONS
 awk '{ sub(/\r$/, ""); print }' "${STUB}" >"${TMP}/.cursor/rules/azg-agent-instructions.mdc"
 extract_managed_block "${AGENTS}" \
   '<!-- AZG:AGENT-INSTRUCTIONS:START -->' \

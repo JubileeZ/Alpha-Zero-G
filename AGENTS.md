@@ -66,12 +66,12 @@ VERSION           # release version
 
 ### Eval campaigns — agent owns the watch
 
-When this agent **starts** or **inherits** a Trap Suite / tier-sweep / repeats campaign (setsid, background `run-trap-campaign`, `run-repeats`, `run-tier-sweep`):
+When this agent **starts** or **inherits** a Trap Process Gate campaign (setsid, background `run-process-gate` / `run-trap-campaign`):
 
-1. **Do not** leave the user to `tail -f` / poll alone. Agent watches until finish or hard block. Launch long runner with stdout visible and `notify_on_output` matcher `^AZG_TRAP_CAMPAIGN_FINISHED`; do not redirect away completion event.
-2. Poll: filled scorecards vs expected · `campaign.log` / `campaign.pid` · terminal artifacts (`TIERS.md`, `AGGREGATE.md`, `REPORT.md`, `promote-result.json`, `LAST-GATE.md`).
+1. **Do not** leave the user to `tail -f` / poll alone. Agent watches until finish or hard block. Launch long runner with stdout visible and `notify_on_output` matcher `^AZG_TRAP_CAMPAIGN_FINISHED`; do not redirect away completion event. Preview pause may need human `y` or `--yes`.
+2. Poll: filled scorecards vs expected · `campaign.log` / `campaign.pid` · terminal artifacts (`LEDGER.md`, `aggregate.json`, `LAST-GATE.md`).
 3. Cadence: completion event → report immediately. Without event, fixed 120-second heartbeat: first check at 120s, then every 120s; never stretch interval. On process exit without artifact → diagnose.
-4. **On finish:** report outcome (rates + material splits) in chat; update `task.md` + `evals/traps/CAMPAIGN.md` and/or `docs/agents/current-state.md` as needed. Do not end the turn with only "watch this path."
+4. **On finish:** report outcome (overall + Coverage + recommend) in chat; update `task.md` + `evals/traps/CAMPAIGN.md` and/or `docs/agents/current-state.md` as needed. Do not end the turn with only "watch this path."
 
 Live camps (gitignored): `evals/traps/campaigns/<id>/`.
 

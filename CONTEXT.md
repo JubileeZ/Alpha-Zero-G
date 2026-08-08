@@ -69,23 +69,39 @@ Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Evaluat
 _Avoid_: Adherence mini-campaign, full Fable product paste as shipped Treatment
 
 **Process Gate**:
-3-arm Trap promote when Candidate pass rate ≥ Current ≥ Baseline on the **Adopt Run** scenario set **and** `isolation=docker`. Preceded by **Smoke Filter** (not a promote input). See ADR 0012.
-_Avoid_: Host-isolation promote, smoke-as-promote, always-run-all-traps-at-R4 as only path
+3-arm Trap promote when Candidate beats Current and Baseline on the agreed **Adopt Ledger** metrics **and** `isolation=docker`. Sole decision model: `gpt-5.6-luna-low`. Preceded by **Preview Round** (human must consent before more rounds). See ADR 0012.
+_Avoid_: Host-isolation promote, luna-xhigh Process Gate, tiered-R promote, 3-id smoke-as-gate
 
-**Smoke Filter**:
-Cheap Candidate kill before Adopt: `s2,s9,s13` × **R=2** × 3 arms at `luna-xhigh` (`evals/traps/run-smoke-filter.sh`). Pass = no nulls and Cand ≥ Cur majority on s9 and s13 (ties OK).
-_Avoid_: Full corpus smoke, R=1 lift-only decide, treat smoke rates as promote
+**Preview Round**:
+Full Trap corpus (S1–S14) × **R=1** × 3 arms at `gpt-5.6-luna-low`; becomes **r1** of the Adopt Ledger. Always pause for human consent before further rounds. Not a cheap 3-id filter.
+_Avoid_: Smoke Filter, s2/s9/s13-only smoke, Preview-as-display-only
+
+**Adopt Ledger**:
+Comparable promote dataset for one Candidate: Preview Round (`r1`) plus up to four more full-corpus rounds (`r2`–`r5`) after human consent — uniform **R=5** max, same model/isolation/protocol.
+_Avoid_: Mixing xhigh camps, tiered-R history bands, smoke-excluded promote sets
 
 **Adopt Run**:
-Process Gate spend after Smoke passes: full Trap corpus at `luna-xhigh` with **tiered R** (lift 4 · s2 1 · stable-tied 1 · unstable 5 · no-history 2 · s14→4 if unsure). Uniform R=4 via `run-repeats.sh` is stand-in until per-id runner exists.
-_Avoid_: Adopt without Smoke, tier-sweep as adopt, R=1 on s9/s13 for promote
+Spend that extends the Adopt Ledger after Preview consent: four additional full-corpus rounds (`r2`–`r5`) at `gpt-5.6-luna-low`, arm-serial fan-out (candidate → current → baseline).
+_Avoid_: Tiered per-id R, auto-continue without consent, run-repeats as sole path
+
+**Trap Family**:
+Named scenario group in `evals/traps/relevance-map.json` `change_types`. Informational / selection only — **not** a Process Gate Coverage signal.
+_Avoid_: Family-based promote coverage
+
+**Coverage**:
+Process Gate secondary signal on an Adopt Ledger: share of scenarios where Candidate mean success ≥ Current mean success (ties count toward Coverage). Board may label per-scenario Cand vs Cur as win / neutral / loss. **Baseline coverage %** (Cand mean ≥ Baseline mean per scenario) is reported only — not a take/not-take input.
+_Avoid_: Smoke-only coverage, relevance-map family coverage as gate, Baseline coverage as promote gate
+
+**Recommend Adopt**:
+Automated advice when Adopt Ledger is complete (R=5, no nulls, docker): overall majority Cand ≥ Cur ≥ B **and** Coverage win; otherwise human decides (no auto-promote).
+_Avoid_: Auto-merge to templates/global, smoke-only recommend
 
 **Live Campaign**:
 Candidate Treatment (and arm checkouts / packs) under test for the current Trap run. Recorded in `evals/traps/CAMPAIGN.md`; procedure in `evals/traps/README.md` + `evals/README.md`.
 _Avoid_: Operator runbook, map-only eval notes
 
 **Campaign cost envelope**:
-Order-of-magnitude operator resources for a trap campaign (e.g. full×3-tier ≈ 126 cells). Informational planning only — not a promote input and not Delivery Cost.
+Order-of-magnitude operator resources for a trap campaign (e.g. Preview ≈ 42 cells; full Adopt Ledger R=5 ≈ 210 cells). Informational planning only — not a promote input and not Delivery Cost.
 _Avoid_: Delivery Cost, promote budget, efficiency score
 
 **Statusline**:

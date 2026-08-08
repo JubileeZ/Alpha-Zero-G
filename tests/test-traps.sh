@@ -54,31 +54,81 @@ echo 'INTENT: pricing 10%; test expected 15%; README says 10%' >"${tmp}/log.txt"
 SCORER_OUT="${tmp}/ca" bash "${REPO_ROOT}/evals/score-trap-cell.sh" s2-surprise-trap "${tmp}" "${tmp}/log.txt" >"${tmp}/ts"
 if [ "$(cat "${tmp}/ts")" = "1" ]; then pass "s2 ideal heuristic"; else fail "s2 ideal" "ts=$(cat "${tmp}/ts")"; fi
 
-section "5. docs + retirement"
+section "5. docs + Process Gate entrypoint"
 if grep -q 'Trap Suite' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Trap Suite"; else fail "CONTEXT"; fi
+if grep -q 'Preview Round' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Preview Round"; else fail "CONTEXT Preview"; fi
 assert_file_exists "ADR 0012" "${REPO_ROOT}/docs/adr/0012-trap-suite-process-gate.md"
 if [ ! -d "${REPO_ROOT}/evals/adherence" ]; then pass "adherence retired"; else fail "adherence still present"; fi
-if grep -q 'gpt-5.6-luna-xhigh' "${REPO_ROOT}/evals/run-trap-cell.sh"; then pass "Trap default luna-xhigh"; else fail "Trap model default"; fi
-if grep -q 'gpt-5.6-luna-low' "${REPO_ROOT}/evals/traps/run-tier-sweep.sh"; then pass "tier sweep includes luna-low"; else fail "tier sweep models"; fi
-if grep -q 'TRAP_REPEATS:-4' "${REPO_ROOT}/evals/traps/run-repeats.sh" \
-  && grep -q 'gpt-5.6-luna-xhigh' "${REPO_ROOT}/evals/traps/run-repeats.sh"; then
-  pass "default repeats luna-xhigh ×4"
+if grep -q 'gpt-5.6-luna-low' "${REPO_ROOT}/evals/run-trap-cell.sh"; then pass "Trap default luna-low"; else fail "Trap model default"; fi
+assert_file_exists "run-process-gate" "${REPO_ROOT}/evals/traps/run-process-gate.sh"
+assert_file_exists "analyze_ledger" "${REPO_ROOT}/evals/traps/analyze_ledger.py"
+assert_file_exists "analyze-trap-ledger" "${REPO_ROOT}/evals/analyze-trap-ledger.sh"
+if grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-process-gate.sh"; then
+  pass "campaign completion event"
 else
-  fail "default repeats/model" ""
+  fail "campaign completion event" ""
 fi
-if grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-repeats.sh" \
-  && grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-tier-sweep.sh" \
-  && grep -q 'AZG_TRAP_CAMPAIGN_FINISHED' "${REPO_ROOT}/evals/traps/run-full-first.sh"; then
-  pass "campaign completion events"
+if grep -q 'gpt-5.6-luna-low' "${REPO_ROOT}/evals/traps/run-process-gate.sh" \
+  && grep -q 'candidate current baseline' "${REPO_ROOT}/evals/traps/run-process-gate.sh"; then
+  pass "process-gate luna-low + arm order"
 else
-  fail "campaign completion events" ""
+  fail "process-gate defaults" ""
 fi
-assert_file_exists "run-repeats" "${REPO_ROOT}/evals/traps/run-repeats.sh"
-assert_file_exists "analyze-trap-repeats" "${REPO_ROOT}/evals/analyze-trap-repeats.sh"
+# retired helpers must be gone
+for gone in run-smoke-filter.sh run-adopt.sh classify-adopt-r.py run-repeats.sh run-tier-sweep.sh run-full-first.sh; do
+  if [ ! -e "${REPO_ROOT}/evals/traps/${gone}" ]; then
+    pass "retired ${gone}"
+  else
+    fail "should be retired: ${gone}" ""
+  fi
+done
+
 if [ ! -e "${REPO_ROOT}/evals/lite" ] && [ ! -f "${REPO_ROOT}/tests/test-lite.sh" ]; then
   pass "Lite suite deleted"
 else
   fail "Lite paths should be gone" ""
 fi
+
+section "5b. analyze_ledger recommend math"
+# shellcheck source=lib/common.sh
+source "${REPO_ROOT}/lib/common.sh"
+if azg_python "${REPO_ROOT}/evals/traps/analyze_ledger.py" --self-test >/dev/null; then
+  pass "analyze_ledger self-test"
+else
+  fail "analyze_ledger self-test" ""
+fi
+
+# Mini ledger: 2 scenarios × 5 rounds × 3 arms — Cand wins overall + coverage
+tmp=$(azg_mktemp_d "tmp_azg_ledger-XXXXXX")
+mkdir -p "${tmp}"
+printf '%s\n' '{"isolation":"docker","model":"gpt-5.6-luna-low","trap_tier":"process_gate"}' >"${tmp}/meta.json"
+for r in 1 2 3 4 5; do
+  for sid in s1-assessment-trap s9-unauthorized-action; do
+    for arm in baseline current candidate; do
+      mkdir -p "${tmp}/r${r}/${sid}/${arm}"
+      # baseline 0, current 0, candidate 1 → Cand wins both scenarios
+      val=0
+      [ "${arm}" = "candidate" ] && val=1
+      printf '{"task_success":%s}\n' "${val}" >"${tmp}/r${r}/${sid}/${arm}/scorecard.json"
+    done
+  done
+done
+azg_python "${REPO_ROOT}/evals/traps/analyze_ledger.py" "${tmp}" --expected-r 5 >/dev/null
+rec=$(jq -r '.recommend' "${tmp}/aggregate.json")
+cov=$(jq -r '.coverage.win' "${tmp}/aggregate.json")
+ov=$(jq -r '.overall_win' "${tmp}/aggregate.json")
+if [ "${rec}" = "RECOMMEND_ADOPT" ] && [ "${cov}" = "true" ] && [ "${ov}" = "true" ]; then
+  pass "mini ledger RECOMMEND_ADOPT"
+else
+  fail "mini ledger adopt" "rec=${rec} cov=${cov} ov=${ov}"
+fi
+
+# R=1 only → INCOMPLETE
+tmp2=$(azg_mktemp_d "tmp_azg_ledger2-XXXXXX")
+cp -R "${tmp}/meta.json" "${tmp2}/"
+cp -R "${tmp}/r1" "${tmp2}/"
+azg_python "${REPO_ROOT}/evals/traps/analyze_ledger.py" "${tmp2}" --expected-r 5 >/dev/null
+rec2=$(jq -r '.recommend' "${tmp2}/aggregate.json")
+if [ "${rec2}" = "INCOMPLETE" ]; then pass "preview-only INCOMPLETE"; else fail "preview incomplete" "rec=${rec2}"; fi
 
 test_summary

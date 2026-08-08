@@ -14,9 +14,14 @@ assert_file_exists "judge skill" "${CAND}/skills/judge/SKILL.md"
 assert_file_exists "NOTICE" "${CAND}/NOTICE"
 assert_file_exists "failure-modes ref" "${CAND}/skills/references/failure-modes.md"
 if [ -f "${CAND}/cursor/rules/azg-ponytail.mdc" ]; then
-  fail "candidate must not ship separate azg-ponytail.mdc (ponytail nested in pipeline)" ""
+  fail "candidate must not ship separate azg-ponytail.mdc" ""
 else
   pass "no separate ponytail cursor rule"
+fi
+if [ -d "${CAND}/skills/ponytail" ] || [ -d "${CAND}/skills/ponytail-skills" ]; then
+  fail "candidate must not ship ponytail skill" ""
+else
+  pass "no ponytail skill in candidate"
 fi
 if [ -d "${CAND}/skills/fable-method" ] || [ -d "${CAND}/skills/fable-loop" ] || [ -d "${CAND}/skills/fable-judge" ]; then
   fail "fable-* skill dirs must not ship on device paths" ""
@@ -32,26 +37,25 @@ if grep -q '<!-- AZG:AGENT-INSTRUCTIONS:START -->' "${agents}" \
 else
   fail "missing AGENT-INSTRUCTIONS markers" ""
 fi
-if grep -q '<!-- PONYTAIL:MANAGED:START -->' "${agents}" \
-  && grep -q '<!-- PONYTAIL:MANAGED:END -->' "${agents}"; then
-  pass "nested PONYTAIL:MANAGED markers"
+if grep -q 'PONYTAIL:MANAGED' "${agents}" || grep -qi 'lazy senior' "${agents}"; then
+  fail "ponytail block must be absent (ablation variant)" ""
 else
-  fail "missing nested ponytail markers" ""
+  pass "no nested ponytail block"
 fi
 if grep -q 'BEGIN VENDORED' "${agents}"; then
   fail "must not use BEGIN VENDORED chrome" ""
 else
   pass "no BEGIN VENDORED"
 fi
-# Order: ACT before SHAPE/ponytail before VERIFY (containment)
+# Order: ACT before SHAPE before VERIFY
 act_line=$(grep -n '## §2 ACT' "${agents}" | head -1 | cut -d: -f1)
-pony_line=$(grep -n 'PONYTAIL:MANAGED:START' "${agents}" | head -1 | cut -d: -f1)
+shape_line=$(grep -n '## §3 SHAPE' "${agents}" | head -1 | cut -d: -f1)
 verify_line=$(grep -n '## §4 VERIFY' "${agents}" | head -1 | cut -d: -f1)
-if [ -n "${act_line}" ] && [ -n "${pony_line}" ] && [ -n "${verify_line}" ] \
-  && [ "${act_line}" -lt "${pony_line}" ] && [ "${pony_line}" -lt "${verify_line}" ]; then
-  pass "ACT → ponytail → VERIFY order"
+if [ -n "${act_line}" ] && [ -n "${shape_line}" ] && [ -n "${verify_line}" ] \
+  && [ "${act_line}" -lt "${shape_line}" ] && [ "${shape_line}" -lt "${verify_line}" ]; then
+  pass "ACT → SHAPE → VERIFY order"
 else
-  fail "pipeline order" "act=${act_line} pony=${pony_line} verify=${verify_line}"
+  fail "pipeline order" "act=${act_line} shape=${shape_line} verify=${verify_line}"
 fi
 
 section "3. skills handoff contract"
@@ -106,10 +110,11 @@ else
   fail "references not staged" ""
 fi
 if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'PONYTAIL:MANAGED:START' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "staged rule embeds nested ponytail"
+  && grep -q '## §0 ROUTER' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'PONYTAIL:MANAGED' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "staged rule has frontmatter + pipeline, no ponytail"
 else
-  fail "staged rule missing frontmatter or nested ponytail" ""
+  fail "staged rule missing pipeline or still has ponytail" ""
 fi
 
 section "5. trap cell routes pack"

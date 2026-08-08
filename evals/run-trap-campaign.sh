@@ -27,7 +27,7 @@ mkdir -p "${LOGDIR}"
 ARMS="baseline current candidate"
 [ -n "${ONLY_ARM}" ] && ARMS="${ONLY_ARM}"
 
-info "trap campaign jobs=${JOBS} model=${TRAP_MODEL:-gpt-5.6-luna-xhigh} camp=${CAMP}"
+info "trap campaign jobs=${JOBS} model=${TRAP_MODEL:-gpt-5.6-luna-low} camp=${CAMP}"
 
 run_one() {
   local id="$1" arm="$2"
