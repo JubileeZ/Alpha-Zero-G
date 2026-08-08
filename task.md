@@ -1,23 +1,22 @@
-# Clean Candidate slot + default setup after promote
+# Drop Windows from CI matrix
 
-**Objective:** Clear promoted pack; document default Device Setup + next-Candidate path.
+**Objective:** CI aggregate gate on ubuntu + macos only; keep Windows local/Git Bash support in code.
 
-**Acceptance:** `templates/candidates/` README-only; no unified-pipeline stager; tests green.
+**Acceptance:** `.github/workflows/ci.yml` matrix has no `windows-latest`; continuity docs match.
 
 ## Work Packet (SFDBN)
 
 **Status:** done
 
 **Files:**
-- `templates/candidates/README.md` (pack removed)
-- `evals/run-trap-cell.sh` · `evals/traps/run-process-gate.sh`
-- `tests/test-candidates-slot.sh` (replaces test-unified-pipeline-candidate)
-- docs/current-state · CAMPAIGN · ADR 0014 · task.md
+- `.github/workflows/ci.yml` — remove `windows-latest` + Windows deps step
+- `lib/setup.sh` · `evals/traps/analyze_ledger.py` — Windows-local fixes kept (jq `\r`, UTF-8 ledger)
+- `task.md` · `docs/agents/current-state.md`
 
 **Decisions:**
-- Default Trap pack empty → Candidate arm = Current global
-- Operators refresh Device Setup with `azg setup --force`
+- No GHA Windows runner; devs still use Git Bash per AGENTS.md
+- Prior Windows CI fixes remain — help local Windows, not CI
 
 **Blocked:** none
 
-**Next:** Commit when asked
+**Next:** Commit + push when asked

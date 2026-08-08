@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
     defaults:
       run:
         shell: bash
@@ -42,41 +42,6 @@ jobs:
           # Do NOT brew-install bash for CI: GHA macos-latest PATH bash is 3.2.
           # lib/ must stay free of Bash 4-only builtins (mapfile, declare -A, ${var,,})
           # so aggregate gate matches real macOS /bin/bash users.
-
-      - name: Install deps (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          # Download static Windows binaries directly from GitHub Releases to bypass Chocolatey CDN 503 flakes
-          $toolsBin = Join-Path $env:RUNNER_TEMP 'azg-tools'
-          New-Item -ItemType Directory -Force -Path $toolsBin | Out-Null
-          $toolsBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          $env:Path = "$toolsBin;$env:Path"
-
-          if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
-            $jqUrl = "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-win64.exe"
-            curl.exe -sSL $jqUrl -o (Join-Path $toolsBin 'jq.exe')
-            if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
-              throw 'jq download failed'
-            }
-          }
-
-          if (-not (Get-Command shellcheck -ErrorAction SilentlyContinue)) {
-            $ver = 'v0.11.0'
-            $zip = Join-Path $env:RUNNER_TEMP 'shellcheck.zip'
-            $url = "https://github.com/koalaman/shellcheck/releases/download/$ver/shellcheck-$ver.zip"
-            curl.exe -sSL $url -o $zip
-            Expand-Archive -Path $zip -DestinationPath $toolsBin -Force
-            $scExe = Get-ChildItem -Path $toolsBin -Recurse -Filter "shellcheck.exe" | Select-Object -First 1
-            if ($scExe) {
-              Move-Item -Path $scExe.FullName -Destination (Join-Path $toolsBin 'shellcheck.exe') -Force
-            }
-            if (-not (Get-Command shellcheck -ErrorAction SilentlyContinue)) {
-              throw 'shellcheck.exe missing from GitHub release zip'
-            }
-          }
-
-          Get-Command jq, shellcheck | Format-Table Name, Source
 
       - name: Sanity (jq / shellcheck / python)
         run: |

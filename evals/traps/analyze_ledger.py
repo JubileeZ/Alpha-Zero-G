@@ -387,11 +387,13 @@ def main(argv: list[str] | None = None) -> int:
     parent = pathlib.Path(args.parent)
     analyze_sh = pathlib.Path(args.analyze_sh) if args.analyze_sh else None
     out = analyze_parent(parent, analyze_sh=analyze_sh, expected_r=args.expected_r)
-    (parent / "aggregate.json").write_text(json.dumps(out, indent=2) + "\n")
+    (parent / "aggregate.json").write_text(
+        json.dumps(out, indent=2) + "\n", encoding="utf-8"
+    )
     text = render_md(out)
-    (parent / "LEDGER.md").write_text(text)
+    (parent / "LEDGER.md").write_text(text, encoding="utf-8")
     if args.last_gate:
-        pathlib.Path(args.last_gate).write_text(text)
+        pathlib.Path(args.last_gate).write_text(text, encoding="utf-8")
     print(text)
     return 0
 

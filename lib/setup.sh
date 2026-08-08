@@ -167,7 +167,8 @@ _get_requested_skills() {
   local manifest="${1}"
   if [ -f "${manifest}" ] && command -v jq >/dev/null 2>&1; then
     local from_file
-    from_file="$(jq -r '.skills[]? // empty' "${manifest}" 2>/dev/null || true)"
+    # ponytail: jq on Windows Git Bash may emit CR; strip before skill-name lookups
+    from_file="$(jq -r '.skills[]? // empty' "${manifest}" 2>/dev/null | tr -d '\r' || true)"
     printf '%s\n' "${from_file}"
     return 0
   fi
@@ -782,19 +783,11 @@ cmd_skill() {
       require_jq
       ensure_dir "${AZG_GLOBAL_DIR}"
       local current_req=()
-      if [ -f "${manifest_file}" ]; then
-        local existing
-        existing="$(jq -r '.skills[]? // empty' "${manifest_file}" 2>/dev/null || true)"
-        for ex in ${existing}; do
-          current_req+=("${ex}")
-        done
-      else
-        local defs
-        defs="$(_get_requested_skills "${manifest_file}")"
-        for d in ${defs}; do
-          current_req+=("${d}")
-        done
-      fi
+      local existing
+      existing="$(_get_requested_skills "${manifest_file}")"
+      for ex in ${existing}; do
+        current_req+=("${ex}")
+      done
 
       for to_add in "$@"; do
         if ! _find_skill_info "${vendor_base_dir}" "${to_add}" >/dev/null 2>&1; then

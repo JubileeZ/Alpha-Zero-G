@@ -20,7 +20,7 @@
 | Intent-gates Candidate | `templates/candidates/` | **Clean slot** — prior unified-pipeline promoted (ADR 0015); see `candidates/README.md` |
 | Azg-owned skills | *(deleted from global)* | Distill skills removed; ponytail = **vendor catalog only** (not always-on) |
 | Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
-| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
+| Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** matrix only (no `windows-latest`); **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
 | Glossary | `CONTEXT.md` | Evaluation Suite = Trap Process Gate; Global Core vs Vendor Catalog |
@@ -79,9 +79,10 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 4. Harness counters do not cross Bash subshells.
 5. `run-hook.cmd` without `+x` breaks Cursor `commit-verify` on macOS/Linux — restore after checkout/merge.
 6. **CI macOS bash 3.2:** no Bash 4-only builtins in `lib/`.
-7. **CI Windows shellcheck:** GitHub zip — not Chocolatey.
-8. Smart sync skips vendor skill copy when `VENDOR.lock` unchanged — empty skills need `./azg setup --force`.
-9. **Windows `azg apply`:** CRLF-only diffs possible — `git restore` if needed.
-10. Vendor prune: azg skills = dirs under `templates/global/skills/azg/`.
-11. **Windows eval Python:** Store `python3` stub → use `azg_python`. Empty `TRAP_FULL` = unset for fable full default.
-12. **No Lite** — `evals/lite/` gone; Trap only. Process Gate = `run-process-gate.sh` @ luna-low (not xhigh / Smoke / tiered-R).
+7. Smart sync skips vendor skill copy when `VENDOR.lock` unchanged — empty skills need `./azg setup --force`.
+8. **Windows `azg apply`:** CRLF-only diffs possible — `git restore` if needed.
+9. Vendor prune: azg skills = dirs under `templates/global/skills/azg/`.
+10. **Windows eval Python:** Store `python3` stub → use `azg_python`. Empty `TRAP_FULL` = unset for fable full default.
+11. **Windows jq manifest:** jq may emit `\r` on skill names — `_get_requested_skills` strips CR before lookup/install.
+12. **Windows ledger UTF-8:** `analyze_ledger.py` must `write_text(..., encoding="utf-8")` (`≥` in LEDGER.md).
+13. **No Lite** — `evals/lite/` gone; Trap only. Process Gate = `run-process-gate.sh` @ luna-low (not xhigh / Smoke / tiered-R).
