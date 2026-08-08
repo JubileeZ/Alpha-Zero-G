@@ -1,0 +1,6 @@
+Unified-pipeline Candidate — method content derived from Sahir619/fable-method (MIT).
+Source: https://github.com/Sahir619/fable-method
+Pin: 88b5cf36b10ee3679e08ee0f0181b9774d481508
+Device paths/skills renamed (orchestrate, judge, Agent Harness Pipeline) for clarity and host-agnostic setup — not a claim of original authorship. Full credit to upstream authors.
+Ponytail block: DietrichGebert/ponytail (separate upstream; PONYTAIL:MANAGED).
+Trap Suite corpus NOTICE remains under evals/traps/vendor/fable-method/NOTICE.

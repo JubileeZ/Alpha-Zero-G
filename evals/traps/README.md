@@ -62,7 +62,7 @@ bash evals/traps/run-repeats.sh --force
 
 Resume skips cells with `task_success` set; `--force` re-runs all.
 
-Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_REPEATS` (default `4`), `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream pack + default full corpus; else azg overlay), `AZG_EVAL_DOCKER` (default `1`).
+Env: `TRAP_CAMP`, `TRAP_MODEL`, `TRAP_N`, `TRAP_FULL`, `TRAP_REPEATS` (default `4`), `TRAP_CHANGE_TYPE`, `TRAP_SEED`, `TRAP_IDS`, `TRAP_JOBS`, `AZG_CURRENT_REF`, `AZG_CANDIDATE_REF`, `TRAP_CANDIDATE_PACK` (`fable-method` = upstream pack + default full corpus; `unified-pipeline` = Candidate from `templates/candidates/unified-pipeline/` via `stage-unified-pipeline-home.sh`; else azg overlay from `stage-eval-home.sh`), `AZG_EVAL_DOCKER` (default `1`).
 
 ## Cleanup (local)
 

@@ -1,32 +1,11 @@
 ---
-name: orchestrate
-description: >
-  Orchestrates complex multi-step work inside the resident AGENTS.md pipeline —
-  parallel evidence subagents, plan artifact + approval stop, surgical execute,
-  adversarial verifier subagents, outcome-first report. Invoke when scope is
-  ambiguous, actions are irreversible, evidence needs parallel fan-out, or the
-  run is unattended.
+name: fable-loop
+description: End-to-end orchestrated workflow that runs a task the way Fable ran sessions - parallel evidence subagents, one committed plan, surgical execution with an intent gate, adversarial verification agents, honest outcome-first report. Use for non-trivial multi-step tasks when the user says "/fable-loop", "run the fable loop", or "do this the way Fable would". For the rules alone without orchestration, use fable-method; for large multi-phase projects, prefer the GSD workflow and use this inside phases.
 ---
 
-## Inherits
-This skill runs inside the resident AGENTS.md pipeline.
-It does not redefine §1–§6. It only replaces HOW §1.3 evidence and §4 verification
-are executed: via subagents instead of inline.
+# The Fable Loop
 
-## Entry conditions
-Invoke when: scope is ambiguous · actions are irreversible ·
-evidence needs parallel fan-out · the run is unattended.
-
-## Subagent Rule Overrides
-- evidence subagents: inherit §1, IGNORE §3
-- verifier subagents: inherit §4/§5, IGNORE §3
-- implementation subagents: inherit all sections
-
----
-
-# Orchestrate
-
-This skill orchestrates the resident AGENTS.md pipeline; those rules govern every stage. Method says WHAT to check; this loop says WHO does the work: main thread vs subagent fan-out vs adversarial verify before delivery.
+This skill orchestrates the fable-method: read its SKILL.md first; its rules govern every stage. It is installed alongside this skill (in this plugin's `skills/fable-method/` directory, or `~/.claude/skills/fable-method/` for manual installs). The method says WHAT to check; this loop says WHO does the work: what runs in the main thread, what fans out to subagents, and what gets attacked before delivery.
 
 **Gate first.** Trivial per the method's triviality gate: do it, verify with the one obvious check, report in two sentences. No stages, no subagents. Everything else runs the four stages below in order.
 
@@ -58,14 +37,14 @@ This skill orchestrates the resident AGENTS.md pipeline; those rules govern ever
 
 ## Stage 4 - AUDIT and REPORT (the second bookend)
 
-1. Self-audit per resident pipeline audit mode: for each method step, followed, skipped, or faked. Fix what one pass can fix (usually an unverified claim: verify it now or relabel it a caveat).
+1. Self-audit per fable-method audit mode: for each method step, followed, skipped, or faked. Fix what one pass can fix (usually an unverified claim: verify it now or relabel it a caveat).
 2. Deliver per method Step 6: outcome in the first sentence, verification evidence shown, honest caveats, follow-ups only if they emerged from the work. No stage names or step numbers in the report; the INTENT and AUTH lines are the only method artifacts a report may contain.
 
 ## When NOT to use this loop
 
 - Trivial tasks (the gate handles them).
-- Pure questions with no multi-step work: resident AGENTS.md pipeline covers the shape.
-- Inside an already-orchestrated GSD phase: GSD owns the stages there; apply agent-harness-pipeline rules within them instead of nesting loops.
+- Pure questions with no multi-step work: plain fable-method covers the shape.
+- Inside an already-orchestrated GSD phase: GSD owns the stages there; apply fable-method rules within them instead of nesting loops.
 
 ## Model economy
 

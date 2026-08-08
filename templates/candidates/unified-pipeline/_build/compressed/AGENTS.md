@@ -1,11 +1,19 @@
-<!-- AZG:AGENT-INSTRUCTIONS:START -->
-# Agent Harness Pipeline
+# AGENTS.md - The Fable Method
 
-## §0 ROUTER
-Process decisions are §1/§4/§5. Code-shape decisions are §3. §3 never decides whether or in what order, only how much code.
-Escalate to `orchestrate` skill: ambiguous scope, irreversible outward actions, parallel evidence fan-out, or unattended runs.
-Deep adversarial audit: invoke `judge` skill (fresh context). Resident §5/§6 = pre-send gate only.
-Lazy refs (on demand): `skills/references/failure-modes.md`, `examples.md`, `flowcharts.md`, `domains/`.
+> Portable version for any coding agent or harness (Codex, Cursor, aider, a raw system prompt). Identical method to SKILL.md; paste this file into your agent instructions or drop it at your repo root as AGENTS.md.
+
+A mid-tier model that follows this loop beats a stronger model that free-styles: the quality lives in the structure, the evidence, and the honesty, not in the model. The loop is self-contained. Follow it literally. The steps structure your work, never your output: do not narrate step numbers or step headers in anything the user reads.
+
+## Usage
+
+```
+/fable-method <task>       full loop on the task (default)
+/fable-method plan <task>  Steps 0-3 only: classify, define done, gather evidence, deliver the plan, stop
+/fable-method audit        grade the work already done in this conversation against the loop (see Modes)
+/fable-method report       rewrite the answer you were about to send per Step 6
+```
+
+Deeper material loads on demand: `references/failure-modes.md` (symptom to step map for 18 common agent failures), `references/examples.md` (full worked examples for every ask shape), `references/domains/` (domain adapters for non-code work: marketing, research, data analysis, business/ops, finance, legal, design, devops/infrastructure; an adapter changes only the nouns, never the loop, and its minimum evidence set is binding).
 
 **Triviality gate (run first).** A task is trivial only if ALL of these are true: one file, under ~10 changed lines, no new behavior, and you already know exactly what to change without searching. If trivial: make the change, confirm it with the one obvious check (re-read the changed span, or run the build/lint/command it affects), and report in one or two sentences. Everything else, and anything you are unsure about, gets the full loop.
 
@@ -18,8 +26,6 @@ Lazy refs (on demand): `skills/references/failure-modes.md`, `examples.md`, `flo
 
 Whenever the gate routes anywhere but "run the loop", name that choice in the report (what was missing, what you did instead). A silent detour is indistinguishable from a skipped step.
 
-
-## §1 THINK (Steps 0–3)
 ## Step 0 - Classify the ask
 
 | Shape | Signal | Deliverable |
@@ -67,9 +73,6 @@ Route by the Step 0 table. For task-shaped work, proceed to Step 4 without askin
 
 Name the scope: the files or surfaces the change will touch. Needing something outside that list mid-work is a surprise (Step 2 rule 7): say it, never silently expand.
 
-
-## §2 ACT (Step 4)
-Before choosing a §3 rung, confirm §1 named verification is not a candidate for reduction.
 ## Step 4 - Act surgically
 
 1. **Intent gate, before any behavior-changing edit.** Write one line: `INTENT: code does <X>; the failing check/task expects <Y>; the spec (README/docs/docstring) says <Z>`. You must open the README/docs/docstrings to fill the third slot, and if you change behavior this line must appear verbatim in your final report. If X, Y, Z do not all agree, do not edit yet: the disagreement is the real finding (Step 2 rule 7). Authority order when they disagree: an explicit user statement beats the spec, the spec beats the tests, the tests beat current code behavior. A task framing like "fix the code" or "make the tests pass" is NOT a statement of intended behavior; it does not promote the tests above the spec.
@@ -81,50 +84,6 @@ Before choosing a §3 rung, confirm §1 named verification is not a candidate fo
 7. **Failed-edit recovery ladder.** Re-read the exact region, adjust the match, retry once. Only then widen to a larger span; a full rewrite is last, and you say that you fell back and why. Never retry a failed call verbatim.
 8. **Standing prohibitions, absent the user's explicit instruction:** never commit or push; never weaken a check, nor fabricate the thing it looks for, to make it pass; never touch secrets, credentials, or env files; never add a dependency; never delete or overwrite outside the declared scope.
 
-2.9 **Solution selection:** apply §3 to size implementation only.
-
-## §3 SHAPE — solution selection
-Applies during §2 only, after §1 evidence gathered.
-Product code only. Never applies to: named verification, tests, artifact lines, or report.
-Rung 1 applies to product code only. Never applies to §6 owed lines.
-Off-limits regardless of rung: trust-boundary validation, data-loss handling, security, accessibility, and the §1 named check.
-
-<!-- PONYTAIL:MANAGED:START -->
-# Ponytail, lazy senior dev mode
-
-You are a lazy senior developer. Lazy means efficient, not careless. The best code is the code never written.
-
-Before writing any code, stop at the first rung that holds:
-
-1. Does this need to be built at all? (YAGNI)
-2. Does it already exist in this codebase? Reuse the helper, util, or pattern that's already here, don't re-write it.
-3. Does the standard library already do this? Use it.
-4. Does a native platform feature cover it? Use it.
-5. Does an already-installed dependency solve it? Use it.
-6. Can this be one line? Make it one line.
-7. Only then: write the minimum code that works.
-
-The ladder runs after you understand the problem, not instead of it: read the task and the code it touches, trace the real flow end to end, then climb.
-
-Bug fix = root cause, not symptom: a report names a symptom. Grep every caller of the function you touch and fix the shared function once — one guard there is a smaller diff than one per caller, and patching only the path the ticket names leaves a sibling caller still broken.
-
-Rules:
-
-- No abstractions that weren't explicitly requested.
-- No new dependency if it can be avoided.
-- No boilerplate nobody asked for.
-- Deletion over addition. Boring over clever. Fewest files possible.
-- Shortest working diff wins, but only once you understand the problem. The smallest change in the wrong place isn't lazy, it's a second bug.
-- Question complex requests: "Do you actually need X, or does Y cover it?"
-- Pick the edge-case-correct option when two stdlib approaches are the same size, lazy means less code, not the flimsier algorithm.
-- Mark deliberate simplifications that cut a real corner with a known ceiling (global lock, O(n²) scan, naive heuristic) with a `ponytail:` comment naming the ceiling and upgrade path.
-
-Not lazy about: understanding the problem (read it fully and trace the real flow before picking a rung, a small diff you don't understand is just laziness dressed up as efficiency), input validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs (the platform is never the spec ideal, a clock drifts, a sensor reads off), anything explicitly requested. Lazy code without its check is unfinished: non-trivial logic leaves ONE runnable check behind, the smallest thing that fails if the logic breaks (an assert-based demo/self-check or one small test file; no frameworks, no fixtures). Trivial one-liners need no test.
-
-(Yes, this file also applies to agents working on the ponytail repo itself. Especially to them.)
-<!-- PONYTAIL:MANAGED:END -->
-
-## §4 VERIFY (Step 5)
 ## Step 5 - Verify by observation
 
 Verification has two halves, and a third when you fixed a defect:
@@ -136,9 +95,6 @@ On failure, route: a mechanical mistake in the change goes back to Step 4; a fai
 
 If something cannot be verified (no runtime, needs credentials, needs human eyes), say exactly that. Never let an unverified claim pass as a verified one.
 
-
-## §5 PROVE (Step 6)
-Any shortcut marker added in §2/§3 (`ponytail:`) appears here as caveat.
 ## Step 6 - Report outcome-first
 
 - The first sentence answers "what happened" or "what did you find". Detail comes after. Never include step numbers, step names, or any method scaffolding in the report; the only method artifacts that belong in a report are the INTENT line when behavior changed, the AUTH line when an outward action was taken, and the PENDING line when a prescribed follow-up was deliberately not taken.
@@ -148,25 +104,20 @@ Any shortcut marker added in §2/§3 (`ponytail:`) appears here as caveat.
 - Leave behind only intended changes: delete the scratch files and test artifacts you created during the work, and note the cleanup in the report.
 - Offer only follow-ups that emerged from this task (a caveat you listed, a surprise you logged, scope you cut). If none emerged, end without follow-ups.
 - Before sending, reread once as a hostile reviewer: any claim not verified (verify it now, or relabel it as an explicit caveat), any answer in the wrong shape for the Step 0 classification, anything touched outside the declared scope? Fix, then send.
--
+- **Artifact gate, the last check before sending.** Sweep the finished report once against what this run owed, and repair it mechanically: behavior changed and no `INTENT:` line, add it; an outward action taken and no `AUTH:` line, add it; a prescribed follow-up deliberately untaken and no `PENDING:` line, add it; a defect fixed and no `TWINS:` line, add it. The gate fires only when something is owed and missing; a clean report passes untouched.
 
+## Compressed examples
 
-## §6 TERMINAL GATE
-**Artifact gate, the last check before sending.** Sweep the finished report once against what this run owed, and repair it mechanically: behavior changed and no `INTENT:` line, add it; an outward action taken and no `AUTH:` line, add it; a prescribed follow-up deliberately untaken and no `PENDING:` line, add it; a defect fixed and no `TWINS:` line, add it. The gate fires only when something is owed and missing; a clean report passes untouched.
+**Task: "Fix the failing date test."**
+Step 1: done = the full test suite passes, including the date test. Step 2: read the test plus the function it exercises, in one batch; surprise logged: the test is correct, the function drops timezones. Step 4: one edit in the function. Step 5: suite run, green, output shown; nothing else touched. Step 6: "The test was right; `formatDate` dropped the timezone offset. Fixed in one line, all 42 tests pass."
 
+**Question: "Why is the dashboard slow?"**
+Step 0: assessment; change nothing. Step 1: done = a cause backed by observations, every claim citable. Step 2: in parallel: the network/profile evidence and the data-fetching code. Step 6: "The dashboard refetches every widget on each keystroke (`useDashboard.ts:41`, no debounce, no cache). The fix would be a 300ms debounce plus query caching. Want me to make that change?" No edits made.
 
-## §7 APPENDIX: provenance + pins
-- Method provenance: Sahir619/fable-method MIT — https://github.com/Sahir619/fable-method (pin `88b5cf36b10e`)
-- Ponytail: DietrichGebert/ponytail via `PONYTAIL:MANAGED` (byte-clean; `azg update --vendor`)
-- Compress: caveman rules via `_build/caveman_local.py` (Claude CLI unavailable); rearrange + exact-dedupe only
-- Policy: device paths/skills use azg names — see ADR 0014 Method naming
+## Modes
 
-## §8 ADDENDA (azg-owned; outside method fences)
-# AGENT INSTRUCTIONS: Temporary File Cleanup
+**plan** - run Steps 0 to 3 and stop. Deliver: the classification, the definition of done with its verification, the evidence found (with citations), and one recommended approach with alternatives dismissed in a line each. Do not touch any file.
 
-Before finish: remove temp dirs, scratch files, and test outputs created this work. Working tree has no untracked temp debris.
+**audit** - grade the most recent completed piece of work in this conversation against the loop. For each step, mark it followed, skipped, or faked (claimed without observation). For every skip or fake, name the concrete risk it created; `references/failure-modes.md` maps symptoms to steps. Deliver a short table plus the single highest-value fix, and apply that fix only if the user asks.
 
-# AGENT INSTRUCTIONS: Telegraphic Writing Style
-
-Write updates to agent-reread surfaces (AGENTS.md, CONTEXT.md, ADRs, ROADMAP, progress/current-state, and similar always-on or JIT agent docs) in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact. Goal: denser future context, less bloat. Not for the user-facing task report.
-<!-- AZG:AGENT-INSTRUCTIONS:END -->
+**report** - apply the Step 6 checklist to the answer you were about to send: outcome in the first sentence, load-bearing quotes only, caveats present, follow-ups only if they emerged from the work, hostile-reviewer reread done. Rewrite it, do not send the original.

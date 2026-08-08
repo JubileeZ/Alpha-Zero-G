@@ -17,7 +17,7 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/unified-pipeline/` | Staged self-contained package: 133-line resident pipeline, unified Cursor rule, `orchestrate`/`judge` skills, compressed `references/` |
+| Intent-gates Candidate | `templates/candidates/unified-pipeline/` | Pipeline AGENTS (nested ponytail) + `orchestrate`/`judge` + compressed refs; `TRAP_CANDIDATE_PACK=unified-pipeline` → `stage-unified-pipeline-home.sh`; **not** promoted to `templates/global/` yet (ADR 0014) |
 | Azg-owned skills | *(deleted from global)* | Distill skills removed clean slate 2026-08-07; candidate skills isolated in `templates/candidates/` |
 | Evaluation Suite / Trap | `evals/traps/` + flat `evals/*trap*` + docker + `stage-eval-home` + `run-{repeats,tier-sweep,full-first}.sh` | **Sole gate** ADR 0012+0013; default decision path = **4× full corpus at luna-xhigh** with majority; tier sweep = optional diagnostic; promote needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
@@ -48,6 +48,7 @@
 | Item | Notes |
 |------|-------|
 | Fable-method distill + re-gate | Re-earn from durable gaps only; or park |
+| Unified-pipeline Candidate → global | Staged under `templates/candidates/`; Trap promote before `templates/global/` (ADR 0014) |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
 Delivery Cost auto-capture: parked / out of scope for now (never a promote input).

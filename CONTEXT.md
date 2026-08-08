@@ -136,7 +136,11 @@ _Avoid_: Sibling callers checked (vague), only the failing test site, fake TWINS
 On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop.
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
 
-**Orchestrate Skill** *(deferred — not shipped)*:
-Future on-demand Act skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, attackers). Not in Device Setup until needed.
-_Avoid_: azg-orchestrate (removed), azg-loop, fable-loop, Act as always-on default
+**Orchestrate Skill**:
+On-demand skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). Shipped in unified-pipeline Candidate (`templates/candidates/…/skills/orchestrate`); not in Device Setup `templates/global/` until Trap promote (ADR 0014).
+_Avoid_: fable-loop as device skill id, Act as always-on default, azg-orchestrate (removed global name)
+
+**Method Naming**:
+Device paths and skill names use azg labels (`orchestrate`, `judge`, Agent Harness Pipeline), not `fable-*`. Opaque product name + Claude-ecosystem branding; project is host-agnostic. Credit Sahir619/fable-method in NOTICE / ADR 0014 / §7 — rename ≠ hide origin.
+_Avoid_: fable-method on device, fable-loop, fable-judge as shipped skill ids
 

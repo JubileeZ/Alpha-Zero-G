@@ -85,6 +85,7 @@ run_suite "tests/test-mutation-verify.sh" bash tests/test-mutation-verify.sh
 run_suite "tests/test-traps.sh" bash tests/test-traps.sh
 run_suite "tests/test-intent-gates-candidate.sh" bash tests/test-intent-gates-candidate.sh
 run_suite "tests/test-eval-isolation.sh" bash tests/test-eval-isolation.sh
+run_suite "tests/test-unified-pipeline-candidate.sh" bash tests/test-unified-pipeline-candidate.sh
 run_suite "tests/test-selective-skills.sh" bash tests/test-selective-skills.sh
 run_suite "tests/test-cursor-device-setup.sh" bash tests/test-cursor-device-setup.sh
 

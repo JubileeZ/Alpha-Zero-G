@@ -9,7 +9,7 @@
 | Optional diagnostic | `run-tier-sweep.sh`: low/medium/high, R=1 → `TIERS.md` |
 | Single-model default | `gpt-5.6-luna-xhigh` |
 | Current Treatment | clean slate @ `a9a68ff` / HEAD worktree for new camps; pin `AZG_CURRENT_REF` as needed |
-| Next | Re-earn distill from durable Fable>Current gaps **or park** |
+| Next | Eval unified-pipeline Candidate (`TRAP_CANDIDATE_PACK=unified-pipeline`); promote to `templates/global/` only after Trap (ADR 0014) |
 | Shipped | `a9a68ff` clean slate + eval-watch |
 
 Do not commit `campaigns/` / `worktrees/` / `homes/` (gitignored).
