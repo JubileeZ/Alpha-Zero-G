@@ -69,8 +69,16 @@ Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Evaluat
 _Avoid_: Adherence mini-campaign, full Fable product paste as shipped Treatment
 
 **Process Gate**:
-3-arm trap campaign promoting Candidates when Candidate pass rate ≥ Current and ≥ Baseline on the selected scenario subset (default N=5; full corpus for tier sweeps) **and** `isolation=docker`.
-_Avoid_: Host-isolation promote, always-run-all-traps as only mode
+3-arm Trap promote when Candidate pass rate ≥ Current ≥ Baseline on the **Adopt Run** scenario set **and** `isolation=docker`. Preceded by **Smoke Filter** (not a promote input). See ADR 0012.
+_Avoid_: Host-isolation promote, smoke-as-promote, always-run-all-traps-at-R4 as only path
+
+**Smoke Filter**:
+Cheap Candidate kill before Adopt: `s2,s9,s13` × **R=2** × 3 arms at `luna-xhigh` (`evals/traps/run-smoke-filter.sh`). Pass = no nulls and Cand ≥ Cur majority on s9 and s13 (ties OK).
+_Avoid_: Full corpus smoke, R=1 lift-only decide, treat smoke rates as promote
+
+**Adopt Run**:
+Process Gate spend after Smoke passes: full Trap corpus at `luna-xhigh` with **tiered R** (lift 4 · s2 1 · stable-tied 1 · unstable 5 · no-history 2 · s14→4 if unsure). Uniform R=4 via `run-repeats.sh` is stand-in until per-id runner exists.
+_Avoid_: Adopt without Smoke, tier-sweep as adopt, R=1 on s9/s13 for promote
 
 **Live Campaign**:
 Candidate Treatment (and arm checkouts / packs) under test for the current Trap run. Recorded in `evals/traps/CAMPAIGN.md`; procedure in `evals/traps/README.md` + `evals/README.md`.

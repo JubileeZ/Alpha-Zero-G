@@ -1,25 +1,27 @@
-# Unified-pipeline Candidate (eval-staged)
+# Trap spend policy (Smoke → Adopt)
 
-**Objective:** Rebuild `templates/candidates/unified-pipeline/` from caveman-compressed fable-method content (byte-preserve + exact-dedupe into pipeline skeleton), wire `TRAP_CANDIDATE_PACK=unified-pipeline` Eval Device Home staging, draft ADR superseding 0009/0010. Do **not** promote into `templates/global/` until Trap tests.
+**Objective:** Record two-tier Trap spend (ADR 0012 amend): Smoke Filter + tiered Adopt R; ship `run-smoke-filter.sh`.
 
-**Acceptance:** Candidate package has single always-on rule path (pipeline + nested ponytail), `orchestrate`+`judge`+compressed refs, no `fable-*` skill names; `stage-unified-pipeline-home.sh` stages that home; trap cell routes pack; structural tests pass; ADR 0014 + CONTEXT naming pointer + NOTICE; `templates/global/` unchanged for Device Setup prose.
+**Acceptance:** ADR 0012 documents Smoke/Adopt; CONTEXT terms; CAMPAIGN/README/current-state updated; `evals/traps/run-smoke-filter.sh` runnable.
 
 ## Work Packet (SFDBN)
 
-**Status:** done — Candidate + eval glue landed; global promote deferred
+**Status:** done — policy saved; smoke helper landed
 
 **Files:**
-- `templates/candidates/unified-pipeline/**` (+ `_build/` assemble)
-- `evals/stage-unified-pipeline-home.sh`, `evals/run-trap-cell.sh`
-- `tests/test-unified-pipeline-candidate.sh`, `tests/run-all.sh`
-- `docs/adr/0014-unified-pipeline-candidate.md`, `0009`/`0010` superseded notes
-- `CONTEXT.md`, `docs/agents/current-state.md`, `evals/traps/{README,CAMPAIGN}.md`
+- `docs/adr/0012-trap-suite-process-gate.md`
+- `CONTEXT.md` (Smoke Filter, Adopt Run)
+- `evals/traps/run-smoke-filter.sh`
+- `evals/traps/{README,CAMPAIGN}.md`
+- `docs/agents/current-state.md`
+- `task.md`
 
 **Decisions:**
-- Q14=B: staged only; no `templates/global` promote
-- Light caveman local (no `claude` CLI); mechanical `fable-*` → azg id renames
-- Eval: `TRAP_CANDIDATE_PACK=unified-pipeline`
+- Smoke: s2,s9,s13 × R=2; pass = no nulls + Cand≥Cur maj on s9/s13
+- Adopt: tiered R (lift 4 · s2 1 · stable 1 · unstable 5 · no-hist 2 · s14→4 if unsure)
+- Stand-in until per-id runner: full `run-repeats.sh` R=4
+- Q8=C: policy + smoke helper
 
 **Blocked:** none
 
-**Next:** Run Trap with `TRAP_CANDIDATE_PACK=unified-pipeline`; promote to global only if Process Gate passes
+**Next:** Optional — run official Smoke for unified-pipeline; tiered-R runner later

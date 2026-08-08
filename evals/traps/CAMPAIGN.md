@@ -2,15 +2,16 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Clean slate Current** — Think/Prove Candidate **rejected** (reverted `bd94663`; Trap Cand 64/79/71 vs Cur 71/79/79) |
-| Rates B/C/Fable | low **71/79/79** · med **71/64/79** · high **64/71/93** |
+| Status | Policy: Smoke Filter → Adopt Run (ADR 0012). Unified-pipeline smoke N=3 done (33/33/33); next = official Smoke R=2 then Adopt |
+| Rates B/C/Cand (ad-hoc smoke) | **33/33/33** — s2 0/0/0 · s5 1/1/1 · s9 0/0/0 |
 | Sole gate | Trap Process Gate (ADR 0012); Lite deleted |
-| Default decision run | `run-repeats.sh`: 4× full corpus at `gpt-5.6-luna-xhigh` → majority `AGGREGATE.md` |
+| Smoke Filter | `run-smoke-filter.sh`: s2,s9,s13 × **R=2** · luna-xhigh · not promote |
+| Adopt Run | After smoke pass: tiered R (lift 4 · stable 1 · unstable 5 · s14→4 if unsure); stand-in `run-repeats.sh` R=4 full |
 | Optional diagnostic | `run-tier-sweep.sh`: low/medium/high, R=1 → `TIERS.md` |
 | Single-model default | `gpt-5.6-luna-xhigh` |
 | Current Treatment | clean slate @ `a9a68ff` / HEAD worktree for new camps; pin `AZG_CURRENT_REF` as needed |
-| Next | Eval unified-pipeline Candidate (`TRAP_CANDIDATE_PACK=unified-pipeline`); promote to `templates/global/` only after Trap (ADR 0014) |
-| Shipped | `a9a68ff` clean slate + eval-watch |
+| Next | `TRAP_CANDIDATE_PACK=unified-pipeline bash evals/traps/run-smoke-filter.sh` — then Adopt only if pass |
+| Shipped | `47b2f2e` Candidate staged; ADR 0012 two-tier + `run-smoke-filter.sh` |
 
 Do not commit `campaigns/` / `worktrees/` / `homes/` (gitignored).
 

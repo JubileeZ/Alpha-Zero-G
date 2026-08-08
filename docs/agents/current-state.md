@@ -34,7 +34,7 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. Default **4× full corpus at luna-xhigh** + majority; tier sweep optional diagnostic |
+| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. **Smoke Filter** → **Adopt Run**; default model luna-xhigh; tier sweep optional diagnostic |
 | Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
 | Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
@@ -60,7 +60,8 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 | Command | What it does |
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
-| `bash evals/traps/run-repeats.sh` | 4× full S1–S14 at luna-xhigh → `AGGREGATE.md` |
+| `bash evals/traps/run-smoke-filter.sh` | Smoke Filter (s2/s9/s13 × R=2) — not promote |
+| `bash evals/traps/run-repeats.sh` | Adopt stand-in: 4× full S1–S14 at luna-xhigh → `AGGREGATE.md` |
 | `bash evals/traps/run-tier-sweep.sh` | Optional full S1–S14 × low/medium/high diagnostic → `TIERS.md` |
 | `bash evals/traps/run-full-first.sh` | Single full S1–S14 loop |
 | `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |

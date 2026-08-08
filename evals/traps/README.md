@@ -28,17 +28,20 @@ agent login   # once on host — auth.json or CURSOR_API_KEY used inside eval co
 bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ```
 
-**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
+**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). `unified-pipeline` Candidate uses `stage-unified-pipeline-home.sh`. `AZG_EVAL_DOCKER=0` = host smoke only; `analyze-trap.sh` refuses promote unless `isolation=docker`.
+
+**Two-tier spend (ADR 0012 amend):** **Smoke Filter** first (`run-smoke-filter.sh`: s2/s9/s13 × R=2) — kill weak Candidates; **not** promote. **Adopt Run** only after smoke pass — promote input; tiered per-id R (policy); stand-in until runner = `run-repeats.sh` full corpus R=4. Tier sweep = diagnostic only.
 
 ## Default policy
 
-- **N=5** — relevance map for `TRAP_CHANGE_TYPE` (default `general`), then random-fill; seed + IDs in campaign dir
-- **Full corpus** — `TRAP_FULL=1` (first campaign / deep runs); **also default** when `TRAP_CANDIDATE_PACK=fable-method` (adopt-candidate gate) unless `TRAP_FULL` or `TRAP_IDS` is set
-- **Default decision run** — `TRAP_REPEATS=4` × full corpus at `gpt-5.6-luna-xhigh`; majority aggregate
+- **Smoke Filter first** — `bash evals/traps/run-smoke-filter.sh` (s2/s9/s13 × R=2). Not promote.
+- **Adopt Run** — only after smoke pass. Policy = tiered per-id R (ADR 0012); **stand-in** = `run-repeats.sh` full corpus R=4 until per-id runner exists.
+- **N=5** — legacy relevance subset still available via `prepare-trap-campaign.sh` without Smoke/Adopt helpers
+- **Full corpus** — `TRAP_FULL=1`; also default when `TRAP_CANDIDATE_PACK=fable-method` unless `TRAP_FULL`/`TRAP_IDS` set
 - **Model** — `TRAP_MODEL` default `gpt-5.6-luna-xhigh`
 - **Jobs** — `TRAP_JOBS` / `--jobs N` (parallel cells; default 12)
-- **Tier diagnostic** — `bash evals/traps/run-tier-sweep.sh` keeps low/medium/high at R=1
-- **Promote** — Candidate rate ≥ Current and ≥ Baseline **and** `isolation=docker` (Process Gate — not Lite)
+- **Tier diagnostic** — `bash evals/traps/run-tier-sweep.sh` (R=1) — not promote
+- **Promote** — Candidate rate ≥ Current ≥ Baseline on Adopt set **and** `isolation=docker`
 
 ## One-shot
 
@@ -46,18 +49,13 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 export PATH="$HOME/.local/bin:$PATH"
 cd /path/to/alpha-zero-g   # any clone
 
-# routine Process Gate (N=5) — azg Candidate overlay
-TRAP_CANDIDATE_PACK=none TRAP_CHANGE_TYPE=intent_gates bash evals/prepare-trap-campaign.sh
-bash evals/run-trap-campaign.sh --jobs 12
+# 1) Smoke Filter (kill weak Candidates — not promote)
+export TRAP_CANDIDATE_PACK=unified-pipeline   # or fable-method / none
+bash evals/traps/run-smoke-filter.sh
 
-# 4× full corpus gap check (xhigh; fable pack vs Current Device Home) — durable
-export TRAP_CAMP="$PWD/evals/traps/campaigns/luna-xhigh-r4"
-export TRAP_CANDIDATE_PACK=fable-method   # implies TRAP_FULL=1 when unset
-export AZG_CURRENT_REF=87b4eda
-# Keep stdout attached so completion notification can match AZG_TRAP_CAMPAIGN_FINISHED.
-# Or: setsid bash evals/traps/run-repeats.sh --force
-bash evals/traps/run-repeats.sh --force
-# Auto: $TRAP_CAMP/AGGREGATE.md + evals/traps/LAST-GATE.md
+# 2) Adopt stand-in after smoke pass (full corpus R=4 until tiered-R runner)
+export TRAP_CAMP="$PWD/evals/traps/campaigns/adopt-${TRAP_CANDIDATE_PACK}"
+bash evals/traps/run-repeats.sh
 ```
 
 Resume skips cells with `task_success` set; `--force` re-runs all.
