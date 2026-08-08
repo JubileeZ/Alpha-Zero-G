@@ -10,7 +10,9 @@
 
 | Area | Path | Notes |
 |------|------|-------|
-| CLI | `azg`, `lib/` | setup (full skills), new, apply, update, selective uninstall; **`azg_python`** for real Py3 |
+| CLI | `azg`, `lib/` | setup (curated active core + transitive dependency resolution), skill list/enable/disable, new, apply, update (--vendor), selective uninstall; **`azg_python`** for real Py3 |
+| Skills Catalog | `templates/global/skills/vendor/` | `mattpocock-skills`, `ponytail-skills`, `caveman-skills` (at VENDOR.lock pin; catalog-only by default) |
+| Active Skills Manifest | `${AZG_GLOBAL_DIR}/azg-skills.json` | Declarative active set; automatic transitive dependency resolution into both `~/.gemini/config/skills/` and `~/.cursor/skills/` with 1:1 parity |
 | Ownership | `azg-ownership.json` under global dir | ADR 0008 |
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
@@ -21,7 +23,7 @@
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
 | ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
-| Glossary | `CONTEXT.md` | Evaluation Suite = Trap Process Gate |
+| Glossary | `CONTEXT.md` | Evaluation Suite = Trap Process Gate; Global Core vs Vendor Catalog |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |

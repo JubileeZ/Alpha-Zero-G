@@ -437,6 +437,11 @@ for skill in "${PRODUCTIVITY_SKILLS[@]}"; do
     "${skill}" "${skill}" > "${TEMP_VENDOR}/productivity/${skill}/SKILL.md"
 done
 
+# Populate manifest with mock skills so setup tests full overlay pipeline
+mkdir -p "${TEMP_HOME}/.gemini/antigravity-cli"
+all_skills_json="$(printf '%s\n' "${ENGINEERING_SKILLS[@]}" "${PRODUCTIVITY_SKILLS[@]}" | jq -R . | jq -s '{version:1, skills: .}')"
+printf '%s\n' "${all_skills_json}" > "${TEMP_HOME}/.gemini/antigravity-cli/azg-skills.json"
+
 # Run azg setup with the temp repo and home
 SETUP_EXIT=0
 HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup > /dev/null 2>&1 \

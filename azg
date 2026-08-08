@@ -49,13 +49,16 @@ ${CLR_BOLD}COMMANDS${CLR_RESET}
   new [DIR]            Scaffold a new Antigravity project interactively
   apply [DIR]          Retrofit an existing repo with the azg harness
   update               Pull the latest Alpha-Zero-G repo
-  update --vendor      Also re-vendor mattpocock/skills from upstream
+  update --vendor      Also re-vendor upstream skills (mattpocock, ponytail, caveman)
+  skill [list|enable|disable]  Manage active skills and dependencies
   uninstall            Remove all files azg setup installed globally
   version              Print version and exit
   help                 Print this help message
 
 ${CLR_BOLD}EXAMPLES${CLR_RESET}
   azg setup
+  azg skill list
+  azg skill enable caveman
   azg new my-project
   azg apply .
   azg update --vendor
@@ -101,6 +104,11 @@ case "${COMMAND}" in
   update)
     source "${LIB_DIR}/update.sh"
     cmd_update "$@"
+    ;;
+
+  skill|skills)
+    source "${LIB_DIR}/setup.sh"
+    cmd_skill "$@"
     ;;
 
   uninstall)

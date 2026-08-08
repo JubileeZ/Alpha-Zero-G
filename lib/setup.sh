@@ -166,6 +166,98 @@ _install_skill_pair() {
   fi
 }
 
+_get_requested_skills() {
+  local manifest="${1}"
+  if [ -f "${manifest}" ] && command -v jq >/dev/null 2>&1; then
+    local from_file
+    from_file="$(jq -r '.skills[]? // empty' "${manifest}" 2>/dev/null || true)"
+    printf '%s\n' "${from_file}"
+    return 0
+  fi
+  # Default curated active set requested by operator when no manifest exists
+  printf '%s\n' "ponytail" "grill-with-docs" "implement" "wayfinder" "writing-for-agents"
+}
+
+_find_skill_info() {
+  local vendor_base="${1}"
+  local skill_name="${2}"
+  for vroot in "${vendor_base}"/*/; do
+    [ -d "${vroot}" ] || continue
+    local vname
+    vname="$(basename "${vroot}")"
+    for cdir in "${vroot}"/*/; do
+      [ -d "${cdir}" ] || continue
+      if [ -d "${cdir}/${skill_name}" ] && [ -f "${cdir}/${skill_name}/SKILL.md" ]; then
+        printf '%s %s\n' "${cdir}" "${vname}"
+        return 0
+      fi
+    done
+  done
+  return 1
+}
+
+_scan_skill_prereqs() {
+  local skill_md="${1}"
+  local vendor_base="${2}"
+  [ -f "${skill_md}" ] || return 0
+
+  local tokens
+  tokens="$(grep -oE '/[a-z0-9-]+' "${skill_md}" 2>/dev/null | sed 's|^/||' | sort -u || true)"
+  for tok in ${tokens}; do
+    if _find_skill_info "${vendor_base}" "${tok}" >/dev/null 2>&1; then
+      printf '%s\n' "${tok}"
+    fi
+  done
+}
+
+_resolve_active_skills() {
+  local vendor_base="${1}"
+  local manifest="${2}"
+
+  local initial_list
+  initial_list="$(_get_requested_skills "${manifest}")"
+
+  local queue=()
+  local resolved=()
+
+  for sk in ${initial_list}; do
+    [ -n "${sk}" ] && queue+=("${sk}")
+  done
+
+  while [ ${#queue[@]} -gt 0 ]; do
+    local current="${queue[0]}"
+    queue=("${queue[@]:1}")
+
+    local already=0
+    for res in "${resolved[@]:-}"; do
+      if [ "${res}" = "${current}" ]; then
+        already=1
+        break
+      fi
+    done
+    [ "${already}" -eq 1 ] && continue
+
+    local sinfo
+    sinfo="$(_find_skill_info "${vendor_base}" "${current}" || echo "")"
+    if [ -n "${sinfo}" ]; then
+      resolved+=("${current}")
+      local cdir="${sinfo%% *}"
+      local skill_file="${cdir}/${current}/SKILL.md"
+      if [ -f "${skill_file}" ]; then
+        local prereqs
+        prereqs="$(_scan_skill_prereqs "${skill_file}" "${vendor_base}")"
+        for pr in ${prereqs}; do
+          queue+=("${pr}")
+        done
+      fi
+    fi
+  done
+
+  if [ ${#resolved[@]} -gt 0 ]; then
+    printf '%s\n' "${resolved[@]}" | sort -u
+  fi
+}
+
 cmd_setup() {
   local dry_run=0
   local force=0
@@ -193,6 +285,7 @@ cmd_setup() {
   local azg_skills_dir="${template_global}/skills/azg"
   local azg_overlay_dir="${template_global}/skills/overlay/azg"
   local cursor_rules_tmpl_dir="${template_global}/cursor/rules"
+  local manifest_file="${AZG_GLOBAL_DIR}/azg-skills.json"
 
   if [ ! -f "${template_agents}" ]; then
     die "Template AGENTS.md not found: ${template_agents}"
@@ -201,12 +294,19 @@ cmd_setup() {
     _validate_cursor_rule_templates "${cursor_rules_tmpl_dir}" "${template_agents}"
   fi
 
+  local active_skills=""
+  if [ -d "${vendor_base_dir}" ]; then
+    active_skills="$(_resolve_active_skills "${vendor_base_dir}" "${manifest_file}")"
+  fi
+
   local skip_sync=0
   local current_stamp_file="${AZG_GLOBAL_DIR}/setup_stamp"
   local new_stamp=""
 
   if [ -d "${vendor_base_dir}" ]; then
     new_stamp="$(find "${vendor_base_dir}" -name "VENDOR.lock" -exec grep "^commit:" {} + | sort)"
+    new_stamp="${new_stamp}
+active: ${active_skills}"
   fi
 
   if [ "${force}" -eq 0 ] && [ -f "${current_stamp_file}" ] && [ -n "${new_stamp}" ]; then
@@ -231,9 +331,21 @@ cmd_setup() {
     if [ "${skip_sync}" -eq 1 ]; then
       info "  [SMART SYNC] vendor skills up-to-date (VENDOR.lock unchanged); would skip vendor skill copying"
     else
-      if [ -d "${vendor_base_dir}" ]; then
+      if [ -n "${active_skills}" ]; then
+        for skill_name in ${active_skills}; do
+          local sinfo
+          sinfo="$(_find_skill_info "${vendor_base_dir}" "${skill_name}" || echo "")"
+          [ -n "${sinfo}" ] || continue
+          local category_dir="${sinfo%% *}"
+          info "  copy skill : ${category_dir}/${skill_name} → ${AZG_GLOBAL_SKILLS_DIR}/${skill_name}/"
+          info "  copy skill : ${category_dir}/${skill_name} → ${AZG_CURSOR_SKILLS_DIR}/${skill_name}/"
+        done
+      elif [ -d "${vendor_base_dir}" ]; then
         for vendor_root in "${vendor_base_dir}"/*/; do
           [ -d "${vendor_root}" ] || continue
+          local vendor_name
+          vendor_name="$(basename "${vendor_root}")"
+          [ "${vendor_name}" = "caveman-skills" ] && continue
           for category_dir in "${vendor_root}"/*/; do
             [ -d "${category_dir}" ] || continue
             for skill_dir in "${category_dir}"/*/; do
@@ -429,29 +541,52 @@ cmd_setup() {
   if [ "${skip_sync}" -eq 1 ]; then
     info "Smart Sync: VENDOR.lock commits unchanged. Skipping global skill sync."
   elif [ -d "${vendor_base_dir}" ]; then
-    for vendor_root in "${vendor_base_dir}"/*/; do
-      [ -d "${vendor_root}" ] || continue
-      local vendor_name
-      vendor_name="$(basename "${vendor_root}")"
+    if [ -n "${active_skills}" ]; then
+      for skill_name in ${active_skills}; do
+        local sinfo
+        sinfo="$(_find_skill_info "${vendor_base_dir}" "${skill_name}" || echo "")"
+        [ -n "${sinfo}" ] || continue
+        local category_dir="${sinfo%% *}"
+        local vendor_name="${sinfo##* }"
+        _install_skill_pair "${skill_name}" "${category_dir}" \
+          "${template_global}/skills/overlay/${vendor_name}" "${force}" \
+          skills_copied cursor_skills_copied
+      done
+    else
+      for vendor_root in "${vendor_base_dir}"/*/; do
+        [ -d "${vendor_root}" ] || continue
+        local vendor_name
+        vendor_name="$(basename "${vendor_root}")"
+        [ "${vendor_name}" = "caveman-skills" ] && continue
 
-      for category_dir in "${vendor_root}"/*/; do
-        [ -d "${category_dir}" ] || continue
-        for skill_dir in "${category_dir}"/*/; do
-          [ -d "${skill_dir}" ] || continue
-          local skill_name
-          skill_name="$(basename "${skill_dir}")"
+        for category_dir in "${vendor_root}"/*/; do
+          [ -d "${category_dir}" ] || continue
+          for skill_dir in "${category_dir}"/*/; do
+            [ -d "${skill_dir}" ] || continue
+            local skill_name
+            skill_name="$(basename "${skill_dir}")"
 
-          _install_skill_pair "${skill_name}" "${category_dir}" \
-            "${template_global}/skills/overlay/${vendor_name}" "${force}" \
-            skills_copied cursor_skills_copied
+            _install_skill_pair "${skill_name}" "${category_dir}" \
+              "${template_global}/skills/overlay/${vendor_name}" "${force}" \
+              skills_copied cursor_skills_copied
+          done
         done
       done
+    fi
 
+    for vendor_root in "${vendor_base_dir}"/*/; do
+      [ -d "${vendor_root}" ] || continue
       _prune_vendor_skills \
         "${AZG_GLOBAL_SKILLS_DIR}" \
         "${vendor_root}" \
-        skills_pruned
+        skills_pruned \
+        "${active_skills}"
     done
+
+    _prune_cursor_skills \
+      "${AZG_CURSOR_SKILLS_DIR}" \
+      skills_pruned \
+      "${active_skills}"
 
     if [ -n "${new_stamp}" ]; then
       printf "%s\n" "${new_stamp}" > "${current_stamp_file}"
@@ -531,11 +666,157 @@ cmd_setup() {
   if [ "${azg_skills_copied}" -gt 0 ] || [ "${azg_cursor_skills_copied}" -gt 0 ]; then
     _sum_skills="${_sum_skills}, ${azg_skills_copied} Gemini azg skill(s), ${azg_cursor_skills_copied} Cursor azg skill(s)"
   fi
-  [ "${skills_pruned}" -gt 0 ] && _sum_skills="${_sum_skills}, ${skills_pruned} removed (deleted upstream)"
+  [ "${skills_pruned}" -gt 0 ] && _sum_skills="${_sum_skills}, ${skills_pruned} removed (deleted/inactive)"
   [ "${cursor_rules_installed}" -gt 0 ] && _sum_skills="${_sum_skills}, ${cursor_rules_installed} Cursor rule(s)"
 
   ok "Setup complete. ${_sum_skills}."
   info "Global config: ${AZG_GLOBAL_DIR}"
   info "Cursor skills: ${AZG_CURSOR_SKILLS_DIR}"
   info "Cursor rules: ${AZG_CURSOR_RULES_DIR}"
+}
+
+cmd_skill() {
+  local subcmd="${1:-list}"
+  shift || true
+
+  local template_global="${AZG_ROOT}/templates/global"
+  local vendor_base_dir="${template_global}/skills/vendor"
+  local manifest_file="${AZG_GLOBAL_DIR}/azg-skills.json"
+
+  case "${subcmd}" in
+    list)
+      require_jq
+      step "Alpha-Zero-G Skill Catalog & Active Skills"
+      local req_skills
+      req_skills="$(_get_requested_skills "${manifest_file}")"
+      local active_skills
+      active_skills="$(_resolve_active_skills "${vendor_base_dir}" "${manifest_file}")"
+
+      info "Active / Installed Skills (with auto-resolved prerequisites):"
+      for ask in ${active_skills}; do
+        local is_req=0
+        for r in ${req_skills}; do
+          if [ "${r}" = "${ask}" ]; then
+            is_req=1
+            break
+          fi
+        done
+        if [ "${is_req}" -eq 1 ]; then
+          printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_BLUE}[requested]${CLR_RESET}\n" "${ask}"
+        elif [ "${ask}" = "ponytail" ]; then
+          printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_CYAN}[core]${CLR_RESET}\n" "${ask}"
+        else
+          printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_YELLOW}[prereq]${CLR_RESET}\n" "${ask}"
+        fi
+      done
+
+      echo ""
+      info "Available Catalog Skills (inactive):"
+      if [ -d "${vendor_base_dir}" ]; then
+        for vroot in "${vendor_base_dir}"/*/; do
+          [ -d "${vroot}" ] || continue
+          for cdir in "${vroot}"/*/; do
+            [ -d "${cdir}" ] || continue
+            for sdir in "${cdir}"/*/; do
+              [ -d "${sdir}" ] || continue
+              [ -f "${sdir}/SKILL.md" ] || continue
+              local sname
+              sname="$(basename "${sdir}")"
+              local is_act=0
+              for ask in ${active_skills}; do
+                if [ "${ask}" = "${sname}" ]; then
+                  is_act=1
+                  break
+                fi
+              done
+              if [ "${is_act}" -eq 0 ]; then
+                printf "  – %-24s (%s)\n" "${sname}" "${sdir#${vendor_base_dir}/}"
+              fi
+            done
+          done
+        done
+      fi
+      ;;
+
+    enable)
+      if [ $# -eq 0 ]; then
+        die "Usage: azg skill enable <skill_name...>"
+      fi
+      require_jq
+      ensure_dir "${AZG_GLOBAL_DIR}"
+      local current_req=()
+      if [ -f "${manifest_file}" ]; then
+        local existing
+        existing="$(jq -r '.skills[]? // empty' "${manifest_file}" 2>/dev/null || true)"
+        for ex in ${existing}; do
+          current_req+=("${ex}")
+        done
+      else
+        local defs
+        defs="$(_get_requested_skills "${manifest_file}")"
+        for d in ${defs}; do
+          current_req+=("${d}")
+        done
+      fi
+
+      for to_add in "$@"; do
+        if ! _find_skill_info "${vendor_base_dir}" "${to_add}" >/dev/null 2>&1; then
+          die "Skill '${to_add}' not found in vendor catalog (${vendor_base_dir})"
+        fi
+        current_req+=("${to_add}")
+      done
+
+      local tmp_m="${manifest_file}.azg.tmp"
+      if [ ${#current_req[@]} -gt 0 ]; then
+        printf '%s\n' "${current_req[@]}" | jq -R . | jq -s '{version: 1, skills: (. | map(select(length > 0)) | unique)}' > "${tmp_m}"
+      else
+        printf '{\n  "version": 1,\n  "skills": []\n}\n' > "${tmp_m}"
+      fi
+      mv "${tmp_m}" "${manifest_file}"
+      ok "Enabled skills: $*"
+      cmd_setup --force
+      ;;
+
+    disable)
+      if [ $# -eq 0 ]; then
+        die "Usage: azg skill disable <skill_name...>"
+      fi
+      require_jq
+      ensure_dir "${AZG_GLOBAL_DIR}"
+      local current_req=()
+      local defs
+      defs="$(_get_requested_skills "${manifest_file}")"
+      for d in ${defs}; do
+        [ -n "${d}" ] && current_req+=("${d}")
+      done
+
+      local new_req=()
+      for c in "${current_req[@]}"; do
+        local remove=0
+        for to_rm in "$@"; do
+          if [ "${c}" = "${to_rm}" ]; then
+            remove=1
+            break
+          fi
+        done
+        if [ "${remove}" -eq 0 ] && [ -n "${c}" ]; then
+          new_req+=("${c}")
+        fi
+      done
+
+      local tmp_m="${manifest_file}.azg.tmp"
+      if [ ${#new_req[@]} -gt 0 ]; then
+        printf '%s\n' "${new_req[@]}" | jq -R . | jq -s '{version: 1, skills: (. | map(select(length > 0)) | unique)}' > "${tmp_m}"
+      else
+        printf '{\n  "version": 1,\n  "skills": []\n}\n' > "${tmp_m}"
+      fi
+      mv "${tmp_m}" "${manifest_file}"
+      ok "Disabled skills: $*"
+      cmd_setup --force
+      ;;
+
+    *)
+      die "Unknown skill subcommand: '${subcmd}'. Usage: azg skill [list|enable|disable]"
+      ;;
+  esac
 }

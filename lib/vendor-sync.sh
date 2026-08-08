@@ -24,6 +24,7 @@ vendor_sync() {
 
   local upstream_matt="${AZG_VENDOR_UPSTREAM:-https://github.com/mattpocock/skills.git}"
   local upstream_pony="${AZG_PONYTAIL_UPSTREAM:-https://github.com/DietrichGebert/ponytail.git}"
+  local upstream_caveman="${AZG_CAVEMAN_UPSTREAM:-https://github.com/JuliusBrussee/caveman.git}"
 
   # -------------------------------------------------------------------------
   # Dependency check
@@ -36,11 +37,12 @@ vendor_sync() {
 
   clone_matt=""
   clone_pony=""
-  local commit_matt="" commit_pony=""
+  clone_caveman=""
+  local commit_matt="" commit_pony="" commit_caveman=""
 
   # Always clean up clone directories even on error or early return
   # shellcheck disable=SC2064
-  trap '_vendor_sync_cleanup "${clone_matt}"; _vendor_sync_cleanup "${clone_pony}"' RETURN
+  trap '_vendor_sync_cleanup "${clone_matt}"; _vendor_sync_cleanup "${clone_pony}"; _vendor_sync_cleanup "${clone_caveman}"' RETURN
 
   # 1. Sync mattpocock-skills
   step "vendor-sync: syncing mattpocock-skills"
@@ -56,7 +58,14 @@ vendor_sync() {
   fi
   _sync_one_repo "${clone_pony}" "${upstream_pony}" "${commit_pony}" "${azg_root}/templates/global/skills/vendor/ponytail-skills" "skills" "ponytail"
 
-  # 3. Sync ponytail AGENTS.md into template
+  # 3. Sync caveman-skills (catalog)
+  step "vendor-sync: syncing caveman-skills"
+  if ! _clone_upstream "${upstream_caveman}" "skills" clone_caveman commit_caveman; then
+    return 1
+  fi
+  _sync_one_repo "${clone_caveman}" "${upstream_caveman}" "${commit_caveman}" "${azg_root}/templates/global/skills/vendor/caveman-skills" "skills" "caveman"
+
+  # 4. Sync ponytail AGENTS.md into template
   step "vendor-sync: syncing ponytail AGENTS.md"
   _sync_ponytail_agents "${clone_pony}" "${azg_root}/templates/global/AGENTS.md"
 

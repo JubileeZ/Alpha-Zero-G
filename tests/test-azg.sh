@@ -44,17 +44,17 @@ else
   fail "settings.json not created globally"
 fi
 
-# 1b. Full vendor install (default)
+# 1b. Active vendor install (default curated set with prerequisites)
 if [ -d "${TEMP_HOME}/.gemini/config/skills/tdd" ] && \
-   [ -d "${TEMP_HOME}/.gemini/config/skills/teach" ] && \
+   [ -d "${TEMP_HOME}/.gemini/config/skills/grill-with-docs" ] && \
    [ -d "${TEMP_HOME}/.gemini/config/skills/writing-for-agents" ]; then
-  pass "setup copies core skills (tdd, teach, writing-for-agents)"
+  pass "setup copies active skills (tdd, grill-with-docs, writing-for-agents)"
 else
   fail "setup missing some skills"
 fi
 
 if [ -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ -d "${TEMP_HOME}/.gemini/config/skills/ponytail" ]; then
-  pass "setup installs full vendor set including setup-matt-pocock-skills and ponytail"
+  pass "setup installs active vendor set including setup-matt-pocock-skills and ponytail"
 else
   fail "setup missing previously non-core skills"
 fi

@@ -259,6 +259,12 @@ _render_vendor_antigravity_note() {
       vendor_path="ponytail-skills"
       tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (if any)."
       ;;
+    caveman-skills)
+      vendor_label="JuliusBrussee/caveman"
+      vendor_url="https://github.com/JuliusBrussee/caveman"
+      vendor_path="caveman-skills"
+      tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (if any)."
+      ;;
     *)
       die "apply_overlay: unknown vendor overlay '${overlay_name}'"
       ;;
@@ -288,6 +294,7 @@ _prune_vendor_skills() {
   local skills_dir="${1}"
   local vendor_dir="${2}"
   local count_var="${3}"
+  local active_skills_list="${4:-}"
 
   [ -d "${skills_dir}" ] || return 0
 
@@ -326,10 +333,60 @@ _prune_vendor_skills() {
       fi
     done
 
-    if [ "${found}" -eq 0 ]; then
-      warn "skill '${skill_name}' no longer in vendor — removing (deleted upstream)"
+    local is_active=1
+    if [ -n "${active_skills_list}" ]; then
+      is_active=0
+      for ask in ${active_skills_list}; do
+        if [ "${ask}" = "${skill_name}" ]; then
+          is_active=1
+          break
+        fi
+      done
+    fi
+
+    if [ "${found}" -eq 0 ] || [ "${is_active}" -eq 0 ]; then
+      warn "skill '${skill_name}' inactive or no longer in vendor — removing"
       rm -rf "${installed_dir}"
+      azg_ownership_list_remove skills "${skill_name}"
       # ponytail: indirect variable increment via printf+eval (no ((VAR++)) with set -e)
+      eval "${count_var}=\$(( \${${count_var}} + 1 ))"
+    fi
+  done
+  return 0
+}
+
+_prune_cursor_skills() {
+  local cursor_skills_dir="${1}"
+  local count_var="${2}"
+  local active_skills_list="${3:-}"
+
+  [ -d "${cursor_skills_dir}" ] || return 0
+
+  for installed_dir in "${cursor_skills_dir}"/*/; do
+    [ -d "${installed_dir}" ] || continue
+    local skill_name
+    skill_name="$(basename "${installed_dir}")"
+
+    # Only prune AZG-owned skills (sentinel file or in ownership list)
+    if [ ! -f "${installed_dir}/AZG-OWNED.md" ] && ! azg_ownership_list_owns cursor_skills "${skill_name}"; then
+      continue
+    fi
+
+    local is_active=1
+    if [ -n "${active_skills_list}" ]; then
+      is_active=0
+      for ask in ${active_skills_list}; do
+        if [ "${ask}" = "${skill_name}" ]; then
+          is_active=1
+          break
+        fi
+      done
+    fi
+
+    if [ "${is_active}" -eq 0 ]; then
+      warn "Cursor skill '${skill_name}' inactive — removing"
+      rm -rf "${installed_dir}"
+      azg_ownership_list_remove cursor_skills "${skill_name}"
       eval "${count_var}=\$(( \${${count_var}} + 1 ))"
     fi
   done
