@@ -17,4 +17,4 @@ Gemini skills keep `ANTIGRAVITY-NOTE.md`. Cursor skills use `AZG-OWNED.md` (neut
 
 ## Cursor Rule Source of Truth
 
-`templates/global/AGENTS.md` is canonical for shared rule prose. `azg setup` extracts marked blocks (`PONYTAIL:MANAGED` and `AZG:AGENT-INSTRUCTIONS`) and composes them with Cursor-only frontmatter stubs into `~/.cursor/rules/azg-*.mdc`. Missing, duplicated, reversed, or empty marker blocks fail setup instead of installing stale rules.
+`templates/global/AGENTS.md` is canonical for shared rule prose. `azg setup` extracts marked block `AZG:AGENT-INSTRUCTIONS` and composes it with Cursor-only frontmatter stub into `~/.cursor/rules/azg-agent-instructions.mdc`. Missing, duplicated, reversed, or empty marker blocks fail setup instead of installing stale rules. Always-on `PONYTAIL:MANAGED` / `azg-ponytail.mdc` **retired** (ADR 0015); ponytail lives in vendor skills catalog only.

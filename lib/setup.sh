@@ -15,9 +15,6 @@ _cursor_rule_markers() {
   local rule_base="${1}"
 
   case "${rule_base}" in
-    azg-ponytail.mdc)
-      printf '%s\n' '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->'
-      ;;
     azg-agent-instructions.mdc)
       printf '%s\n' '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
       ;;
@@ -427,66 +424,86 @@ active: ${active_skills}"
     info "AGENTS.md already up-to-date, skipping"
     azg_ownership_set_flag agents true
   else
-    if extract_managed_block "${AZG_GLOBAL_AGENTS}" \
-      '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->' > /dev/null 2>&1; then
+    # Owned / azg-marked AGENTS: sync AGENT-INSTRUCTIONS; strip legacy PONYTAIL if present
+    local _has_ai=0 _has_pony=0 _ai_ok=0 _pony_ok=0
+    grep -q '<!-- AZG:AGENT-INSTRUCTIONS:' "${AZG_GLOBAL_AGENTS}" 2>/dev/null && _has_ai=1
+    grep -q '<!-- PONYTAIL:MANAGED:' "${AZG_GLOBAL_AGENTS}" 2>/dev/null && _has_pony=1
+    extract_managed_block "${AZG_GLOBAL_AGENTS}" \
+      '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->' > /dev/null 2>&1 && _ai_ok=1
+    extract_managed_block "${AZG_GLOBAL_AGENTS}" \
+      '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->' > /dev/null 2>&1 && _pony_ok=1
+    if { [ "${_has_ai}" -eq 1 ] && [ "${_ai_ok}" -eq 0 ]; } \
+      || { [ "${_has_pony}" -eq 1 ] && [ "${_pony_ok}" -eq 0 ]; }; then
+      die "Owned AGENTS.md has malformed managed markers; use --force to refresh"
+    fi
+    if [ "${_ai_ok}" -eq 1 ] || [ "${_pony_ok}" -eq 1 ] \
+      || [ "$(azg_ownership_get agents)" = "true" ]; then
       local agents_sync_tmp="${AZG_GLOBAL_AGENTS}.azg.sync.tmp"
       if ! cp "${AZG_GLOBAL_AGENTS}" "${agents_sync_tmp}"; then
-        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
         rm -f "${agents_sync_tmp}"
         die "Failed to prepare AGENTS.md sync temporary"
       fi
-      if ! extract_managed_block "${agents_sync_tmp}" \
-        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' \
-        '<!-- AZG:AGENT-INSTRUCTIONS:END -->' > /dev/null 2>&1; then
-        _migrate_agent_instruction_markers "${agents_sync_tmp}" || {
-          # DESTRUCTIVE: remove failed AGENTS.md sync temporary
-          rm -f "${agents_sync_tmp}"
-          die "Owned AGENTS.md lacks migratable agent-instruction markers; use --force to refresh"
-        }
+      if [ "${_ai_ok}" -eq 0 ]; then
+        if [ "${_pony_ok}" -eq 1 ]; then
+          # Legacy owned file: strip pony then append AGENT-INSTRUCTIONS
+          :
+        else
+          _migrate_agent_instruction_markers "${agents_sync_tmp}" || {
+            rm -f "${agents_sync_tmp}"
+            die "Owned AGENTS.md lacks migratable agent-instruction markers; use --force to refresh"
+          }
+        fi
       fi
-      local new_ponytail
-      new_ponytail="$(extract_managed_block "${template_agents}" \
-        '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->')" || {
-        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
-        rm -f "${agents_sync_tmp}"
-        die "Failed to extract AGENTS.md ponytail block"
-      }
       local new_agent_instructions
       new_agent_instructions="$(extract_managed_block "${template_agents}" \
-        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->')" || {
-        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
+        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' \
+        '<!-- AZG:AGENT-INSTRUCTIONS:END -->')" || {
         rm -f "${agents_sync_tmp}"
         die "Failed to extract AGENTS.md agent-instruction block"
       }
-      if ! replace_managed_block "${agents_sync_tmp}" \
-        "<!-- PONYTAIL:MANAGED:START -->" "<!-- PONYTAIL:MANAGED:END -->" "${new_ponytail}" ||
-        ! replace_managed_block "${agents_sync_tmp}" \
+      # Strip retired always-on ponytail (ADR 0015)
+      if grep -q '<!-- PONYTAIL:MANAGED:START -->' "${agents_sync_tmp}" 2>/dev/null; then
+        remove_managed_block "${agents_sync_tmp}" \
+          "<!-- PONYTAIL:MANAGED:START -->" "<!-- PONYTAIL:MANAGED:END -->" || {
+          rm -f "${agents_sync_tmp}"
+          die "Failed to remove legacy PONYTAIL block from AGENTS.md"
+        }
+      fi
+      if extract_managed_block "${agents_sync_tmp}" \
+        '<!-- AZG:AGENT-INSTRUCTIONS:START -->' \
+        '<!-- AZG:AGENT-INSTRUCTIONS:END -->' > /dev/null 2>&1; then
+        if ! replace_managed_block "${agents_sync_tmp}" \
           "<!-- AZG:AGENT-INSTRUCTIONS:START -->" \
           "<!-- AZG:AGENT-INSTRUCTIONS:END -->" "${new_agent_instructions}"; then
-        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
-        rm -f "${agents_sync_tmp}"
-        die "Failed to update AGENTS.md managed blocks"
+          rm -f "${agents_sync_tmp}"
+          die "Failed to update AGENTS.md agent-instruction block"
+        fi
+      else
+        # No instructions block left after strip — append template block
+        {
+          printf '\n'
+          printf '%s\n' '<!-- AZG:AGENT-INSTRUCTIONS:START -->'
+          printf '%s\n' "${new_agent_instructions}"
+          printf '%s\n' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
+        } >>"${agents_sync_tmp}"
       fi
-      # DESTRUCTIVE: replace owned global AGENTS.md with synchronized blocks
       if ! atomic_copy "${agents_sync_tmp}" "${AZG_GLOBAL_AGENTS}"; then
-        # DESTRUCTIVE: remove failed AGENTS.md sync temporary
         rm -f "${agents_sync_tmp}"
         die "Failed to install synchronized AGENTS.md"
       fi
-      # DESTRUCTIVE: remove completed AGENTS.md sync temporary
       rm -f "${agents_sync_tmp}"
       azg_ownership_set_flag agents true
       ok "Updated: AGENTS.md managed blocks (global)"
     elif [ "$(azg_ownership_get agents)" = "true" ]; then
-      if grep -q '<!-- PONYTAIL:MANAGED:' "${AZG_GLOBAL_AGENTS}" ||
-        grep -q '<!-- AZG:AGENT-INSTRUCTIONS:' "${AZG_GLOBAL_AGENTS}"; then
+      if grep -q '<!-- AZG:AGENT-INSTRUCTIONS:' "${AZG_GLOBAL_AGENTS}" ||
+        grep -q '<!-- PONYTAIL:MANAGED:' "${AZG_GLOBAL_AGENTS}"; then
         die "Owned AGENTS.md has malformed managed markers; use --force to refresh"
       fi
       cp "${AZG_GLOBAL_AGENTS}" "${AZG_GLOBAL_AGENTS}.bak"
       atomic_copy "${template_agents}" "${AZG_GLOBAL_AGENTS}"
       ok "Installed: AGENTS.md (global, owned file refreshed; backup .bak)"
     else
-      warn "Foreign AGENTS.md (no PONYTAIL markers) — skipping (use --force to overwrite)"
+      warn "Foreign AGENTS.md (no AZG:AGENT-INSTRUCTIONS markers) — skipping (use --force to overwrite)"
     fi
   fi
 
@@ -636,6 +653,7 @@ active: ${active_skills}"
 
   # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)
   local cursor_rules_installed=0
+  local cursor_rules_pruned=0
   if [ -d "${cursor_rules_tmpl_dir}" ]; then
     local rule_src rule_base rule_dest
     for rule_src in "${cursor_rules_tmpl_dir}"/azg-*.mdc; do
@@ -651,6 +669,24 @@ active: ${active_skills}"
       cursor_rules_installed=$((cursor_rules_installed + 1))
       ok "Installed Cursor rule: ${rule_base}"
     done
+    # Prune owned rules no longer in templates (e.g. retired azg-ponytail.mdc)
+    local owned_rule own_path
+    own_path="$(azg_ownership_path)"
+    if [ -f "${own_path}" ]; then
+      while IFS= read -r owned_rule; do
+        [ -n "${owned_rule}" ] || continue
+        if [ ! -f "${cursor_rules_tmpl_dir}/${owned_rule}" ]; then
+          if [ -f "${AZG_CURSOR_RULES_DIR}/${owned_rule}" ]; then
+            rm -f "${AZG_CURSOR_RULES_DIR}/${owned_rule}"
+            ok "Removed retired Cursor rule: ${owned_rule}"
+          fi
+          azg_ownership_list_remove cursor_rules "${owned_rule}"
+          cursor_rules_pruned=$((cursor_rules_pruned + 1))
+        fi
+      done <<EOF
+$(jq -r '.cursor_rules[]? // empty' "${own_path}")
+EOF
+    fi
   else
     warn "Cursor rules template dir missing: ${cursor_rules_tmpl_dir}"
   fi
@@ -668,6 +704,7 @@ active: ${active_skills}"
   fi
   [ "${skills_pruned}" -gt 0 ] && _sum_skills="${_sum_skills}, ${skills_pruned} removed (deleted/inactive)"
   [ "${cursor_rules_installed}" -gt 0 ] && _sum_skills="${_sum_skills}, ${cursor_rules_installed} Cursor rule(s)"
+  [ "${cursor_rules_pruned}" -gt 0 ] && _sum_skills="${_sum_skills}, ${cursor_rules_pruned} retired Cursor rule(s) removed"
 
   ok "Setup complete. ${_sum_skills}."
   info "Global config: ${AZG_GLOBAL_DIR}"

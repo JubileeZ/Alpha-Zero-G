@@ -79,7 +79,8 @@ cmd_uninstall() {
 
   # AGENTS: owned flag or managed markers
   if [ -f "${AZG_GLOBAL_AGENTS}" ]; then
-    if [ "$(azg_ownership_get agents)" = "true" ] || grep -q '<!-- PONYTAIL:MANAGED:START -->' "${AZG_GLOBAL_AGENTS}" 2>/dev/null; then
+    if [ "$(azg_ownership_get agents)" = "true" ] || grep -q '<!-- AZG:AGENT-INSTRUCTIONS:START -->' "${AZG_GLOBAL_AGENTS}" 2>/dev/null \
+      || grep -q '<!-- PONYTAIL:MANAGED:START -->' "${AZG_GLOBAL_AGENTS}" 2>/dev/null; then
       rm -f "${AZG_GLOBAL_AGENTS}"
       ok "Removed: ${AZG_GLOBAL_AGENTS}"
       removed=1

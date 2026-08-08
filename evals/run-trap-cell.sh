@@ -86,11 +86,9 @@ case "${ARM}" in
       bash "${ROOT}/evals/trap-fable-pack.sh" inject "${WT}"
       git add -A
       git -c user.email=azg@test -c user.name=azg commit -qm "inject fable-method" >/dev/null || true
-    elif [ "${TRAP_CANDIDATE_PACK:-}" = "unified-pipeline" ]; then
-      # Candidate Treatment from templates/candidates/unified-pipeline/ (not global promote)
-      EVAL_HOME="${ROOT}/evals/traps/homes/candidate-unified-pipeline"
-      bash "${ROOT}/evals/stage-unified-pipeline-home.sh" "${EVAL_HOME}"
     else
+      # Default / unknown pack: Candidate = global Device Setup at AZG_CANDIDATE_REF
+      # Custom packs: add elif + stage-<pack>-home.sh under templates/candidates/<pack>/
       CAN_SHA="$(git -C "${ROOT}" rev-parse "${CANDIDATE_REF}^{commit}")"
       EVAL_HOME="${ROOT}/evals/traps/homes/candidate-${CAN_SHA}"
       bash "${ROOT}/evals/stage-eval-home.sh" "${CAN_SHA}" "${EVAL_HOME}"

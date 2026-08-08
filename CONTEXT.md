@@ -21,8 +21,8 @@ Running eval Agent CLI calls so host Device Setup (`~/.cursor` rules/skills) can
 _Avoid_: Clean HOME ritual only, trust host ~/.cursor
 
 **Eval Device Home**:
-Staged per-arm fake `$HOME` fragment (azg-owned Ponytail + AGENT-INSTRUCTIONS + optional azg skills from a git ref) mounted read-only into the Docker eval agent — mimics Device Setup without host leakage. Baseline omits it.
-_Avoid_: Worktree inject of global rules, mounting host ~/.cursor, full vendor skill forest in eval home
+Staged per-arm fake `$HOME` fragment (azg-owned AGENT-INSTRUCTIONS + optional azg skills from a git ref) mounted read-only into the Docker eval agent — mimics Device Setup without host leakage. Baseline omits it. Always-on ponytail not staged (ADR 0015).
+_Avoid_: Host ~/.cursor mount, worktree inject of global rules, full vendor skill forest in eval home
 
 **Current Treatment**:
 Evaluation arm with the shipped Alpha-Zero-G harness as of the run (no Candidate changes).
@@ -31,6 +31,10 @@ _Avoid_: Production harness, old core, control with azg
 **Candidate Treatment**:
 Evaluation arm with Current Treatment plus one proposed change under test for adoption.
 _Avoid_: Experimental profile, feature flag arm, core+addon
+
+**Ponytail**:
+On-demand lazy-senior coding skill from vendor catalog (`ponytail-skills`). **Not** Device Setup always-on (ADR 0015) — no `PONYTAIL:MANAGED` in global AGENTS, no `azg-ponytail.mdc`.
+_Avoid_: Always-on ponytail rule, nested PONYTAIL in Device Setup AGENTS
 
 **Delivery Cost**:
 Native model token usage or spend for a task run when available. Optional on trap notes; **never a Process Gate promote input** (ADR 0012) — promote uses trap pass rates + isolation=docker. Wall time and human interventions are separate reported measures.
@@ -161,10 +165,10 @@ On-demand azg-owned skill that binds a sector’s minimum evidence set, authorit
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
 
 **Orchestrate Skill**:
-On-demand skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). Shipped in unified-pipeline Candidate (`templates/candidates/…/skills/orchestrate`); not in Device Setup `templates/global/` until Trap promote (ADR 0014).
+On-demand skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). **Parked** — not in current Candidate (instructions-only) nor `templates/global/` (ADR 0014 amend).
 _Avoid_: fable-loop as device skill id, Act as always-on default, azg-orchestrate (removed global name)
 
 **Method Naming**:
-Device paths and skill names use azg labels (`orchestrate`, `judge`, Agent Harness Pipeline), not `fable-*`. Opaque product name + Claude-ecosystem branding; project is host-agnostic. Credit Sahir619/fable-method in NOTICE / ADR 0014 / §7 — rename ≠ hide origin.
+When shipping method skills/paths: use azg labels (`orchestrate`, `judge`), not `fable-*`. Opaque product name + Claude-ecosystem branding; project is host-agnostic. Credit Sahir619/fable-method when content derives from it.
 _Avoid_: fable-method on device, fable-loop, fable-judge as shipped skill ids
 

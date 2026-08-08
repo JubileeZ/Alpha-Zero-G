@@ -15,14 +15,15 @@ export PATH="${HOME}/.local/bin:${PATH}"
 export TRAP_MODEL="${TRAP_MODEL:-gpt-5.6-luna-low}"
 export TRAP_JOBS="${TRAP_JOBS:-14}"
 export AZG_CURRENT_REF="${AZG_CURRENT_REF:-HEAD}"
-export TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-unified-pipeline}"
+export TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-}"
 export AZG_CANDIDATE_REF="${AZG_CANDIDATE_REF:-HEAD}"
 export AZG_EVAL_DOCKER="${AZG_EVAL_DOCKER:-1}"
 export TRAP_CHANGE_TYPE="${TRAP_CHANGE_TYPE:-process_gate}"
 export TRAP_FULL=1
 export TRAP_IDS="${TRAP_IDS:-}"
 EXPECTED_R="${TRAP_EXPECTED_R:-5}"
-PARENT="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/gate-${TRAP_CANDIDATE_PACK}}"
+PACK_LABEL="${TRAP_CANDIDATE_PACK:-current}"
+PARENT="${TRAP_CAMP:-${ROOT}/evals/traps/campaigns/gate-${PACK_LABEL}}"
 
 FORCE_FLAG=""
 YES=0
@@ -54,7 +55,7 @@ mkdir -p "${PARENT}"
 } >"${PARENT}/meta.json"
 
 echo $$ >"${PARENT}/campaign.pid"
-info "PROCESS GATE model=${TRAP_MODEL} pack=${TRAP_CANDIDATE_PACK} parent=${PARENT} expected_r=${EXPECTED_R}"
+info "PROCESS GATE model=${TRAP_MODEL} pack=${PACK_LABEL} parent=${PARENT} expected_r=${EXPECTED_R}"
 
 run_round() {
   local i="$1"

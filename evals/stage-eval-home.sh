@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # evals/stage-eval-home.sh — stage azg-owned Device Setup core into a fake HOME (ADR 0013).
 # Usage: bash evals/stage-eval-home.sh <git-ref> <dest-dir>
-# Contents: Ponytail + AGENT-INSTRUCTIONS .mdc (Eval Device Home core).
+# Contents: AGENT-INSTRUCTIONS .mdc only (ponytail retired from always-on — ADR 0015).
 # Clean slate: azg distill skills NOT staged unless AZG_EVAL_AZG_SKILLS=1
 # (and templates/global/skills/azg/<name> exist at ref).
 # When ref resolves to HEAD, prefer worktree templates (uncommitted Candidate OK).
@@ -30,12 +30,12 @@ SHIP_SKILLS=0
 case "${AZG_EVAL_AZG_SKILLS:-0}" in
   1|true|TRUE|yes|YES|on|ON) SHIP_SKILLS=1 ;;
 esac
-FINGERPRINT="${SHA}:wt${USE_WT}:sk${SHIP_SKILLS}:ag${AGENTS_HASH}"
+FINGERPRINT="${SHA}:wt${USE_WT}:sk${SHIP_SKILLS}:ag${AGENTS_HASH}:nopony"
 MARKER="${DEST}/.azg-eval-home-ref"
 
 if [ -f "${MARKER}" ] && [ "$(cat "${MARKER}")" = "${FINGERPRINT}" ] \
-  && [ -f "${DEST}/.cursor/rules/azg-ponytail.mdc" ] \
-  && [ -f "${DEST}/.cursor/rules/azg-agent-instructions.mdc" ]; then
+  && [ -f "${DEST}/.cursor/rules/azg-agent-instructions.mdc" ] \
+  && [ ! -f "${DEST}/.cursor/rules/azg-ponytail.mdc" ]; then
   info "eval home ready ${DEST} @ ${FINGERPRINT}"
   exit 0
 fi
@@ -59,7 +59,8 @@ cleanup_lock() { rmdir "${LOCKDIR}" 2>/dev/null || true; }
 trap cleanup_lock EXIT
 
 if [ -f "${MARKER}" ] && [ "$(cat "${MARKER}")" = "${FINGERPRINT}" ] \
-  && [ -f "${DEST}/.cursor/rules/azg-ponytail.mdc" ]; then
+  && [ -f "${DEST}/.cursor/rules/azg-agent-instructions.mdc" ] \
+  && [ ! -f "${DEST}/.cursor/rules/azg-ponytail.mdc" ]; then
   info "eval home ready ${DEST} @ ${FINGERPRINT}"
   exit 0
 fi
@@ -91,7 +92,6 @@ render_rule() {
 }
 
 mkdir -p "${TMP}/.cursor/rules" "${TMP}/.cursor/skills" "${TMP}/.agents/skills"
-render_rule azg-ponytail.mdc '<!-- PONYTAIL:MANAGED:START -->' '<!-- PONYTAIL:MANAGED:END -->'
 render_rule azg-agent-instructions.mdc '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
 
 if [ "${SHIP_SKILLS}" -eq 1 ]; then

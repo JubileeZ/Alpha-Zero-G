@@ -17,8 +17,8 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/unified-pipeline/` | Pipeline AGENTS **no nested ponytail** (ablation); prior xhigh rates wiped; **re-gate via Process Gate @ luna-low** (ADR 0014 promote TBD) |
-| Azg-owned skills | *(deleted from global)* | Distill skills removed clean slate 2026-08-07; candidate skills isolated in `templates/candidates/` |
+| Intent-gates Candidate | `templates/candidates/` | **Clean slot** — prior unified-pipeline promoted (ADR 0015); see `candidates/README.md` |
+| Azg-owned skills | *(deleted from global)* | Distill skills removed; ponytail = **vendor catalog only** (not always-on) |
 | Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **no** `test-lite`; Windows shellcheck zip; jq fallback; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -48,7 +48,8 @@
 | Item | Notes |
 |------|-------|
 | Fable-method distill + re-gate | Re-earn from durable gaps only; or park |
-| Unified-pipeline Candidate → global | Staged under `templates/candidates/`; Trap promote before `templates/global/` (ADR 0014) |
+| Unified-pipeline Candidate → global | **Done** ADR 0015 — Candidate slot cleared for next pack |
+| Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
 Delivery Cost auto-capture: parked / out of scope for now (never a promote input).
@@ -61,6 +62,7 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
 | `bash evals/traps/run-process-gate.sh` | Sole Process Gate (Preview → ask → Adopt Ledger R=5) |
+| `./azg setup` / `./azg setup --force` | Install Device Setup (AGENT-INSTRUCTIONS; prune retired ponytail rule) |
 | `bash evals/analyze-trap-ledger.sh <parent>` | `LEDGER.md` + recommend |
 | `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |
 | `bash evals/run-trap-campaign.sh --jobs 14 --arm ARM` | Parallel scenarios for one arm |

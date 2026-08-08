@@ -65,9 +65,8 @@ vendor_sync() {
   fi
   _sync_one_repo "${clone_caveman}" "${upstream_caveman}" "${commit_caveman}" "${azg_root}/templates/global/skills/vendor/caveman-skills" "skills" "caveman"
 
-  # 4. Sync ponytail AGENTS.md into template
-  step "vendor-sync: syncing ponytail AGENTS.md"
-  _sync_ponytail_agents "${clone_pony}" "${azg_root}/templates/global/AGENTS.md"
+  # 4. Ponytail AGENTS always-on sync retired (ADR 0015) — vendor skills only
+  info "vendor-sync: skipping ponytail AGENTS.md inject (always-on retired; catalog remains)"
 
   ok "vendor-sync complete"
   ok "Run 'azg setup' on each device to push vendor changes to ~/.gemini/antigravity-cli/"

@@ -21,11 +21,21 @@ for bad in 'Intent gates' 'Prove stance' 'INTENT:' 'AUTH:' 'TWINS:' 'PENDING:' '
   fi
 done
 
-section "2. ponytail untouched + azg skills deleted"
-if grep -q 'PONYTAIL:MANAGED:START' "${AGENTS}" && grep -q 'lazy senior' "${AGENTS}"; then
-  pass "ponytail block present"
+section "2. always-on ponytail retired + azg skills deleted"
+if grep -q 'PONYTAIL:MANAGED' "${AGENTS}" || grep -qi 'lazy senior' "${AGENTS}"; then
+  fail "ponytail must not be in Device Setup AGENTS (ADR 0015)" ""
 else
-  fail "ponytail missing" ""
+  pass "no always-on ponytail in global AGENTS"
+fi
+if [ -f "${REPO_ROOT}/templates/global/cursor/rules/azg-ponytail.mdc" ]; then
+  fail "azg-ponytail.mdc stub must be deleted" ""
+else
+  pass "azg-ponytail.mdc stub gone"
+fi
+if [ -d "${REPO_ROOT}/templates/global/skills/vendor/ponytail-skills" ]; then
+  pass "ponytail remains vendor catalog skill"
+else
+  fail "vendor ponytail-skills missing" ""
 fi
 if [ -d "${REPO_ROOT}/templates/global/skills/azg" ]; then
   fail "skills/azg still present" ""

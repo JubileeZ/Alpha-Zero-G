@@ -27,14 +27,20 @@ fi
 
 section "1. setup installs Cursor skill + AZG-OWNED.md; never skills-cursor"
 
-# Foreign Cursor rule + foreign skill present before setup
+# Pre-existing owned-style AGENTS (legacy ponytail + instructions) — setup must strip pony + refresh instructions
 mkdir -p "${TEMP_HOME}/.cursor/rules"
 mkdir -p "${TEMP_HOME}/.cursor/skills/my-foreign-skill"
 mkdir -p "${TEMP_HOME}/.cursor/skills-cursor/builtin-keep"
 mkdir -p "${TEMP_HOME}/.gemini/config"
-awk '$0 != "<!-- AZG:AGENT-INSTRUCTIONS:START -->" && \
-  $0 != "<!-- AZG:AGENT-INSTRUCTIONS:END -->"' \
-  "${TEMP_REPO}/templates/global/AGENTS.md" > "${TEMP_HOME}/.gemini/config/AGENTS.md"
+cat > "${TEMP_HOME}/.gemini/config/AGENTS.md" <<'EOF'
+<!-- PONYTAIL:MANAGED:START -->
+# legacy ponytail block (must be removed by setup)
+<!-- PONYTAIL:MANAGED:END -->
+
+<!-- AZG:AGENT-INSTRUCTIONS:START -->
+# AGENT INSTRUCTIONS: stale placeholder
+<!-- AZG:AGENT-INSTRUCTIONS:END -->
+EOF
 printf '%s\n' '# foreign user rule' > "${TEMP_HOME}/.cursor/rules/user-preference.mdc"
 printf '%s\n' '# foreign azg-named rule' > "${TEMP_HOME}/.cursor/rules/azg-foreign.mdc"
 printf '%s\n' '# foreign skill' > "${TEMP_HOME}/.cursor/skills/my-foreign-skill/SKILL.md"
@@ -49,15 +55,15 @@ assert_file_exists "Cursor skill has AZG-OWNED.md sentinel" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/AZG-OWNED.md"
 assert_file_exists "global AGENTS.md installed" \
   "${TEMP_HOME}/.gemini/config/AGENTS.md"
-assert_file_exists "azg-owned global rule installed" \
-  "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 assert_file_exists "azg-owned agent-instructions rule installed" \
   "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"
+assert_file_not_exists "retired azg-ponytail.mdc not installed" \
+  "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 
-if grep -q 'alwaysApply:\s*true' "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc" 2>/dev/null; then
-  pass "azg-ponytail.mdc is alwaysApply"
+if grep -q 'alwaysApply:\s*true' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" 2>/dev/null; then
+  pass "azg-agent-instructions.mdc is alwaysApply"
 else
-  fail "azg-ponytail.mdc missing alwaysApply: true"
+  fail "azg-agent-instructions.mdc missing alwaysApply: true"
 fi
 
 if grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" 2>/dev/null; then
@@ -73,14 +79,10 @@ else
   fail "setup left global AGENTS.md without agent-instruction markers"
 fi
 
-expected_ponytail="$(awk '/<!-- PONYTAIL:MANAGED:START -->/{f=1; next} /<!-- PONYTAIL:MANAGED:END -->/{f=0; next} f {sub(/\r$/, ""); print}' \
-  "${TEMP_REPO}/templates/global/AGENTS.md")"
-actual_ponytail="$(awk 'BEGIN{frontmatter=0} /^---$/{frontmatter += 1; next} frontmatter >= 2 {print}' \
-  "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc")"
-if [ "${actual_ponytail}" = "${expected_ponytail}" ]; then
-  pass "azg-ponytail.mdc body matches AGENTS.md source block"
+if ! grep -q 'PONYTAIL:MANAGED' "${TEMP_HOME}/.gemini/config/AGENTS.md"; then
+  pass "global AGENTS.md has no always-on ponytail"
 else
-  fail "azg-ponytail.mdc body drifted from AGENTS.md source block"
+  fail "ponytail still in installed AGENTS.md"
 fi
 
 expected_agent_instructions="$(awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{f=1; next} /<!-- AZG:AGENT-INSTRUCTIONS:END -->/{f=0; next} f {sub(/\r$/, ""); print}' \
@@ -131,15 +133,15 @@ if [ -f "${OWN}" ] && jq -e --arg s "${SAMPLE_SKILL}" '(.cursor_skills // []) | 
 else
   fail "ownership missing cursor_skills for ${SAMPLE_SKILL}"
 fi
-if [ -f "${OWN}" ] && jq -e '(.cursor_rules // []) | index("azg-ponytail.mdc") != null' "${OWN}" >/dev/null; then
-  pass "ownership lists cursor_rules azg-ponytail.mdc"
-else
-  fail "ownership missing cursor_rules azg-ponytail.mdc"
-fi
 if [ -f "${OWN}" ] && jq -e '(.cursor_rules // []) | index("azg-agent-instructions.mdc") != null' "${OWN}" >/dev/null; then
   pass "ownership lists cursor_rules azg-agent-instructions.mdc"
 else
   fail "ownership missing cursor_rules azg-agent-instructions.mdc"
+fi
+if [ -f "${OWN}" ] && jq -e '(.cursor_rules // []) | index("azg-ponytail.mdc") == null' "${OWN}" >/dev/null; then
+  pass "ownership does not list retired azg-ponytail.mdc"
+else
+  fail "ownership still lists azg-ponytail.mdc"
 fi
 
 section "1b. clean slate — azg distill skills removed + no Prove in always-on"
@@ -218,13 +220,13 @@ awk -v end='<!-- AZG:AGENT-INSTRUCTIONS:END -->' \
   "${TEMP_REPO}/templates/global/AGENTS.md" > "${MALFORMED_AGENTS}"
 assert_marker_rejected "substring AGENTS.md marker" "${MALFORMED_AGENTS}"
 
-MALFORMED_AGENTS="${TEMP_HOME}/AGENTS-missing-ponytail-marker.md"
-awk '$0 != "<!-- PONYTAIL:MANAGED:END -->"' \
+MALFORMED_AGENTS="${TEMP_HOME}/AGENTS-missing-instructions-marker.md"
+awk '$0 != "<!-- AZG:AGENT-INSTRUCTIONS:END -->"' \
   "${TEMP_REPO}/templates/global/AGENTS.md" > "${MALFORMED_AGENTS}"
-assert_marker_rejected "missing ponytail marker" "${MALFORMED_AGENTS}"
+assert_marker_rejected "missing agent-instructions end marker" "${MALFORMED_AGENTS}"
 
 MALFORMED_GLOBAL="${TEMP_HOME}/.gemini/config/AGENTS.md.malformed"
-awk '$0 != "<!-- PONYTAIL:MANAGED:END -->"' \
+awk '$0 != "<!-- AZG:AGENT-INSTRUCTIONS:END -->"' \
   "${TEMP_HOME}/.gemini/config/AGENTS.md" > "${MALFORMED_GLOBAL}"
 # DESTRUCTIVE: replace mocked AGENTS.md with malformed managed markers
 mv "${MALFORMED_GLOBAL}" "${TEMP_HOME}/.gemini/config/AGENTS.md"
@@ -240,10 +242,10 @@ assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
 assert_file_not_exists "uninstall removed azg-method-refs (already parked)" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
-assert_file_not_exists "uninstall removed azg-ponytail.mdc" \
-  "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 assert_file_not_exists "uninstall removed azg-agent-instructions.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"
+assert_file_not_exists "uninstall left no azg-ponytail.mdc" \
+  "${TEMP_HOME}/.cursor/rules/azg-ponytail.mdc"
 
 if [ -f "${TEMP_HOME}/.cursor/rules/user-preference.mdc" ]; then
   pass "uninstall left foreign Cursor rule"

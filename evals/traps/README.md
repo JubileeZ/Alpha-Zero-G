@@ -29,7 +29,7 @@ agent login   # once on host — auth.json or CURSOR_API_KEY used inside eval co
 bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 ```
 
-**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). `unified-pipeline` Candidate uses `stage-unified-pipeline-home.sh`. `AZG_EVAL_DOCKER=0` = host smoke only; analyze refuses promote unless `isolation=docker`.
+**Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). Custom Candidate packs: `templates/candidates/<pack>/` + stager (see that README). `AZG_EVAL_DOCKER=0` = host smoke only; analyze refuses promote unless `isolation=docker`.
 
 ## Default policy (ADR 0012)
 
@@ -46,7 +46,7 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 export PATH="$HOME/.local/bin:$PATH"
 cd /path/to/alpha-zero-g
 
-export TRAP_CANDIDATE_PACK=unified-pipeline   # or fable-method / none
+export TRAP_CANDIDATE_PACK=   # empty = Candidate arm stages Current global; or fable-method / <pack-id>
 export TRAP_CAMP="$PWD/evals/traps/campaigns/gate-${TRAP_CANDIDATE_PACK}"
 bash evals/traps/run-process-gate.sh
 # after Preview: answer y to continue, or:

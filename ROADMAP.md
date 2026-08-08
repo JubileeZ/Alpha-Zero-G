@@ -31,7 +31,8 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Trap Eval Isolation + Device Home (ADR 0013)
 - [x] Clean slate always-on + delete `skills/azg/`
 - [x] Process Gate = Preview + Adopt Ledger **R=5** @ `luna-low` (`run-process-gate.sh`); prior xhigh/Smoke/tiered path retired
-- [ ] Re-earn distill from durable gaps (see `evals/traps/CAMPAIGN.md`) or park — re-baseline after clean ledger
+- [x] Promote instructions-only Candidate — always-on ponytail retired (ADR 0015); vendor `ponytail-skills` remains
+- [ ] Re-earn distill from durable gaps (see `evals/traps/CAMPAIGN.md`) or park — re-baseline after promote
 - [x] Wipe incomparable camps + rate research (apple-to-apple)
 
 Live notes: `evals/traps/CAMPAIGN.md`.

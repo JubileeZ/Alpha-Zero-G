@@ -288,6 +288,59 @@ replace_managed_block() {
   return 0
 }
 
+# remove_managed_block TARGET_FILE START_MARKER END_MARKER
+# Deletes one ordered marker pair and content between (inclusive). Returns 1 if absent/malformed.
+remove_managed_block() {
+  local target="${1}"
+  local start_marker="${2}"
+  local end_marker="${3}"
+
+  [ -f "${target}" ] || return 1
+
+  local marker_state
+  marker_state="$(awk -v start="${start_marker}" -v end="${end_marker}" '
+    {
+      line = $0
+      sub(/\r$/, "", line)
+    }
+    line == start { starts += 1; if (ends == 0) order_ok = 1 }
+    line == end { ends += 1 }
+    END {
+      if (starts == 1 && ends == 1 && order_ok == 1) print "ok"
+      else print "bad"
+    }
+  ' "${target}")"
+  if [ "${marker_state}" != "ok" ]; then
+    return 1
+  fi
+
+  export _RMB_START="${start_marker}"
+  export _RMB_END="${end_marker}"
+  local remove_tmp="${target}.azg.remove.tmp"
+  if ! awk '
+  BEGIN { in_block = 0 }
+  {
+      line = $0
+      sub(/\r$/, "", line)
+  }
+  line == ENVIRON["_RMB_START"] { in_block = 1; next }
+  line == ENVIRON["_RMB_END"] { in_block = 0; next }
+  !in_block { print line }
+  ' "${target}" > "${remove_tmp}"; then
+    rm -f "${remove_tmp}"
+    unset _RMB_START _RMB_END
+    return 1
+  fi
+  if ! atomic_copy "${remove_tmp}" "${target}"; then
+    rm -f "${remove_tmp}"
+    unset _RMB_START _RMB_END
+    return 1
+  fi
+  rm -f "${remove_tmp}"
+  unset _RMB_START _RMB_END
+  return 0
+}
+
 # extract_managed_block SOURCE_FILE START_MARKER END_MARKER
 # Prints non-empty content between one ordered marker pair.
 # Fails closed when markers are missing, duplicated, reversed, or empty.
