@@ -1,22 +1,26 @@
-# Drop Windows from CI matrix
+# Fable-method candidate handcraft (WIP)
 
-**Objective:** CI aggregate gate on ubuntu + macos only; keep Windows local/Git Bash support in code.
+**Objective:** Azg-owned intent-gates Candidate draft from fable-method compress; git-tracked under `wip/`.
 
-**Acceptance:** `.github/workflows/ci.yml` matrix has no `windows-latest`; continuity docs match.
+**Acceptance:** `wip/` tracked in git; `wip/candidates-raw/AGENTS.md` scaffold ready; compress snapshots in `wip/fable-method/`.
 
 ## Work Packet (SFDBN)
 
-**Status:** done
+**Status:** in_progress (scaffold done; handcraft + Trap gate next)
 
 **Files:**
-- `.github/workflows/ci.yml` — remove `windows-latest` + Windows deps step
-- `lib/setup.sh` · `evals/traps/analyze_ledger.py` — Windows-local fixes kept (jq `\r`, UTF-8 ledger)
+- `wip/README.md` — WIP root (not session temp)
+- `wip/candidates-raw/AGENTS.md` — candidate starter (`AZG:AGENT-INSTRUCTIONS` scaffold)
+- `wip/candidates-raw/NOTICE` · `README.md`
+- `wip/fable-method/` — upstream + compressed + references
 - `task.md` · `docs/agents/current-state.md`
 
 **Decisions:**
-- No GHA Windows runner; devs still use Git Bash per AGENTS.md
-- Prior Windows CI fixes remain — help local Windows, not CI
+- Renamed `.tmp/` to `wip/` so agent temp-cleanup rules do not target it
+- Git-track `wip/` (commit when ready)
+- ADR 0009 scope: always-on gates only; no fable vendor paste on device
+- Compress v3: preserve quoted examples; references pulled
 
 **Blocked:** none
 
-**Next:** Commit + push when asked
+**Next:** Handcraft `wip/candidates-raw/AGENTS.md`; commit `wip/`; Trap Process Gate when pack wired
