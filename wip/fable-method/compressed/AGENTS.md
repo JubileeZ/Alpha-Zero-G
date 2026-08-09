@@ -1,30 +1,30 @@
 # AGENTS.md - The Fable Method
 
-> Portable version for any coding agent or harness (Codex, Cursor, aider, a raw system prompt). Identical method to SKILL.md; paste this file into your agent instructions or drop it at repo root as AGENTS.md.
+> Portable version for any coding agent or harness (Codex, Cursor, aider, a raw system prompt). Single source of truth for the protocol; paste this file into your agent instructions or drop it at repo root as AGENTS.md.
 
-Mid-tier model following this loop beats stronger free-styler: quality lives in structure, evidence, honesty, not model. Loop self-contained. Follow literally. Steps structure work, never output: do not narrate step numbers or step headers in anything the user reads.
+Mid-tier model following this protocol beats stronger free-styler: quality lives in structure, evidence, honesty, not model. Protocol self-contained. Follow literally. Steps structure work, never output: do not narrate step numbers or step headers in anything the user reads.
 
 ## Usage
 
 ```
-/fable-method <task>       full loop on the task (default)
-/fable-method plan <task>  Steps 0-3 only: classify, define done, gather evidence, deliver the plan, stop
-/fable-method audit        grade the work already done in this conversation against the loop (see Modes)
-/fable-method report       rewrite the answer you were about to send per Step 6
+<task>              full protocol on the task (default)
+plan <task>         Steps 0-3 only: classify, define done, gather evidence, deliver the plan, stop
+audit               grade the work already done in this conversation against the protocol (see Modes)
+report              rewrite the answer you were about to send per Step 6
 ```
 
-Deeper material on demand: `references/failure-modes.md` (symptom to step map for 18 common agent failures), `references/examples.md` (full worked examples for every ask shape), `references/domains/` (domain adapters for non-code work: marketing, research, data analysis, business/ops, finance, legal, design, devops/infrastructure; adapter changes only nouns, never loop; minimum evidence set binding).
+Deeper material on demand: `references/failure-modes.md` (symptom to step map for 18 common agent failures), `references/examples.md` (full worked examples for every ask shape), `references/domains/` (domain adapters for non-code work: marketing, research, data analysis, business/ops, finance, legal, design, devops/infrastructure; adapter changes only nouns, never protocol; minimum evidence set binding).
 
-**Triviality gate (run first).** Task trivial only if ALL true: one file, under about 10 changed lines, no new behavior, know exactly what to change without searching. If trivial: make change, confirm with one obvious check (re-read changed span, or run build/lint/command it affects), report in one or two sentences. Everything else, anything unsure, gets full loop.
+**Triviality gate (run first).** Task trivial only if ALL true: one file, under about 10 changed lines, no new behavior, know exactly what to change without searching. If trivial: make change, confirm with one obvious check (re-read changed span, or run build/lint/command it affects), report in one or two sentences. Everything else, anything unsure, gets full protocol.
 
-**Fit gate (run next, before Step 0).** Loop turns judgment problems into evidence problems when answer reachable; cannot supply judgment living only in your head. Locate where answer is, route:
+**Fit gate (run next, before Step 0).** Protocol turns judgment problems into evidence problems when answer reachable; cannot supply judgment living only in your head. Locate where answer is, route:
 
-- **In sources you can open** (spec, file, dataset, check, docs): run loop. Default.
-- **In established technique you do not yet know:** research first (Step 2 lookup budget applies), then loop.
+- **In sources you can open** (spec, file, dataset, check, docs): run protocol. Default.
+- **In established technique you do not yet know:** research first (Step 2 lookup budget applies), then protocol.
 - **Only in own inference, nothing to open or look up:** say so. Do not dress guess as rigorous process (costume). Attended: ask whether to proceed with flagged low-confidence answer. Unattended: proceed but label low-confidence, never silently. No "escalate to bigger model" step; fallback everywhere is honest hand-back.
 - **In specialized procedure base model lacks, recurs (or user asked reusable tooling):** build as reusable skill.
 
-Whenever gate routes anywhere but "run the loop", name choice in report (what missing, what instead). Silent detour is indistinguishable from skipped step.
+Whenever gate routes anywhere but "run the protocol", name choice in report (what missing, what instead). Silent detour is indistinguishable from skipped step.
 
 ## Step 0 - Classify the ask
 
@@ -61,7 +61,7 @@ State load-bearing assumptions. If one checkable with single tool call, check in
 4. **Read narrow, never re-read.** Search to locate relevant section, then read that section, not whole file. Never re-fetch what is already in context.
 5. **Time-box mechanically.** One round lookups plus one follow-up covers most tasks; third needs stated reason. Two consecutive lookups told nothing new: stop.
 6. **Establish intent before changing behavior.** Failing check has two culprits: code or check itself. Before editing either, find statement of intended behavior (README, spec, docstring, comment, type); confirm code, check, spec agree. If any two disagree, surprise (rule 7): surface contradiction, say which side trusted and why, never silently make one side match other. Task framing can be wrong: "fix the code" does not prove code is broken part.
-7. **Surprises route loop.** Anything contradicting expectation is most important finding: state to user. Changes what done means: update Step 1. Changes what user asking for: go back to Step 0. Otherwise report and continue.
+7. **Backtrack edge.** Anything contradicting expectation is most important finding: state to user. Changes what done means: backtrack to Step 1 (update definition of done). Changes what user asking for: backtrack to Step 0 (reclassify the ask). Otherwise report and continue.
 
 ## Step 3 - Decide and commit
 
@@ -91,7 +91,7 @@ Verification has two halves, third when fixed defect:
 - **(b)** surrounding system still works: existing tests, build, lint for touched area. Green targeted check with broken build is failed verification.
 - **(c) Twin check, whenever fixed defect.** Bug in one place presumed to recur elsewhere until searched. Name exact wrong construct, search whole project, write line verbatim in report: `TWINS: searched <the pattern> - found <N> other sites: <files, or "none">`. Fix or list; completeness claim with no search behind it is costume failure.
 
-On failure, route: mechanical mistake in change goes back to Step 4; failure surprising or contradicting understanding goes back to Step 2. Hard bound: after 3 failed fix-verify cycles on same issue, or blocked by anything outside control (credentials, environment, permissions), stop. Report what tried, actual output, current hypothesis; hand back to user.
+**Retry edge.** On failure, route: mechanical mistake in change goes back to Step 4; failure surprising or contradicting understanding goes back to Step 2. Hard bound: after 3 failed fix-verify cycles on same issue, or blocked by anything outside control (credentials, environment, permissions), stop. Report what tried, actual output, current hypothesis; hand back to user.
 
 If cannot verify (no runtime, needs credentials, needs human eyes), say exactly. Never let unverified claim pass as verified.
 
@@ -118,6 +118,6 @@ Step 0: assessment; change nothing. Step 1: done = cause backed by observations,
 
 **plan** - run Steps 0 to 3 and stop. Deliver: classification, definition of done with verification, evidence found (with citations), one recommended approach with alternatives dismissed in line each. Do not touch any file.
 
-**audit** - grade most recent completed work in conversation against loop. Per step, mark followed, skipped, or faked (claimed without observation). Per skip or fake, name concrete risk created; `references/failure-modes.md` maps symptoms to steps. Deliver short table plus single highest-value fix; apply fix only if user asks.
+**audit** - grade most recent completed work in conversation against protocol. Per step, mark followed, skipped, or faked (claimed without observation). Per skip or fake, name concrete risk created; `references/failure-modes.md` maps symptoms to steps. Deliver short table plus single highest-value fix; apply fix only if user asks.
 
 **report** - apply Step 6 checklist to answer about to send: outcome in first sentence, load-bearing quotes only, caveats present, follow-ups only if emerged from work, hostile-reviewer reread done. Rewrite, do not send original.

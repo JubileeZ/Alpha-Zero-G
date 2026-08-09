@@ -1,6 +1,6 @@
 # The workflow, drawn
 
-The same method as decision flowcharts. Each chart is executable pseudocode: a model can follow the arrows literally, and a human can audit exactly what happens at every branch. Nothing here adds rules; every box traces to a numbered rule in SKILL.md or a skill in the family.
+The same method as decision flowcharts. Each chart is executable pseudocode: a model can follow the arrows literally, and a human can audit exactly what happens at every branch. Nothing here adds rules; every box traces to a numbered rule in AGENTS.md or a skill in the family.
 
 ## 1. The master router: any problem, start to finish
 
@@ -10,17 +10,17 @@ flowchart TD
     TRIV -->|yes| DOIT["Do it, run the one obvious check,<br/>report in two sentences"]
     TRIV -->|"no, or unsure"| FIT{"Fit gate:<br/>where does the answer live?"}
     FIT -->|"reachable sources"| SHAPE{"What shape is the ask?"}
-    FIT -->|"unknown but researchable"| RES["Research it first<br/>(Step 2 budget), then loop"]
+    FIT -->|"unknown but researchable"| RES["Research it first<br/>(Step 2 budget), then protocol"]
     FIT -->|"only your own inference"| INFER["Say so, no costume.<br/>Ask, or flag low-confidence"]
-    FIT -->|"specialized + recurring"| MK["Make a skill (fable-domain)"]
+    FIT -->|"specialized + recurring"| MK["Make a skill (adapter-builder)"]
     RES --> SHAPE
     SHAPE -->|"question or assessment"| ASSESS["Diagnose only, change nothing.<br/>Findings plus one recommendation"]
     SHAPE -->|"plan-first: ambiguous scope,<br/>irreversible actions, or a plan was asked for"| PLANF["Build the plan artifact.<br/>STOP for approval"]
     SHAPE -->|task| DOM{"Which domain?"}
-    DOM -->|coding| LOOP2["Run the loop:<br/>evidence, decide, act, verify"]
+    DOM -->|coding| PROTO2["Run the protocol:<br/>evidence, decide, act, verify"]
     DOM -->|"marketing, research, data,<br/>business, finance, legal, design, devops"| ADAPT["Load the domain adapter.<br/>Its minimum evidence set is binding"]
-    ADAPT --> LOOP2
-    LOOP2 --> JPASS["Judge pass before presenting:<br/>every claim observed, or relabeled a caveat"]
+    ADAPT --> PROTO2
+    PROTO2 --> JPASS["Judge pass before presenting:<br/>every claim observed, or relabeled a caveat"]
     ASSESS --> JPASS
     JPASS --> OUT["Report, outcome first,<br/>honest caveats"]
 ```
@@ -97,15 +97,15 @@ flowchart TD
     H2 -->|yes| OK["Verified. To the report,<br/>with the output shown"]
     H1 -->|no| WHY{"Why did it fail?"}
     H2 -->|no| WHY
-    WHY -->|"mechanical mistake in the change"| BACK4["Back to Step 4"]
-    WHY -->|"it surprises you or contradicts<br/>your understanding"| BACK2["Back to Step 2"]
+    WHY -->|"mechanical mistake in the change"| BACK4["Retry edge: back to Step 4"]
+    WHY -->|"it surprises you or contradicts<br/>your understanding"| BACK2["Retry edge: back to Step 2"]
     BACK4 --> CNT{"Third failed cycle on the<br/>same issue? Or blocked by anything<br/>outside your control?"}
     BACK2 --> CNT
     CNT -->|no| V
     CNT -->|yes| HAND["STOP. Hand back with what was<br/>tried, the actual output,<br/>and your current hypothesis"]
 ```
 
-## 7. Judging finished work (fable-judge)
+## 7. Judging finished work (auditor)
 
 ```mermaid
 flowchart TD
@@ -126,14 +126,14 @@ flowchart TD
     Q["What is in front of you?"] --> A{"Trivial task?"}
     A -->|yes| NONE["No skill. Do it, check it, report"]
     A -->|no| B{"Finished work someone<br/>claims is done?"}
-    B -->|yes| J["fable-judge"]
+    B -->|yes| J["auditor"]
     B -->|no| C{"A multi-phase project<br/>with milestones?"}
-    C -->|yes| G["Your project workflow (e.g. GSD),<br/>with fable-method rules inside phases"]
+    C -->|yes| G["Your project workflow (e.g. GSD),<br/>with protocol rules inside phases"]
     C -->|no| D{"Non-trivial and multi-step,<br/>worth subagents and<br/>adversarial verification?"}
-    D -->|yes| L["fable-loop"]
+    D -->|yes| L["orchestrator"]
     D -->|no| E{"A sector none of the shipped<br/>domain adapters covers,<br/>needing its own?"}
-    E -->|yes| FD["fable-domain: generate the<br/>adapter + trap + smoke-eval bundle"]
-    E -->|no| M["fable-method inline"]
+    E -->|yes| FD["adapter-builder: generate the<br/>adapter + trap + smoke-eval bundle"]
+    E -->|no| M["protocol inline"]
 ```
 
 ## Reading these as a model
@@ -144,4 +144,4 @@ Follow the arrows literally; a diamond is a decision you must actually make, not
 
 These charts began as introspection and were then checked against observed behavior: bare Fable 5 agents run on real problems with their full tool-call transcripts extracted (eval round 10). The observation validated the core paths (spec read before any edit, twin bug found via the README, verification of every mode, assumption stated on ambiguity) and corrected the charts in three places: the ORIENT box at the start of evidence gathering, the expensive-vs-chained nuance on parallelization, and the cleanup rule in the report step. Where introspection and observation disagreed, observation won.
 
-Round 11 repeated the protocol for chart 5: the gates were drafted first, then bare Fable 5 ran the new trap fixtures (one of two bare runs took the unauthorized deploy after reading the same evidence as the run that refused, which is why the gate lives at the decision point and why docs-are-not-authorization is spelled out), and the first Haiku transfer runs showed the mid-tier failure is silently dropping the documented follow-up rather than taking it, which added the deliberately-not-taken caveat rule to the report step. The fable-domain skill's process is itself a distilled trace: `eval/results/round11-observed-traces.json`.
+Round 11 repeated the protocol for chart 5: the gates were drafted first, then bare Fable 5 ran the new trap fixtures (one of two bare runs took the unauthorized deploy after reading the same evidence as the run that refused, which is why the gate lives at the decision point and why docs-are-not-authorization is spelled out), and the first Haiku transfer runs showed the mid-tier failure is silently dropping the documented follow-up rather than taking it, which added the deliberately-not-taken caveat rule to the report step. The adapter-builder skill's process is itself a distilled trace: `eval/results/round11-observed-traces.json`.

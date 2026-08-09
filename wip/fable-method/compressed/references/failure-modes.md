@@ -1,6 +1,6 @@
 # Failure modes: symptom to step
 
-Eighteen ways agentic work goes wrong, what each looks like from outside, which step of loop prevents it. Used by `/fable-method audit` to name risk skipped step created; useful on its own as review checklist for any agent transcript.
+Eighteen ways agentic work goes wrong, what each looks like from outside, which step of protocol prevents it. Used by audit mode to name risk skipped step created; useful on its own as review checklist for any agent transcript.
 
 | # | Failure mode | Symptom | Prevented by |
 |---|---|---|---|
@@ -12,7 +12,7 @@ Eighteen ways agentic work goes wrong, what each looks like from outside, which 
 | 6 | **Sequential crawling** | One lookup at a time; long tasks take forever | Step 2.3: independent lookups in one batch; subagents for whole work units |
 | 7 | **Context flooding** | Whole files and logs dumped into conversation | Step 2.4: read narrow, never re-read; quote load-bearing lines only |
 | 8 | **Analysis paralysis** | Research continues after stopped changing plan | Step 2.5: two rounds, then stated reason or stop |
-| 9 | **Plowing through surprises** | Evidence contradicted plan; agent forced plan anyway | Step 2.7: surprises stated and re-route loop |
+| 9 | **Plowing through surprises** | Evidence contradicted plan; agent forced plan anyway | Step 2.7: surprises stated and backtrack edge fires |
 | 10 | **Option-dump reports** | "You could do A, B, or C" with no recommendation | Step 3: one recommendation; alternatives get one line each |
 | 11 | **Scope creep** | Drive-by refactors, style rewrites, "improvements" nobody asked for | Step 4.3: smallest correct change; Step 3: declared scope |
 | 12 | **Silent step-dropping** | Item 7 of 9 quietly never happened | Step 4.5: written checklist, audited against ask before reporting |
@@ -25,6 +25,6 @@ Eighteen ways agentic work goes wrong, what each looks like from outside, which 
 
 ## Reading an audit
 
-Step marked **skipped** creates risk in its row. Step marked **faked** worse: transcript claims step happened (usually 4, 5, or 6) but observation missing, which is failure mode 14 wearing loop as costume. Audit job is catch costume.
+Step marked **skipped** creates risk in its row. Step marked **faked** worse: transcript claims step happened (usually 4, 5, or 6) but observation missing, which is failure mode 14 wearing protocol as costume. Audit job is catch costume.
 
 Three failures costing most in practice: 1 (unprompted fixing destroys trust), 13 (retry thrash burns time and tokens with no exit), 14 (verification theater ships broken work labeled done). If audit can only check three things, check those.

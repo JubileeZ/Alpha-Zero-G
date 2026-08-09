@@ -1,6 +1,6 @@
 # Domain adapter: marketing and content
 
-Applies when the deliverable is copy, campaign assets, landing pages, emails, social posts, SEO content, or brand material. The loop is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is copy, campaign assets, landing pages, emails, social posts, SEO content, or brand material. The protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any writing)
 
@@ -23,7 +23,7 @@ Explicit client/user instruction > brand guidelines (`brand.md`) > the campaign 
 - Names, prices, dates, and titles are exact. One wrong competitor price discredits the whole piece.
 - Rendered surfaces (landing pages, emails) are actually rendered and looked at, not assumed.
 
-## Fraud table (for fable-judge)
+## Fraud table (for auditor)
 
 | Fraud | Symptom |
 |---|---|

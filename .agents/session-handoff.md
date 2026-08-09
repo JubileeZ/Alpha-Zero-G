@@ -1,7 +1,7 @@
 # Session Handoff (SFDBN)
 
-- **Status:** Fable-method candidate WIP committed under `wip/`; scaffold in `wip/candidates-raw/AGENTS.md` ready; handcraft + Trap gate next
-- **Files:** `wip/` (README, candidates-raw, fable-method upstream+compressed+references); `task.md`; `docs/agents/current-state.md`
-- **Decisions:** Renamed `.tmp/` → `wip/` (git-tracked, not agent temp cleanup); ADR 0009 always-on gates only; compress v3 keeps quoted examples + pulled references; fable-method pin `88b5cf36`
+- **Status:** Fable-method compressed terminology rename done; candidate handcraft + Trap gate next
+- **Files:** `wip/fable-method/compressed/` (`AGENTS.md` protocol SoT, `references/`, skills orchestrator/auditor/adapter-builder, `CHANGELOG.md`); `wip/candidates-raw/AGENTS.md` scaffold; `wip/fable-method/upstream/` pin `88b5cf36` (old names); `task.md`; `docs/agents/current-state.md`
+- **Decisions:** loop→protocol; fable-loop→orchestrator; fable-judge→auditor; fable-domain→adapter-builder; backtrack/retry edges named; no plugin packaging → deleted `fable-method` skill dup, `references/` at compressed root; upstream untouched
 - **Blocked:** none
-- **Next:** Handcraft `wip/candidates-raw/AGENTS.md` from `wip/fable-method/compressed/`; copy to `templates/candidates/<pack-id>/` when ready; Trap Process Gate (`bash evals/traps/run-process-gate.sh`) before global promote
+- **Next:** Handcraft `wip/candidates-raw/AGENTS.md` from `compressed/AGENTS.md`; commit `wip/`; Trap Process Gate before global promote

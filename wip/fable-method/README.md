@@ -14,17 +14,13 @@ Fetched 2026-08-08. v3: lighter compression + full references + example preserva
 ## Files
 
 **Core**
-- `AGENTS.md`
-- `skills/fable-method/SKILL.md`
-- `skills/fable-judge/SKILL.md`
-- `skills/fable-loop/SKILL.md`
-- `skills/fable-domain/SKILL.md`
+- `AGENTS.md` — the protocol (single source of truth)
+- `references/` — failure modes, examples, flowcharts, domain adapters
 
-**References** (`skills/fable-method/references/`)
-- `examples.md` - worked examples per ask shape (light compress)
-- `failure-modes.md` - 18 failure modes table (light compress)
-- `flowcharts.md` - 8 mermaid flowcharts (upstream copy; code blocks exact)
-- `domains/` - 8 adapters + `TEMPLATE.md` (upstream copy; dense reference material)
+**Skills** (`skills/`)
+- `orchestrator/SKILL.md` — multi-agent orchestrator (was fable-loop)
+- `auditor/SKILL.md` — adversarial re-verification (was fable-judge)
+- `adapter-builder/SKILL.md` — domain adapter generator (was fable-domain)
 
 ## Compression rules (v3)
 

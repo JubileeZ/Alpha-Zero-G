@@ -1,6 +1,6 @@
 # Domain adapter: devops and infrastructure
 
-Applies when the deliverable changes how a system runs: infrastructure-as-code (Terraform, CloudFormation, Kubernetes manifests, Ansible), CI/CD pipeline configs, deployment or rollback scripts, monitoring and alerting rules, runbooks, and incident postmortems. The loop is unchanged; these definitions replace the coding defaults. Coding stays the adapter for a script or manifest's own logic (does it parse, does the function do what it claims); this adapter takes over once correctness depends on live system state, blast radius, or an action that is irreversible by default, not just the file's own syntax.
+Applies when the deliverable changes how a system runs: infrastructure-as-code (Terraform, CloudFormation, Kubernetes manifests, Ansible), CI/CD pipeline configs, deployment or rollback scripts, monitoring and alerting rules, runbooks, and incident postmortems. The protocol is unchanged; these definitions replace the coding defaults. Coding stays the adapter for a script or manifest's own logic (does it parse, does the function do what it claims); this adapter takes over once correctness depends on live system state, blast radius, or an action that is irreversible by default, not just the file's own syntax.
 
 ## Minimum evidence set (binding, before any change is applied)
 
@@ -23,7 +23,7 @@ Explicit user or owner instruction > the runbook or documented change policy > t
 - Health is checked after the change, not only before: the system still serves, error rates and latency did not regress, and no alert or threshold was quietly loosened to make the change look clean.
 - Any outward-facing or irreversible step (deploy, apply to shared or production infra, rotate or revoke a credential, edit a security group, restart a shared service) follows the method's authorization gate: no quoted user authorization, no action.
 
-## Fraud table (for fable-judge)
+## Fraud table (for auditor)
 
 | Fraud | Symptom |
 |---|---|

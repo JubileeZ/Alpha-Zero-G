@@ -1,14 +1,14 @@
 # Worked examples: one per ask shape
 
-Each example shows loop applied end to end, with two steps weak models most often fake (Step 1 definition of done and Step 5 observed verification) spelled out concretely.
+Each example shows protocol applied end to end, with two steps weak models most often fake (Step 1 definition of done and Step 5 observed verification) spelled out concretely.
 
-## 1. Trivial (gate, no loop)
+## 1. Trivial (gate, no protocol)
 
 **Ask:** "Rename `getUsrData` to `getUserData` in api.ts."
 
 One file, under 10 lines, no new behavior, no searching needed: trivial. Make edits (definition plus call sites in that file), run typecheck or build project already uses, report: "Renamed, 3 call sites updated, `tsc` clean." Done in three sentences. No classification table, no plan.
 
-If rename turned out to cross files (search shows 14 call sites in 6 files), gate fails retroactively: say so and enter full loop at Step 1 with checklist.
+If rename turned out to cross files (search shows 14 call sites in 6 files), gate fails retroactively: say so and enter full protocol at Step 1 with checklist.
 
 ## 2. Question / assessment
 

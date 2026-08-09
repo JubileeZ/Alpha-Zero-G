@@ -1,6 +1,6 @@
 # Domain adapter: legal and compliance
 
-Applies when the deliverable touches contracts, terms of service, privacy policies, licenses, regulatory requirements, or compliance checks. The loop is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable touches contracts, terms of service, privacy policies, licenses, regulatory requirements, or compliance checks. The protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any conclusion)
 
@@ -23,7 +23,7 @@ The document's actual text > the law of the stated jurisdiction > the user's int
 - Obligations, deadlines, and thresholds are exact: numbers, dates, and defined terms as written, not approximated.
 - The report states plainly that it is document analysis, not legal advice, and names the point at which a qualified lawyer is needed. This boundary is a feature of the deliverable, not a disclaimer to bury.
 
-## Fraud table (for fable-judge)
+## Fraud table (for auditor)
 
 | Fraud | Symptom |
 |---|---|

@@ -1,6 +1,6 @@
 # Domain adapter: design and UX
 
-Applies when the deliverable is visual or interactive: UI components, pages, layouts, design reviews, brand surfaces, presentations. The loop is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is visual or interactive: UI components, pages, layouts, design reviews, brand surfaces, presentations. The protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any pixel)
 
@@ -23,7 +23,7 @@ Explicit user/client direction > brand.md and design tokens > the referenced des
 - Accessibility is checked, not asserted: contrast ratios computed, focus visible, interactive elements labeled, keyboard path walked.
 - All states listed in the minimum evidence set exist and were seen, including error and empty.
 
-## Fraud table (for fable-judge)
+## Fraud table (for auditor)
 
 | Fraud | Symptom |
 |---|---|

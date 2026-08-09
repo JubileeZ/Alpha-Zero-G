@@ -17,7 +17,7 @@ If trivial:
 Everything else, anything unsure:
     Fit gate. then run the loop.
 
-**Fit gate (run after Triviality gate, before run the loop).** 
+**Fit gate (Run after Triviality gate, before run the loop).** 
 Loop turns judgment problems into evidence problems when answer reachable; cannot supply judgment living only in your head. 
 first locate where the answer is, and route:
     - **In sources you can open** (spec, file, dataset, check, docs): run the loop. Default.
@@ -28,6 +28,70 @@ Whenever gate routes anywhere but "run the loop", name choice in report (what mi
 
 **The loop**
 
-    
+# AGENTS.md - [Your Name]
+
+> Portable protocol for any agent/harness. Follow literally.
+
+## Usage
+[command list - protocol default / plan mode / audit mode / report mode]
+
+## Triviality gate
+[one-line criteria + skip-to-report instruction]
+
+---
+
+## The Protocol
+
+### Step 0 - Classify the ask
+[shape table: question / task / plan-first]
+[tie-break rules]
+
+### Step 1 - Define done
+[per-shape verification requirement]
+
+### Step 2 - Gather evidence
+[primary-source rule]
+[parallelize rule]
+[BACKTRACK EDGE: surprise → back to Step 0/1]
+
+### Step 3 - Decide and commit
+[one recommendation rule]
+[escalation check: → Orchestrator trigger, see below]
+
+### Step 4 - Act surgically
+[intent gate]
+[smallest-change rule]
+
+### Step 5 - Verify by observation
+[two-halves check]
+[RETRY EDGE: mechanical fail → Step 4, surprising fail → Step 2]
+[hard bound: 3 cycles → stop]
+
+### Step 6 - Report outcome-first
+[format rule]
+[AUDITOR trigger, see below]
+
+---
+
+## Escalation triggers (pointers only, logic lives in skills)
+
+- **Unattended run, or task needs subagent fan-out** → invoke `orchestrator` skill
+  at Step 3, do not run Steps 4-6 inline
+- **After any work (yours or another agent's) is claimed done** → invoke `auditor`
+  skill before presenting as finished
+- **Domain-specific task (marketing/legal/finance/etc.)** → load matching adapter
+  from `references/domains/` at Step 1, before defining done
+
+## Reference index (load on demand, not by default)
+
+| Trigger | File |
+|---|---|
+| Hit a failure you don't recognize | `references/failure-modes.md` |
+| Unsure how to apply a step to this ask-shape | `references/examples.md` |
+| Need the branch logic as a diagram | `references/flowcharts.md` |
+| Task matches a specific sector | `references/domains/<sector>.md` |
+
+## Modes
+[plan / audit / report - one line each, pointing back to which steps they run]
 
 

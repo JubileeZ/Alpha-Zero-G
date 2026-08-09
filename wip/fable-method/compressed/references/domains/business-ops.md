@@ -1,6 +1,6 @@
 # Domain adapter: business and operations
 
-Applies when the deliverable is a business decision or artifact: plans, budgets, pricing, proposals, pitch decks, vendor choices, process docs, emails that commit the business to something. The loop is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is a business decision or artifact: plans, budgets, pricing, proposals, pitch decks, vendor choices, process docs, emails that commit the business to something. The protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any recommendation)
 
@@ -22,7 +22,7 @@ Explicit owner/user decisions > the business's written strategy and brand docume
 - Every external commitment (a price quoted, a law cited, a vendor capability) traces to a current source you opened.
 - Anything outward-facing (sent, published, signed, purchased) is treated as irreversible: confirmed with the user before acting, per the method's reversibility test.
 
-## Fraud table (for fable-judge)
+## Fraud table (for auditor)
 
 | Fraud | Symptom |
 |---|---|

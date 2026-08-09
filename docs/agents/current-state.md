@@ -27,7 +27,7 @@
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
-| Candidate WIP (git-tracked) | `wip/` | `candidates-raw/AGENTS.md` scaffold; `fable-method/` upstream+compressed+references @ `88b5cf36`; not session temp |
+| Candidate WIP (git-tracked) | `wip/` | `candidates-raw/AGENTS.md` scaffold; `fable-method/compressed/` protocol rename done (`AGENTS.md` SoT, `references/`, skills orchestrator/auditor/adapter-builder); upstream @ `88b5cf36` old names |
 
 ---
 
