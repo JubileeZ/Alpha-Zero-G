@@ -1,7 +1,7 @@
 # Session Handoff (SFDBN)
 
-- **Status:** Fable-method compressed terminology rename done (Execution Protocol + core protocol); candidate handcraft + Trap gate next
-- **Files:** `wip/fable-method/compressed/` (`AGENTS.md` Execution Protocol SoT, `references/`, skills orchestrator/auditor/adapter-builder, `CHANGELOG.md`); `wip/candidates-raw/AGENTS.md` scaffold; `wip/fable-method/upstream/` pin `88b5cf36` (old names); `task.md`; `docs/agents/current-state.md`
-- **Decisions:** loop→core protocol; whole method→Execution Protocol; fable-loop→orchestrator; fable-judge→auditor; fable-domain→adapter-builder; backtrack/retry edges named; no plugin packaging → deleted `fable-method` skill dup, `references/` at compressed root; upstream untouched
-- **Blocked:** none
-- **Next:** Handcraft `wip/candidates-raw/AGENTS.md` from `compressed/AGENTS.md`; commit `wip/`; Trap Process Gate before global promote
+- **Status:** Candidate `wip/candidates-raw/AGENTS.md` expanded Step 0 only → full Steps 0–6 (~120 lines, uncommitted); writing-for-agents review + grill R1 complete
+- **Files:** `wip/candidates-raw/AGENTS.md` (draft); `wip/candidates-raw/Olddraft.md` (prior distill); `wip/fable-method/compressed/` (SoT); `task.md`; `docs/agents/current-state.md`
+- **Decisions:** candidate = de-branded compressed minus Usage/Modes/examples; ponytail ladder Step 4.3; grill R1 recommends hybrid distill (~1.1–1.3k words), Prove closing line, precedence block, fit→`azg-domain-*` router, typo fixes before Trap
+- **Blocked:** user grill Q1–Q6 pick (or "go with recommendations")
+- **Next:** apply distill → `AZG:AGENT-INSTRUCTIONS` wrapper → commit `wip/` → `templates/candidates/<pack-id>/` + Trap Process Gate

@@ -27,7 +27,7 @@
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
-| Candidate WIP (git-tracked) | `wip/` | `candidates-raw/AGENTS.md` scaffold; `fable-method/compressed/` Execution Protocol rename done (`AGENTS.md` SoT, `references/`, skills orchestrator/auditor/adapter-builder); upstream @ `88b5cf36` old names |
+| Candidate WIP (git-tracked) | `wip/` | `candidates-raw/AGENTS.md` Steps 0–6 draft (~120 lines, uncommitted; no `AZG:` markers); `Olddraft.md` prior azg distill; `fable-method/compressed/` SoT; upstream @ `88b5cf36` |
 
 ---
 
@@ -48,7 +48,7 @@
 
 | Item | Notes |
 |------|-------|
-| Fable-method distill + re-gate | `wip/candidates-raw/` scaffold (2026-08-08); handcraft + Trap gate; re-earn or park |
+| Fable-method distill + re-gate | `wip/candidates-raw/AGENTS.md` full-protocol draft; hybrid distill + `AZG:` packaging + Trap gate before promote |
 | Unified-pipeline Candidate → global | **Done** ADR 0015 — Candidate slot cleared for next pack |
 | Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
