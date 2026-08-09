@@ -50,7 +50,7 @@ LIST_OUT="$(env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" skill 
 
 assert_output_contains "skill list shows active section" "${LIST_OUT}" "Active / Installed Skills"
 assert_output_contains "skill list shows available catalog section" "${LIST_OUT}" "Available Catalog Skills"
-assert_output_contains "skill list shows caveman in catalog" "${LIST_OUT}" "caveman"
+assert_output_contains "skill list shows wizard in catalog" "${LIST_OUT}" "wizard"
 
 section "3. azg setup installs active skills into both IDEs with 1:1 parity"
 
@@ -65,22 +65,22 @@ assert_dir_exists "Gemini has auto-resolved tdd" "${GEMINI_SKILLS}/tdd"
 assert_dir_exists "Cursor has auto-resolved tdd" "${CURSOR_SKILLS}/tdd"
 
 # Inactive catalog skills must not be in global directories
-assert_dir_not_exists "Gemini does not have unselected caveman" "${GEMINI_SKILLS}/caveman"
-assert_dir_not_exists "Cursor does not have unselected caveman" "${CURSOR_SKILLS}/caveman"
 assert_dir_not_exists "Gemini does not have unselected wizard" "${GEMINI_SKILLS}/wizard"
 assert_dir_not_exists "Cursor does not have unselected wizard" "${CURSOR_SKILLS}/wizard"
+assert_dir_not_exists "Gemini does not have unselected ask-matt" "${GEMINI_SKILLS}/ask-matt"
+assert_dir_not_exists "Cursor does not have unselected ask-matt" "${CURSOR_SKILLS}/ask-matt"
 
 section "4. azg skill enable adds skill and prunes when disabled"
 
-env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" skill enable caveman >/dev/null 2>&1
+env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" skill enable wizard >/dev/null 2>&1
 
-assert_dir_exists "Gemini has enabled caveman" "${GEMINI_SKILLS}/caveman"
-assert_dir_exists "Cursor has enabled caveman" "${CURSOR_SKILLS}/caveman"
+assert_dir_exists "Gemini has enabled wizard" "${GEMINI_SKILLS}/wizard"
+assert_dir_exists "Cursor has enabled wizard" "${CURSOR_SKILLS}/wizard"
 
-env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" skill disable caveman >/dev/null 2>&1
+env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" skill disable wizard >/dev/null 2>&1
 
-assert_dir_not_exists "Gemini has pruned disabled caveman" "${GEMINI_SKILLS}/caveman"
-assert_dir_not_exists "Cursor has pruned disabled caveman" "${CURSOR_SKILLS}/caveman"
+assert_dir_not_exists "Gemini has pruned disabled wizard" "${GEMINI_SKILLS}/wizard"
+assert_dir_not_exists "Cursor has pruned disabled wizard" "${CURSOR_SKILLS}/wizard"
 
 section "5. Custom skills survive in both IDEs"
 

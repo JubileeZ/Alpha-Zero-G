@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# lib/vendor-sync.sh — re-vendor mattpocock/skills and ponytail skills from upstream
+# lib/vendor-sync.sh — re-vendor mattpocock/skills from upstream
 #
-# Shallow-clones upstreams (or uses overrides for testing),
+# Shallow-clones upstream (or uses overrides for testing),
 # copies skills into the vendor tree, writes VENDOR.lock, and prints summary.
 #
 # Called by: azg update --vendor  (via update.sh)
@@ -23,8 +23,6 @@ vendor_sync() {
   fi
 
   local upstream_matt="${AZG_VENDOR_UPSTREAM:-https://github.com/mattpocock/skills.git}"
-  local upstream_pony="${AZG_PONYTAIL_UPSTREAM:-https://github.com/DietrichGebert/ponytail.git}"
-  local upstream_caveman="${AZG_CAVEMAN_UPSTREAM:-https://github.com/JuliusBrussee/caveman.git}"
 
   # -------------------------------------------------------------------------
   # Dependency check
@@ -36,37 +34,17 @@ vendor_sync() {
   fi
 
   clone_matt=""
-  clone_pony=""
-  clone_caveman=""
-  local commit_matt="" commit_pony="" commit_caveman=""
+  local commit_matt=""
 
   # Always clean up clone directories even on error or early return
   # shellcheck disable=SC2064
-  trap '_vendor_sync_cleanup "${clone_matt}"; _vendor_sync_cleanup "${clone_pony}"; _vendor_sync_cleanup "${clone_caveman}"' RETURN
+  trap '_vendor_sync_cleanup "${clone_matt}"' RETURN
 
-  # 1. Sync mattpocock-skills
   step "vendor-sync: syncing mattpocock-skills"
   if ! _clone_upstream "${upstream_matt}" "skills/engineering skills/productivity" clone_matt commit_matt; then
     return 1
   fi
   _sync_one_repo "${clone_matt}" "${upstream_matt}" "${commit_matt}" "${azg_root}/templates/global/skills/vendor/mattpocock-skills" "skills/engineering skills/productivity" ""
-  
-  # 2. Sync ponytail-skills
-  step "vendor-sync: syncing ponytail-skills"
-  if ! _clone_upstream "${upstream_pony}" "skills" clone_pony commit_pony; then
-    return 1
-  fi
-  _sync_one_repo "${clone_pony}" "${upstream_pony}" "${commit_pony}" "${azg_root}/templates/global/skills/vendor/ponytail-skills" "skills" "ponytail"
-
-  # 3. Sync caveman-skills (catalog)
-  step "vendor-sync: syncing caveman-skills"
-  if ! _clone_upstream "${upstream_caveman}" "skills" clone_caveman commit_caveman; then
-    return 1
-  fi
-  _sync_one_repo "${clone_caveman}" "${upstream_caveman}" "${commit_caveman}" "${azg_root}/templates/global/skills/vendor/caveman-skills" "skills" "caveman"
-
-  # 4. Ponytail AGENTS always-on sync retired (ADR 0015) — vendor skills only
-  info "vendor-sync: skipping ponytail AGENTS.md inject (always-on retired; catalog remains)"
 
   ok "vendor-sync complete"
   ok "Run 'azg setup' on each device to push vendor changes to ~/.gemini/antigravity-cli/"
@@ -233,29 +211,4 @@ excluded:
     info "  Changes : none (already up-to-date)"
   fi
   info "  VENDOR.lock written to: ${vendor_lock}"
-}
-
-_sync_ponytail_agents() {
-  local clone_dir="${1}"
-  local target_agents="${2}"
-
-  local upstream_agents="${clone_dir}/repo/AGENTS.md"
-  if [ ! -f "${upstream_agents}" ]; then
-    warn "AGENTS.md not found in ponytail upstream — skipping"
-    return 0
-  fi
-
-  local upstream_content
-  upstream_content="$(cat "${upstream_agents}")"
-
-  if [ -z "${upstream_content}" ]; then
-    warn "Upstream AGENTS.md is empty — skipping sync"
-    return 0
-  fi
-
-  if replace_managed_block "${target_agents}" "<!-- PONYTAIL:MANAGED:START -->" "<!-- PONYTAIL:MANAGED:END -->" "${upstream_content}"; then
-    ok "Synced ponytail AGENTS.md into template"
-  else
-    warn "No PONYTAIL:MANAGED markers in ${target_agents} — skipping sync"
-  fi
 }

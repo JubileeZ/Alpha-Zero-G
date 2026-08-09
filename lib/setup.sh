@@ -173,7 +173,7 @@ _get_requested_skills() {
     return 0
   fi
   # Default curated active set requested by operator when no manifest exists
-  printf '%s\n' "ponytail" "grill-with-docs" "implement" "wayfinder" "writing-for-agents"
+  printf '%s\n' "grill-with-docs" "implement" "wayfinder" "writing-for-agents"
 }
 
 _find_skill_info() {
@@ -343,7 +343,6 @@ active: ${active_skills}"
           [ -d "${vendor_root}" ] || continue
           local vendor_name
           vendor_name="$(basename "${vendor_root}")"
-          [ "${vendor_name}" = "caveman-skills" ] && continue
           for category_dir in "${vendor_root}"/*/; do
             [ -d "${category_dir}" ] || continue
             for skill_dir in "${category_dir}"/*/; do
@@ -575,7 +574,6 @@ active: ${active_skills}"
         [ -d "${vendor_root}" ] || continue
         local vendor_name
         vendor_name="$(basename "${vendor_root}")"
-        [ "${vendor_name}" = "caveman-skills" ] && continue
 
         for category_dir in "${vendor_root}"/*/; do
           [ -d "${category_dir}" ] || continue
@@ -741,8 +739,6 @@ cmd_skill() {
         done
         if [ "${is_req}" -eq 1 ]; then
           printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_BLUE}[requested]${CLR_RESET}\n" "${ask}"
-        elif [ "${ask}" = "ponytail" ]; then
-          printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_CYAN}[core]${CLR_RESET}\n" "${ask}"
         else
           printf "  ${CLR_GREEN}•${CLR_RESET} %-24s ${CLR_YELLOW}[prereq]${CLR_RESET}\n" "${ask}"
         fi

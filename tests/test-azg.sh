@@ -53,8 +53,8 @@ else
   fail "setup missing some skills"
 fi
 
-if [ -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ -d "${TEMP_HOME}/.gemini/config/skills/ponytail" ]; then
-  pass "setup installs active vendor set including setup-matt-pocock-skills and ponytail"
+if [ -d "${TEMP_HOME}/.gemini/config/skills/setup-matt-pocock-skills" ] && [ -d "${TEMP_HOME}/.gemini/config/skills/implement" ]; then
+  pass "setup installs active vendor set including setup-matt-pocock-skills and implement"
 else
   fail "setup missing previously non-core skills"
 fi

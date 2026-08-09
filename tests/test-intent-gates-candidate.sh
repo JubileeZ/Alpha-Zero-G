@@ -31,7 +31,7 @@ for bad in 'Prove stance' 'VERIFIED:' 'azg-method-refs' 'fable-method' 'fable-lo
   fi
 done
 
-section "2. always-on ponytail retired + azg skills deleted"
+section "2. always-on ponytail retired + vendor packs trimmed"
 if grep -q 'PONYTAIL:MANAGED' "${AGENTS}" || grep -qi 'lazy senior' "${AGENTS}"; then
   fail "ponytail must not be in Device Setup AGENTS (ADR 0015)" ""
 else
@@ -42,10 +42,15 @@ if [ -f "${REPO_ROOT}/templates/global/cursor/rules/azg-ponytail.mdc" ]; then
 else
   pass "azg-ponytail.mdc stub gone"
 fi
-if [ -d "${REPO_ROOT}/templates/global/skills/vendor/ponytail-skills" ]; then
-  pass "ponytail remains vendor catalog skill"
+if [ ! -d "${REPO_ROOT}/templates/global/skills/vendor/ponytail-skills" ]; then
+  pass "ponytail-skills removed from vendor catalog"
 else
-  fail "vendor ponytail-skills missing" ""
+  fail "vendor ponytail-skills still present" ""
+fi
+if [ ! -d "${REPO_ROOT}/templates/global/skills/vendor/caveman-skills" ]; then
+  pass "caveman-skills removed from vendor catalog"
+else
+  fail "vendor caveman-skills still present" ""
 fi
 if [ -d "${REPO_ROOT}/templates/global/skills/azg" ]; then
   fail "skills/azg still present" ""

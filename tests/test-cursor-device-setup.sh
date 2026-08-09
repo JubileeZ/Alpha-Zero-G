@@ -13,7 +13,7 @@ TEMP_AZG="${TEMP_REPO}/azg"
 
 # Pick one known vendored skill name (must exist in templates)
 SAMPLE_SKILL=""
-for candidate in tdd grilling implement ponytail; do
+for candidate in tdd grilling implement; do
   if find "${TEMP_REPO}/templates/global/skills/vendor" -type d -name "${candidate}" 2>/dev/null | grep -q .; then
     SAMPLE_SKILL="${candidate}"
     break
@@ -144,7 +144,7 @@ else
   fail "ownership still lists azg-ponytail.mdc"
 fi
 
-section "1b. clean slate — azg distill skills removed + no Prove in always-on"
+section "1b. azg distill skills removed + Execution Protocol v1 always-on"
 
 for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; do
   assert_file_not_exists "Cursor azg skill ${azg_skill} not installed" \
@@ -159,14 +159,14 @@ else
   pass "azg distill skill sources removed"
 fi
 
-if grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+if grep -q 'Execution Protocol v1' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && grep -q 'Temporary File Cleanup' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && ! grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
-  && ! grep -q 'INTENT:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions clean slate (cleanup+telegraphic only)"
+  pass "agent-instructions has Execution Protocol v1 + cleanup + telegraphic"
 else
-  fail "agent-instructions not clean slate"
+  fail "agent-instructions missing promoted always-on shape"
 fi
 
 # Smart-sync skip must not resurrect retired skills

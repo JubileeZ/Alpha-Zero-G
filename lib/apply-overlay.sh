@@ -253,18 +253,6 @@ _render_vendor_antigravity_note() {
       vendor_path="mattpocock-skills"
       tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (e.g. Bash → run_command, Read → read_file)."
       ;;
-    ponytail-skills)
-      vendor_label="DietrichGebert/ponytail"
-      vendor_url="https://github.com/DietrichGebert/ponytail"
-      vendor_path="ponytail-skills"
-      tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (if any)."
-      ;;
-    caveman-skills)
-      vendor_label="JuliusBrussee/caveman"
-      vendor_url="https://github.com/JuliusBrussee/caveman"
-      vendor_path="caveman-skills"
-      tool_remap_note="Tool references in this file have been remapped from the upstream tool names to their Antigravity equivalents (if any)."
-      ;;
     *)
       die "apply_overlay: unknown vendor overlay '${overlay_name}'"
       ;;
