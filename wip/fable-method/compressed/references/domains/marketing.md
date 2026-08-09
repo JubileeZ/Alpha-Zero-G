@@ -1,6 +1,6 @@
 # Domain adapter: marketing and content
 
-Applies when the deliverable is copy, campaign assets, landing pages, emails, social posts, SEO content, or brand material. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is copy, campaign assets, landing pages, emails, social posts, SEO content, or brand material. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any writing)
 

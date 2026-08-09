@@ -1,6 +1,6 @@
 # Domain adapter: research and reporting
 
-Applies when the deliverable is an answer to a question about the world: market research, technical comparisons, policy/grant questions, recommendations, reports. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is an answer to a question about the world: market research, technical comparisons, policy/grant questions, recommendations, reports. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any conclusion)
 

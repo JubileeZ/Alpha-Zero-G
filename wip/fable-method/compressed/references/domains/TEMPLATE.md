@@ -2,7 +2,7 @@
 
 This file is the explicit schema behind every adapter in this directory. `/adapter-builder` generates new adapters against it; CI validates that every adapter carries its binding sections; auditor reads adapters through it. It was distilled from the seven hand-written adapters plus the observed process of two blind Fable 5 adapter-creation runs (`eval/results/round11-observed-traces.json`).
 
-An adapter changes only the nouns, never the protocol. It answers, for one sector: what counts as evidence, who the authority is, what verification by observation means, and what the frauds are. If a section below cannot be filled with content genuinely different from the coding default, the sector does not need an adapter.
+An adapter changes only the nouns, never the core protocol. It answers, for one sector: what counts as evidence, who the authority is, what verification by observation means, and what the frauds are. If a section below cannot be filled with content genuinely different from the coding default, the sector does not need an adapter.
 
 Replace every `<...>` slot. Keep the section headers exactly as written (CI greps for them). Target length: 35-50 lines. Medical and clinical work deliberately gets no adapter: it needs qualified review, not a checklist.
 
@@ -10,7 +10,7 @@ Replace every `<...>` slot. Keep the section headers exactly as written (CI grep
 
 # Domain adapter: <sector>
 
-Applies when the deliverable is <the sector's actual outputs, concretely>. The protocol is unchanged; these definitions replace the coding defaults. <One boundary sentence naming the nearest adapter or the coding default, and which side of the line takes over when.>
+Applies when the deliverable is <the sector's actual outputs, concretely>. The core protocol is unchanged; these definitions replace the coding defaults. <One boundary sentence naming the nearest adapter or the coding default, and which side of the line takes over when.>
 
 ## Workflow (steps + flowchart)
 

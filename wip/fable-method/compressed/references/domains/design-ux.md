@@ -1,6 +1,6 @@
 # Domain adapter: design and UX
 
-Applies when the deliverable is visual or interactive: UI components, pages, layouts, design reviews, brand surfaces, presentations. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is visual or interactive: UI components, pages, layouts, design reviews, brand surfaces, presentations. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any pixel)
 

@@ -1,6 +1,6 @@
 # Domain adapter: devops and infrastructure
 
-Applies when the deliverable changes how a system runs: infrastructure-as-code (Terraform, CloudFormation, Kubernetes manifests, Ansible), CI/CD pipeline configs, deployment or rollback scripts, monitoring and alerting rules, runbooks, and incident postmortems. The protocol is unchanged; these definitions replace the coding defaults. Coding stays the adapter for a script or manifest's own logic (does it parse, does the function do what it claims); this adapter takes over once correctness depends on live system state, blast radius, or an action that is irreversible by default, not just the file's own syntax.
+Applies when the deliverable changes how a system runs: infrastructure-as-code (Terraform, CloudFormation, Kubernetes manifests, Ansible), CI/CD pipeline configs, deployment or rollback scripts, monitoring and alerting rules, runbooks, and incident postmortems. The core protocol is unchanged; these definitions replace the coding defaults. Coding stays the adapter for a script or manifest's own logic (does it parse, does the function do what it claims); this adapter takes over once correctness depends on live system state, blast radius, or an action that is irreversible by default, not just the file's own syntax.
 
 ## Minimum evidence set (binding, before any change is applied)
 

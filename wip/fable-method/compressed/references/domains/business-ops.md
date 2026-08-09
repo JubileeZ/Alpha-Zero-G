@@ -1,6 +1,6 @@
 # Domain adapter: business and operations
 
-Applies when the deliverable is a business decision or artifact: plans, budgets, pricing, proposals, pitch decks, vendor choices, process docs, emails that commit the business to something. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is a business decision or artifact: plans, budgets, pricing, proposals, pitch decks, vendor choices, process docs, emails that commit the business to something. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any recommendation)
 

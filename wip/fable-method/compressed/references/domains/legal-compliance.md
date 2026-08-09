@@ -1,6 +1,6 @@
 # Domain adapter: legal and compliance
 
-Applies when the deliverable touches contracts, terms of service, privacy policies, licenses, regulatory requirements, or compliance checks. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable touches contracts, terms of service, privacy policies, licenses, regulatory requirements, or compliance checks. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any conclusion)
 

@@ -1,6 +1,6 @@
 ---
 name: auditor
-description: Adversarial verification of finished work. Treats any "done" as set of claims, re-runs claimed verifications, diffs what changed, detects weakened tests and false completion claims, delivers evidence-based verdict (VERIFIED / VERIFIED WITH CAVEATS / REFUTED). Use after any agent or model claims work complete: "/auditor", "judge this work", "verify what it did", "did that actually work?". Also runs protocol trap suite against skill or model via "/auditor suite <target>".
+description: Adversarial verification of finished work. Treats any "done" as set of claims, re-runs claimed verifications, diffs what changed, detects weakened tests and false completion claims, delivers evidence-based verdict (VERIFIED / VERIFIED WITH CAVEATS / REFUTED). Use after any agent or model claims work complete: "/auditor", "judge this work", "verify what it did", "did that actually work?". Also runs Execution Protocol trap suite against skill or model via "/auditor suite <target>".
 trigger: /auditor
 ---
 
@@ -34,6 +34,6 @@ Standing rules: judging changes nothing (read and run only; fixes happen only if
 
 ## suite mode: judge a skill or a model
 
-`/auditor suite <target>` runs protocol trap suite against target configuration: newly installed skill, different model, modified prompt. Needs repo `eval/` directory. Plugin install: `eval/` already in plugin install directory (plugin source is repo itself); locate relative to this SKILL.md (`../../eval/`). Standalone-skill installs need separate clone of `https://github.com/Sahir619/fable-method`.
+`/auditor suite <target>` runs Execution Protocol trap suite against target configuration: newly installed skill, different model, modified prompt. Needs repo `eval/` directory. Plugin install: `eval/` already in plugin install directory (plugin source is repo itself); locate relative to this SKILL.md (`../../eval/`). Standalone-skill installs need separate clone of `https://github.com/Sahir619/fable-method`.
 
 Per scenario in `eval/scenarios/`: create fresh copy in scratch directory, run executor subagent with target configuration on scenario task (tasks and ground truths live in `eval/workflow.js` and `eval/README.md`), then judge run exactly as default mode judges work: by diff and execution against scenario ground truth, never by executor report alone. Deliver per-scenario scores and which traps triggered. One seed per scenario is smoke test, not benchmark; multiply seeds for confidence, say which done.

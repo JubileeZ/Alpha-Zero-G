@@ -1,6 +1,6 @@
 # Failure modes: symptom to step
 
-Eighteen ways agentic work goes wrong, what each looks like from outside, which step of protocol prevents it. Used by audit mode to name risk skipped step created; useful on its own as review checklist for any agent transcript.
+Eighteen ways agentic work goes wrong, what each looks like from outside, which step of core protocol prevents it. Used by audit mode to name risk skipped step created; useful on its own as review checklist for any agent transcript.
 
 | # | Failure mode | Symptom | Prevented by |
 |---|---|---|---|
@@ -25,6 +25,6 @@ Eighteen ways agentic work goes wrong, what each looks like from outside, which 
 
 ## Reading an audit
 
-Step marked **skipped** creates risk in its row. Step marked **faked** worse: transcript claims step happened (usually 4, 5, or 6) but observation missing, which is failure mode 14 wearing protocol as costume. Audit job is catch costume.
+Step marked **skipped** creates risk in its row. Step marked **faked** worse: transcript claims step happened (usually 4, 5, or 6) but observation missing, which is failure mode 14 wearing core protocol as costume. Audit job is catch costume.
 
 Three failures costing most in practice: 1 (unprompted fixing destroys trust), 13 (retry thrash burns time and tokens with no exit), 14 (verification theater ships broken work labeled done). If audit can only check three things, check those.

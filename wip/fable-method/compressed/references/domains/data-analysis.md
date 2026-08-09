@@ -1,6 +1,6 @@
 # Domain adapter: data analysis
 
-Applies when the deliverable is an answer derived from data: spreadsheets, exports, logs, metrics, "which/how many/top N" questions. The protocol is unchanged; these definitions replace the coding defaults.
+Applies when the deliverable is an answer derived from data: spreadsheets, exports, logs, metrics, "which/how many/top N" questions. The core protocol is unchanged; these definitions replace the coding defaults.
 
 ## Minimum evidence set (binding, before any aggregate)
 

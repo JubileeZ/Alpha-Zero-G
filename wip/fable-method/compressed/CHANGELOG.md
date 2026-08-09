@@ -4,7 +4,8 @@
 
 ### Renamed (terminology only; no behavior change)
 
-- **the loop** (8-step procedure with backtrack/retry edges) → **the protocol**
+- **the loop** (8-step procedure with backtrack/retry edges) → **core protocol**
+- **the protocol** (whole method including gates) → **Execution Protocol** (gates + core protocol + modes)
 - **fable-loop** skill → **orchestrator** (`/orchestrator`)
 - **fable-judge** skill → **auditor** (`/auditor`)
 - **fable-domain** skill → **adapter-builder** (`/adapter-builder`)

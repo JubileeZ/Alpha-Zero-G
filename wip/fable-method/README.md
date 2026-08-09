@@ -14,7 +14,7 @@ Fetched 2026-08-08. v3: lighter compression + full references + example preserva
 ## Files
 
 **Core**
-- `AGENTS.md` — the protocol (single source of truth)
+- `AGENTS.md` — Execution Protocol (gates + core protocol); single source of truth
 - `references/` — failure modes, examples, flowcharts, domain adapters
 
 **Skills** (`skills/`)
