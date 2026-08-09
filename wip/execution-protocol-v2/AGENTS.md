@@ -1,5 +1,5 @@
 <!-- AZG:AGENT-INSTRUCTIONS:START -->
-# AGENT INSTRUCTIONS: Execution Protocol v1
+# AGENT INSTRUCTIONS: Execution Protocol v2
 
 Follow literally. Steps structure work, never output: do not narrate step numbers or step headers in anything the user reads.
 

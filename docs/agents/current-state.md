@@ -27,7 +27,7 @@
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
-| Candidate WIP (git-tracked) | `wip/` | `execution-protocol-v1/AGENTS.md` Candidate (`AZG:AGENT-INSTRUCTIONS`); `fable-method/compressed/` reference only |
+| Candidate WIP (git-tracked) | `wip/` | `execution-protocol-v2/AGENTS.md` draft (`AZG:AGENT-INSTRUCTIONS`); `fable-method/compressed/` reference only |
 
 ---
 

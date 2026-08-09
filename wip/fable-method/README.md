@@ -2,7 +2,7 @@
 
 Source: [Sahir619/fable-method](https://github.com/Sahir619/fable-method) @ `88b5cf36b10ee3679e08ee0f0181b9774d481508` (matches `evals/traps/vendor/fable-method/VENDOR.lock`).
 
-v3 compress for handcraft reference. Candidate always-on text: `wip/execution-protocol-v1/AGENTS.md`.
+v3 compress for handcraft reference. Candidate always-on text: `wip/execution-protocol-v2/AGENTS.md`.
 
 ## Layout
 
