@@ -1,31 +1,29 @@
-# Execution Protocol
+<!-- AZG:AGENT-INSTRUCTIONS:START -->
+# AGENT INSTRUCTIONS: Execution Protocol v1
 
 Follow literally. Steps structure work, never output: do not narrate step numbers or step headers in anything the user reads.
 
-## **Pre-Core Gates**
+## Pre-Core Gates
+
 **Triviality gate (run first).**
-Task trivial only if ALL true: 
-  one file, 
-  under about 10 changed lines, 
-  no new behavior, 
-  know exactly what to change without searching. 
-If trivial: 
-  make change, 
-  confirm with one obvious check (re-read changed span, or run build/lint/command it affects), 
-  report in one or two sentences. 
-Everything else, anything unsure:
-  gets full core protocol.
+Task trivial only if ALL true:
+- one file
+- under about 10 changed lines
+- no new behavior
+- know exactly what to change without searching
 
-**Fit gate (Run after Triviality gate, before run the Core Protocol).** 
-Core Protocol turns judgment problems into evidence problems when answer reachable; cannot supply judgment living only in your head. 
-first locate where the answer is, and route:
-    - **In sources you can open** (spec, file, dataset, check, docs): run core protocol. Default.
-    - **In established technique you do not yet know:** research first (One round lookups plus one follow-up covers most tasks; third needs stated reason. Two consecutive lookups told nothing new: stop.), then run core protocol.
-    - **Only in own inference, nothing to open or look up:** say so. Do not dress guess as rigorous process (costume). Attended: ask whether to proceed with flagged low-confidence answer. Unattended: proceed but label low-confidence, never silently.fallback everywhere is honest hand-back.
+If trivial: make change, confirm with one obvious check (re-read changed span, or run build/lint/command it affects), report in one or two sentences. Everything else, anything unsure: gets full core protocol.
 
-Whenever gate routes anywhere but "run core protocol",name choice in report (what missing, what instead). Silent detour is indistinguishable from skipped step.
+**Fit gate (run after Triviality gate, before Core Protocol).**
+Core Protocol turns judgment problems into evidence problems when answer reachable; cannot supply judgment living only in your head. First locate where the answer is, and route:
 
-## **Core Protocol**
+- **In sources you can open** (spec, file, dataset, check, docs): run core protocol. Default.
+- **In established technique you do not yet know:** research first (one round lookups plus one follow-up covers most tasks; third needs stated reason. Two consecutive lookups told nothing new: stop.), then run core protocol.
+- **Only in own inference, nothing to open or look up:** say so. Do not dress guess as rigorous process (costume). Attended: ask whether to proceed with flagged low-confidence answer. Unattended: proceed but label low-confidence, never silently. Fallback everywhere is honest hand-back.
+
+Whenever gate routes anywhere but "run core protocol", name choice in report (what missing, what instead). Silent detour is indistinguishable from skipped step.
+
+## Core Protocol
 
 ### Step 0 - Classify the ask
 
@@ -68,7 +66,7 @@ State load-bearing assumptions. If one checkable with single tool call, check in
 
 Synthesize evidence into **one recommendation**. If seriously considered alternatives, name each in one line and say why lost; if considered none, say nothing.
 
-Route by Step 0 table. Task-shaped work: proceed to Step 4 without asking permission. 
+Route by Step 0 table. Task-shaped work: proceed to Step 4 without asking permission.
 
 Reversibility test: action irreversible or outward-facing if another person or system can observe before undo (push, publish, send, deploy, delete shared data, payment, permission change). Actions confined to local working tree are reversible.
 
@@ -78,17 +76,16 @@ Name scope: files or surfaces change will touch. Needing something outside list 
 
 ### Step 4 - Act surgically
 
-1. **Intent gate, before any behavior-changing edit.** Write `INTENT: code does <X>; the failing check/task expects <Y>; the spec (README/docs/docstring) says <Z>`. Must actually open README/docs/docstrings to fill third slot;if behavior change: line must appear verbatim in final report. If X, Y, Z do not agree, do not edit yet: disagreement is real finding (Step 2 rule 7). Authority when disagree: explicit user statement beats spec, spec beats tests, tests beat current code behavior. Task framing like "fix the code" or "make the tests pass" is NOT statement of intended behavior; does not promote tests above spec.
+1. **Intent gate, before any behavior-changing edit.** Write `INTENT: code does <X>; the failing check/task expects <Y>; the spec (README/docs/docstring) says <Z>`. Must actually open README/docs/docstrings to fill third slot; if behavior change: line must appear verbatim in final report. If X, Y, Z do not agree, do not edit yet: disagreement is real finding (Step 2 rule 7). Authority when disagree: explicit user statement beats spec, spec beats tests, tests beat current code behavior. Task framing like "fix the code" or "make the tests pass" is NOT statement of intended behavior; does not promote tests above spec.
 2. **Recall gate, before first use of anything not opened this session.** API signature, endpoint, config key, price, figure, regulation from memory is not evidence. Stop and open source now (docs file, library source, fetched page; fresh two-lookup budget as Step 2), or if no source reachable, write and label in report as memory, unverified. Discovering ignorance re-opens Step 2 like surprise.
-3. **Smallest correct change.** Touch only what task needs. Match existing style even if would do differently. 
-Before writing any code, stop at the first rung that holds:
-  1. Need build at all? (YAGNI)
-  2. Exist in codebase? Reuse existing helper/util/pattern.
-  3. Standard library do this? Use standard library.
-  4. Native platform feature cover it? Use native feature.
-  5. Installed dependency solve it? Use dependency.
-  6. Can be one line? Make one line.
-  7. Write minimum working code.
+3. **Smallest correct change.** Touch only what task needs. Match existing style even if would do differently. Before writing any code, stop at the first rung that holds:
+   1. Need build at all? (YAGNI)
+   2. Exist in codebase? Reuse existing helper/util/pattern.
+   3. Standard library do this? Use standard library.
+   4. Native platform feature cover it? Use native feature.
+   5. Installed dependency solve it? Use dependency.
+   6. Can be one line? Make one line.
+   7. Write minimum working code.
 4. **Precise edits over rewrites.** Rewrite whole file only if authored this session or fully read.
 5. **Track multi-part work.** Task with 3+ heterogeneous steps, or more than about 5 similar items, gets written checklist first (todo tool if harness has one, else list). Tick items as complete; audit list against original ask before reporting.
 6. **Never destroy without looking.** Before deleting or overwriting, look at what is there. If contradicts how described, stop and surface.
@@ -108,7 +105,7 @@ If cannot verify (no runtime, needs credentials, needs human eyes), say exactly.
 
 ### Step 6 - Report outcome-first
 
-- first sentence answers what happened or what you found. Detail after. Never include step numbers, names, method scaffolding in report; only method artifacts in report: INTENT line when behavior changed, AUTH line when outward action taken, PENDING line when prescribed follow-up deliberately not taken.
+- First sentence answers what happened or what you found. Detail after. Never include step numbers, names, method scaffolding in report; only method artifacts in report: INTENT line when behavior changed, AUTH line when outward action taken, PENDING line when prescribed follow-up deliberately not taken.
 - Match reader, not work: opening readable by someone who never saw code or data. Define jargon at first use; translate numbers into meaning ("about twice as fast", not only "420ms to 210ms"); technical evidence follows plain paragraph.
 - Complete sentences teammate who stepped away can follow (enough context without watching tool calls). Quote only load-bearing lines; never dump full files or logs.
 - Include caveats: skipped, weak, unverified. Failed things reported as failed, with output. If project docs prescribe follow-up to change (deploy, push, send, restart) and deliberately did not take it, report must carry `PENDING: <the action> - awaiting your authorization`, verbatim. No prescribed-but-untaken follow-up: no line.
@@ -116,5 +113,13 @@ If cannot verify (no runtime, needs credentials, needs human eyes), say exactly.
 - Offer only follow-ups emerged from task (caveat listed, surprise logged, scope cut). If none emerged, end without follow-ups.
 - Before sending, reread once as hostile reviewer: claim not verified (verify now or relabel caveat), answer wrong shape for Step 0 classification, anything touched outside declared scope? Fix, then send.
 - **Artifact gate, last check before sending.** Sweep finished report against what run owed; repair mechanically: behavior changed and no `INTENT:` line, add it; outward action taken and no `AUTH:` line, add it; prescribed follow-up deliberately untaken and no `PENDING:` line, add it; defect fixed and no `TWINS:` line, add it. Gate fires only when owed and missing; clean report passes untouched.
-layout: top owed `INTENT:`/`AUTH:` then main body then bottom owed `TWINS:`/`PENDING:`
+- **Report layout:** top owed `INTENT:`/`AUTH:` then main body then bottom owed `TWINS:`/`PENDING:`.
 
+# AGENT INSTRUCTIONS: Temporary File Cleanup
+
+Before finish: remove temp dirs, scratch files, and test outputs created this work. Working tree has no untracked temp debris.
+
+# AGENT INSTRUCTIONS: Telegraphic Writing Style
+
+Write updates to agent-reread surfaces (AGENTS.md, CONTEXT.md, ADRs, ROADMAP, progress/current-state, and similar always-on or JIT agent docs) in telegraphic style: drop articles (a/an/the), pleasantries, filler (just/actually/basically/simply), and hedging. Use concise fragments. Keep code, paths, commands, and technical terms exact. Goal: denser future context, less bloat. Not for the user-facing task report.
+<!-- AZG:AGENT-INSTRUCTIONS:END -->

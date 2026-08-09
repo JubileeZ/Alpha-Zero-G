@@ -4,7 +4,7 @@ Git-tracked scratch for candidate handcraft. **Not** session temp debris; do not
 
 | Path | Purpose |
 |------|---------|
-| `candidates-raw/` | Handcraft draft for next Trap Candidate (`AGENTS.md` starter) |
-| `fable-method/` | Upstream compress material @ VENDOR.lock `88b5cf36` (upstream + compressed + references) |
+| `execution-protocol-v1/` | Trap Candidate draft (`AGENTS.md` with `AZG:AGENT-INSTRUCTIONS`) |
+| `fable-method/compressed/` | Reference compress (skills, `references/`, portable protocol source) |
 
-Promote flow: finish draft in `candidates-raw/` then copy into `templates/candidates/<pack-id>/` per `templates/candidates/README.md`. Trap gate before global merge (ADR 0012).
+Promote flow: finish `execution-protocol-v1/` → `templates/candidates/execution-protocol-v1/` per `templates/candidates/README.md`. Trap gate before global merge (ADR 0012).

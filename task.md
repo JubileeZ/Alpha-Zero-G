@@ -1,31 +1,22 @@
-# Fable-method candidate handcraft (WIP)
+# Execution Protocol v1 Candidate (WIP)
 
-**Objective:** Azg-owned intent-gates Candidate draft from fable-method compress; git-tracked under `wip/`.
+**Objective:** Trap Candidate always-on pack wired at `templates/candidates/execution-protocol-v1/`.
 
-**Acceptance:** `wip/` tracked in git; `wip/candidates-raw/AGENTS.md` distill-ready for `AZG:AGENT-INSTRUCTIONS`; compress snapshots in `wip/fable-method/`; Trap Process Gate when wired.
+**Acceptance:** Trap Process Gate preview passes with `TRAP_CANDIDATE_PACK=execution-protocol-v1`.
 
 ## Work Packet (SFDBN)
 
-**Status:** in_progress — candidate `AGENTS.md` expanded to full Steps 0–6 (~120 lines, uncommitted); writing-for-agents review + grill R1 done; hybrid distill pending user pick
+**Status:** in_progress — wired + committed; Trap preview next
 
 **Files:**
-- `wip/README.md` — WIP root (not session temp)
-- `wip/candidates-raw/AGENTS.md` — Execution Protocol draft (de-branded; Steps 0–6; no `AZG:` markers yet)
-- `wip/candidates-raw/Olddraft.md` — prior azg distill (~1.2k words; Prove + precedence + router)
-- `wip/candidates-raw/NOTICE` · `README.md`
-- `wip/fable-method/compressed/` — Execution Protocol SoT; `references/` at root; skills orchestrator · auditor · adapter-builder
-- `wip/fable-method/compressed/CHANGELOG.md` — rename entry
-- `wip/fable-method/upstream/` — raw pin `88b5cf36` (old names; untouched)
-- `task.md` · `docs/agents/current-state.md` · `.agents/session-handoff.md`
+- `templates/candidates/execution-protocol-v1/` — Candidate pack (AGENTS.md · cursor stub · NOTICE)
+- `evals/stage-execution-protocol-v1-home.sh` — Eval Device Home stager
+- `evals/run-trap-cell.sh` — `execution-protocol-v1` arm branch
+- `wip/execution-protocol-v1/` — lab mirror of candidate AGENTS.md
+- `wip/fable-method/compressed/` — reference compress
 
-**Decisions:**
-- Renamed `.tmp/` → `wip/` (agent temp-cleanup safe)
-- ADR 0009 scope: always-on gates only; no fable vendor paste on device
-- Compress v3: `AGENTS.md` sole Execution Protocol source; `references/` at compressed root
-- Terminology: loop→core protocol; whole method→Execution Protocol; fable-loop→orchestrator; fable-judge→auditor; fable-domain→adapter-builder
-- Candidate fork: near-full compressed copy minus Usage/Modes/examples/references pointers; ponytail ladder inlined Step 4.3
-- Grill R1 recommended: hybrid distill (compress Step 2 + method-refs pointer), Prove closing line, precedence block, fit router to `azg-domain-*`, fix typos before Trap
+**Decisions:** Execution Protocol first; cleanup + telegraphic after; no Prove; no domain router
 
-**Blocked:** grill Q1–Q6 answers (or "go with recommendations")
+**Blocked:** none
 
-**Next:** Apply chosen distill path → `AZG:AGENT-INSTRUCTIONS` wrapper → fix formatting defects → commit `wip/` → wire `templates/candidates/<pack-id>/` + Trap Process Gate
+**Next:** `TRAP_CANDIDATE_PACK=execution-protocol-v1 bash evals/traps/run-process-gate.sh --preview-only` → Adopt Ledger R=5

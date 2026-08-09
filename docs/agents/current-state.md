@@ -17,7 +17,7 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/` | **Clean slot** — prior unified-pipeline promoted (ADR 0015); see `candidates/README.md` |
+| Intent-gates Candidate | `templates/candidates/` | `execution-protocol-v1/` pack + stager; Trap gate before global promote |
 | Azg-owned skills | *(deleted from global)* | Distill skills removed; ponytail = **vendor catalog only** (not always-on) |
 | Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** matrix only (no `windows-latest`); **no** `test-lite`; `azg_python` |
@@ -27,7 +27,7 @@
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
-| Candidate WIP (git-tracked) | `wip/` | `candidates-raw/AGENTS.md` Steps 0–6 draft (~120 lines, uncommitted; no `AZG:` markers); `Olddraft.md` prior azg distill; `fable-method/compressed/` SoT; upstream @ `88b5cf36` |
+| Candidate WIP (git-tracked) | `wip/` | `execution-protocol-v1/AGENTS.md` Candidate (`AZG:AGENT-INSTRUCTIONS`); `fable-method/compressed/` reference only |
 
 ---
 
@@ -48,7 +48,7 @@
 
 | Item | Notes |
 |------|-------|
-| Fable-method distill + re-gate | `wip/candidates-raw/AGENTS.md` full-protocol draft; hybrid distill + `AZG:` packaging + Trap gate before promote |
+| Execution Protocol v1 Candidate | `templates/candidates/execution-protocol-v1/` wired; Trap preview + promote TBD |
 | Unified-pipeline Candidate → global | **Done** ADR 0015 — Candidate slot cleared for next pack |
 | Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |

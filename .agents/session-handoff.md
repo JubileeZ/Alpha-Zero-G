@@ -1,7 +1,15 @@
 # Session Handoff (SFDBN)
 
-- **Status:** Candidate `wip/candidates-raw/AGENTS.md` expanded Step 0 only → full Steps 0–6 (~120 lines, uncommitted); writing-for-agents review + grill R1 complete
-- **Files:** `wip/candidates-raw/AGENTS.md` (draft); `wip/candidates-raw/Olddraft.md` (prior distill); `wip/fable-method/compressed/` (SoT); `task.md`; `docs/agents/current-state.md`
-- **Decisions:** candidate = de-branded compressed minus Usage/Modes/examples; ponytail ladder Step 4.3; grill R1 recommends hybrid distill (~1.1–1.3k words), Prove closing line, precedence block, fit→`azg-domain-*` router, typo fixes before Trap
-- **Blocked:** user grill Q1–Q6 pick (or "go with recommendations")
-- **Next:** apply distill → `AZG:AGENT-INSTRUCTIONS` wrapper → commit `wip/` → `templates/candidates/<pack-id>/` + Trap Process Gate
+- **Status:** execution-protocol-v1 Candidate wired (`templates/candidates/` + stager + trap cell); block order fixed (protocol → cleanup → telegraphic)
+- **Files:** `templates/candidates/execution-protocol-v1/`; `evals/stage-execution-protocol-v1-home.sh`; `evals/run-trap-cell.sh`; `wip/execution-protocol-v1/AGENTS.md`
+- **Decisions:** grill Q1–Q5 settled; Trap pack id `execution-protocol-v1`
+- **Blocked:** none
+- **Next:** Trap Process Gate preview then Adopt Ledger R=5
+
+## Trap preview command
+
+```bash
+TRAP_CANDIDATE_PACK=execution-protocol-v1 \
+  TRAP_CAMP="$PWD/evals/traps/campaigns/gate-execution-protocol-v1" \
+  bash evals/traps/run-process-gate.sh --preview-only
+```
