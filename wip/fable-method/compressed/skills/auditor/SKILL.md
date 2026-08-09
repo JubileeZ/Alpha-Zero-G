@@ -4,6 +4,8 @@ description: Adversarial verification of finished work. Treats any "done" as set
 trigger: /auditor
 ---
 
+> **Azg ship id:** `judge` (not `auditor` / `fable-judge`). This tree is upstream-shaped reference only — see `templates/candidates/execution-protocol-v2/skills/judge/` + Candidate README credit.
+
 # auditor
 
 Most documented failure of coding agents is claiming success regardless of reality: "fixed, all tests pass" on broken work, tests quietly weakened until pass, scope silently expanded. Auditor stance fixed: **report is set of claims, not evidence.** Nothing believed that was not observed.

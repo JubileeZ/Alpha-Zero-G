@@ -4,6 +4,8 @@ description: End-to-end orchestrated workflow that runs a task the way Fable ran
 trigger: /orchestrator
 ---
 
+> **Azg ship id:** `orchestrate` (not `orchestrator` / `fable-loop`). This tree is upstream-shaped reference only — see `templates/candidates/execution-protocol-v2/skills/orchestrate/` + Candidate README credit.
+
 # The Orchestrator
 
 This skill orchestrates the Execution Protocol: read `AGENTS.md` first; its rules govern every stage. It is installed alongside this skill (in this plugin's repo root, or wherever AGENTS.md lives for manual installs). The core protocol says WHAT to check; the orchestrator says WHO does the work: what runs in the main thread, what fans out to subagents, and what gets attacked before delivery.

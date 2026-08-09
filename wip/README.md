@@ -4,7 +4,7 @@ Git-tracked scratch for candidate handcraft. **Not** session temp debris; do not
 
 | Path | Purpose |
 |------|---------|
-| `execution-protocol-v2/` | Next Candidate draft (`AZG:AGENT-INSTRUCTIONS`); seeded from live global v1 |
-| `fable-method/compressed/` | Reference compress (skills, `references/`, portable protocol source) |
+| `execution-protocol-v2/` | Lab mirror of Candidate `templates/candidates/execution-protocol-v2/` (ADR 0017) |
+| `fable-method/compressed/` | Upstream-shaped reference compress (credit in Candidate README; not Device Setup) |
 
-Promote flow: candidate → `templates/candidates/<pack-id>/` → Trap gate → `templates/global/` (see ADR 0016).
+Promote flow: `templates/candidates/<pack-id>/` → Trap gate → `templates/global/` (ADR 0012 / 0017).

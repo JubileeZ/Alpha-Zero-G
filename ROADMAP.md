@@ -10,7 +10,7 @@
 
 Reliable Delivery: higher Task Success per Delivery Cost than No-Harness Baseline, with Minimal Setup, across devices and Cursor/Antigravity. Repo-native gates own guarantees; IDE hooks are thin adapters.
 
-ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0009` intent-gates](docs/adr/0009-distilled-intent-gates.md) · [`0012` Trap sole gate](docs/adr/0012-trap-suite-process-gate.md) · [`0016` Execution Protocol v1](docs/adr/0016-promote-execution-protocol-v1.md)
+ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0009` intent-gates](docs/adr/0009-distilled-intent-gates.md) · [`0012` Trap sole gate](docs/adr/0012-trap-suite-process-gate.md) · [`0016` Execution Protocol v1](docs/adr/0016-promote-execution-protocol-v1.md) · [`0017` EP/judge/orchestrate layering](docs/adr/0017-ep-judge-orchestrate-layering.md)
 
 ---
 
@@ -33,6 +33,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Process Gate = Preview + Adopt Ledger **R=5** @ `luna-low` (`run-process-gate.sh`); prior xhigh/Smoke/tiered path retired
 - [x] Promote instructions-only Candidate — always-on ponytail retired (ADR 0015); vendor `ponytail-skills` remains
 - [x] Promote Execution Protocol v1 always-on (ADR 0016); Trap `gate-execution-protocol-v1` R=5 RECOMMEND_ADOPT
+- [ ] Trap Candidate `execution-protocol-v2` (ADR 0017): EP v2 + `judge` + `orchestrate` — Preview then Adopt Ledger
 - [x] Wipe incomparable camps + rate research (apple-to-apple)
 
 Live notes: `evals/traps/CAMPAIGN.md`.

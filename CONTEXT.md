@@ -164,11 +164,15 @@ _Avoid_: Sibling callers checked (vague), only the failing test site, fake TWINS
 On-demand azg-owned skill that binds a sector’s minimum evidence set, authority order, verify-by-observation meaning, and fraud table without changing the Think/Prove loop.
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
 
+**Judge Skill**:
+On-demand adversarial verification skill (`judge`): treats done reports as claims; re-runs checks; hunts classic frauds; verdict VERIFIED / CAVEATS / REFUTED. Fresh-context preferred. Lives in Candidate pack until Trap promote (ADR 0017) — not pasted into always-on EP.
+_Avoid_: fable-judge, auditor as shipped id, full fraud catalogue in always-on AGENTS
+
 **Orchestrate Skill**:
-On-demand skill for complex/unattended multi-area work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). **Parked** — not in current Candidate (instructions-only) nor `templates/global/` (ADR 0014 amend).
-_Avoid_: fable-loop as device skill id, Act as always-on default, azg-orchestrate (removed global name)
+On-demand skill for multi-area / long unattended / large blast-radius work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). User invoke or high bar only — **not** default after triviality (ADR 0017). Candidate pack `execution-protocol-v2` until Trap promote; not in current global Device Setup.
+_Avoid_: fable-loop as device skill id, orchestrator as shipped id, Act as always-on default, auto-Orchestrate for every non-trivial task
 
 **Method Naming**:
-When shipping method skills/paths: use azg labels (`orchestrate`, `judge`), not `fable-*`. Opaque product name + Claude-ecosystem branding; project is host-agnostic. Credit Sahir619/fable-method when content derives from it.
+When shipping method skills/paths: use azg labels (`orchestrate`, `judge`), not `fable-*`. Opaque product name + Claude-ecosystem branding; project is host-agnostic. Credit Sahir619/fable-method in Candidate README/NOTICE when content derives from it.
 _Avoid_: fable-method on device, fable-loop, fable-judge as shipped skill ids
 

@@ -1,3 +1,1 @@
-Execution Protocol v2 — azg-owned draft; forked from promoted v1 in `templates/global/AGENTS.md` (ADR 0016).
-Provenance chain: Sahir619/fable-method (MIT, ~v1.4.0) → v1 distill → v2 edits in `wip/execution-protocol-v2/AGENTS.md`.
-Reference compress: `wip/fable-method/compressed/` @ VENDOR.lock `88b5cf36`.
+Execution Protocol v2 lab mirror — see templates/candidates/execution-protocol-v2/NOTICE + README for credit (Sahir619/fable-method MIT) and ADR 0017.

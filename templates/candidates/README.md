@@ -1,6 +1,6 @@
 # Candidate Treatments (Trap Process Gate)
 
-Empty slot after ADR 0015 promote. Next Candidate lives here until Trap promote into `templates/global/`.
+Empty after ADR 0015/0016 promotes until next pack. Active Candidate: **`execution-protocol-v2/`** (ADR 0017) — EP v2 + `judge` + `orchestrate`.
 
 ## Add a Candidate
 

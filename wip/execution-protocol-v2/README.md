@@ -1,11 +1,11 @@
-# Execution Protocol v2 (WIP Candidate)
+# Execution Protocol v2 (WIP lab mirror)
 
-Next always-on Candidate draft. Seeded from live `templates/global/AGENTS.md` (Execution Protocol v1, ADR 0016).
+Canonical Candidate pack: **`templates/candidates/execution-protocol-v2/`** (ADR 0017).
 
-**Edit:** `AGENTS.md`
+This directory mirrors `AGENTS.md` for handcraft; prefer editing the Candidate pack, then sync here if needed.
 
-**Baseline (live):** `templates/global/AGENTS.md` — do not edit global until Trap gate promotes v2.
+**Skills (ship names):** `judge`, `orchestrate` — under Candidate `skills/`. No `fable-*` ids.
 
-**Reference:** `wip/fable-method/compressed/` (handcraft source; on-demand skills/references)
+**Credit:** see Candidate `README.md` / `NOTICE` → Sahir619/fable-method MIT.
 
-**Promote when ready:** copy to `templates/candidates/execution-protocol-v2/` + stager → Trap Process Gate (ADR 0012) → `templates/global/`
+**Promote:** Trap Process Gate with `TRAP_CANDIDATE_PACK=execution-protocol-v2` → `templates/global/` after RECOMMEND_ADOPT.

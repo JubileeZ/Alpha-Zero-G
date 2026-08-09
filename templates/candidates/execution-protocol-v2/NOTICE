@@ -1,0 +1,5 @@
+Execution Protocol v2 Candidate — azg-owned.
+Derived from Sahir619/fable-method (MIT, ~v1.4.0 ideas): Execution Protocol shape + auditor/orchestrator skill patterns.
+Shipped skill ids: judge, orchestrate (not fable-*).
+Reference compress: wip/fable-method/compressed/ @ VENDOR.lock 88b5cf36.
+See README.md for credit and Trap promote path. ADR 0017.

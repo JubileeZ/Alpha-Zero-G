@@ -17,17 +17,17 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/` | **Clean slot** — Execution Protocol v1 promoted (ADR 0016) |
-| Azg-owned skills | *(deleted from global)* | Distill skills removed; no ponytail/caveman vendor packs |
+| Intent-gates Candidate | `templates/candidates/` | **`execution-protocol-v2/`** — EP v2 + `judge` + `orchestrate` (ADR 0017); not promoted |
+| Azg-owned skills | Candidate pack only | `judge` / `orchestrate` under Candidate; none in global until Trap promote |
 | Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** matrix only (no `windows-latest`); **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | 0007 Lite **superseded**; **0012** sole Trap gate; **0013** Trap-only isolation |
-| Glossary | `CONTEXT.md` | Evaluation Suite = Trap Process Gate; Global Core vs Vendor Catalog |
+| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** EP/judge/orchestrate layering; 0007 Lite superseded; 0012 sole Trap gate |
+| Glossary | `CONTEXT.md` | Judge Skill · Orchestrate Skill · Method Naming (`judge`/`orchestrate`) |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
-| Research notes | `docs/research/` | Incl. Device Home / noise / tier notes (Lite adopt claims historical) |
-| Candidate WIP (git-tracked) | `wip/` | `execution-protocol-v2/AGENTS.md` draft (`AZG:AGENT-INSTRUCTIONS`); `fable-method/compressed/` reference only |
+| Research notes | `docs/research/` | Incl. **2026-08-09** auditor/orchestrator vs always-on |
+| Candidate WIP (git-tracked) | `wip/` | Lab mirror of EP v2 Candidate; `fable-method/compressed/` reference only |
 
 ---
 
@@ -41,6 +41,9 @@
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
 | Intent-gates form | ADR 0009 — historical Lite adopt; clean slate parked distill |
 | AGENTS always-on budget | No invented tok cap; absolute lean |
+| EP / judge / orchestrate layering | ADR 0017 — lean EP always-on; `judge`+`orchestrate` on-demand; no auto-Orchestrate |
+
+**Open:** Trap Preview for `execution-protocol-v2` when ready
 
 ---
 
@@ -48,9 +51,9 @@
 
 | Item | Notes |
 |------|-------|
-| Device Setup always-on | `templates/global/AGENTS.md` | Execution Protocol v1 + cleanup + telegraphic (ADR 0016) |
-| Unified-pipeline Candidate → global | **Done** ADR 0015 — Candidate slot cleared for next pack |
-| Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
+| EP v2 in Device Setup global | Candidate only until Trap RECOMMEND_ADOPT |
+| `judge` / `orchestrate` in global skills | Candidate pack `execution-protocol-v2/skills/` until promote |
+| Next Candidate after v2 | Clean slot after promote |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
 Delivery Cost auto-capture: parked / out of scope for now (never a promote input).
