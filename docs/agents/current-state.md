@@ -17,17 +17,17 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only (no `.sh` token) |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Intent-gates Candidate | `templates/candidates/` | **`execution-protocol-v2/`** — EP v2 + `judge` + `orchestrate` (ADR 0017); not promoted |
-| Azg-owned skills | Candidate pack only | `judge` / `orchestrate` under Candidate; none in global until Trap promote |
+| Intent-gates Candidate | `templates/candidates/` | **Empty slot** — EP v2 Candidate killed (ADR 0017); live = EP v1 global |
+| Azg-owned skills | *(none in global)* | `judge`/`orchestrate` deferred; reference `wip/fable-method/compressed/` |
 | Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** matrix only (no `windows-latest`); **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** EP/judge/orchestrate layering; 0007 Lite superseded; 0012 sole Trap gate |
-| Glossary | `CONTEXT.md` | Judge Skill · Orchestrate Skill · Method Naming (`judge`/`orchestrate`) |
+| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** layering (EP v2 Candidate killed — keep Current) |
+| Glossary | `CONTEXT.md` | Judge/Orchestrate deferred; Method Naming |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
 | Research notes | `docs/research/` | Incl. **2026-08-09** auditor/orchestrator vs always-on |
-| Candidate WIP (git-tracked) | `wip/` | Lab mirror of EP v2 Candidate; `fable-method/compressed/` reference only |
+| Candidate WIP (git-tracked) | `wip/` | `fable-method/compressed/` reference only |
 
 ---
 
@@ -41,9 +41,7 @@
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
 | Intent-gates form | ADR 0009 — historical Lite adopt; clean slate parked distill |
 | AGENTS always-on budget | No invented tok cap; absolute lean |
-| EP / judge / orchestrate layering | ADR 0017 — lean EP always-on; `judge`+`orchestrate` on-demand; no auto-Orchestrate |
-
-**Open:** Trap Preview for `execution-protocol-v2` when ready
+| EP / judge / orchestrate layering | ADR 0017 — lean always-on; EP v2 Candidate **killed**; keep EP v1 |
 
 ---
 
@@ -51,9 +49,8 @@
 
 | Item | Notes |
 |------|-------|
-| EP v2 in Device Setup global | Candidate only until Trap RECOMMEND_ADOPT |
-| `judge` / `orchestrate` in global skills | Candidate pack `execution-protocol-v2/skills/` until promote |
-| Next Candidate after v2 | Clean slot after promote |
+| Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
+| `judge` / `orchestrate` Device skills | Deferred — not in global |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
 Delivery Cost auto-capture: parked / out of scope for now (never a promote input).

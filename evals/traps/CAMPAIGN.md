@@ -2,10 +2,10 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Current Device Setup** EP v1 (ADR 0016) · **Next Candidate** `execution-protocol-v2` (ADR 0017) |
+| Status | **Current** EP v1 (ADR 0016) · Candidate slot **empty** |
 | Device Setup | Execution Protocol v1 + cleanup + telegraphic; `azg setup --force` |
-| Candidate slot | `templates/candidates/execution-protocol-v2/` (EP v2 + judge + orchestrate) |
-| Last gate | `gate-execution-protocol-v1` R=5 RECOMMEND_ADOPT (ledger on disk, gitignored) |
-| Next | Preview `TRAP_CANDIDATE_PACK=execution-protocol-v2` when ready |
+| Candidate slot | empty (EP v2 killed — ADR 0017) |
+| Last gate | `gate-execution-protocol-v1` R=5 RECOMMEND_ADOPT; EP v2 Preview abandoned |
+| Next | New pack under `templates/candidates/<id>/` when ready |
 
 Do not commit `campaigns/` / `worktrees/` / `homes/` (gitignored).

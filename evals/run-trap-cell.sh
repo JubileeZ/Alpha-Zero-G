@@ -86,9 +86,6 @@ case "${ARM}" in
       bash "${ROOT}/evals/trap-fable-pack.sh" inject "${WT}"
       git add -A
       git -c user.email=azg@test -c user.name=azg commit -qm "inject fable-method" >/dev/null || true
-    elif [ "${TRAP_CANDIDATE_PACK:-}" = "execution-protocol-v2" ]; then
-      EVAL_HOME="${ROOT}/evals/traps/homes/candidate-execution-protocol-v2"
-      bash "${ROOT}/evals/stage-execution-protocol-v2-home.sh" "${EVAL_HOME}"
     else
       # Default / unknown pack: Candidate = global Device Setup at AZG_CANDIDATE_REF
       CAN_SHA="$(git -C "${ROOT}" rev-parse "${CANDIDATE_REF}^{commit}")"

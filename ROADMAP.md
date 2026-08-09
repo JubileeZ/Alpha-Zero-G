@@ -33,7 +33,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 - [x] Process Gate = Preview + Adopt Ledger **R=5** @ `luna-low` (`run-process-gate.sh`); prior xhigh/Smoke/tiered path retired
 - [x] Promote instructions-only Candidate — always-on ponytail retired (ADR 0015); vendor `ponytail-skills` remains
 - [x] Promote Execution Protocol v1 always-on (ADR 0016); Trap `gate-execution-protocol-v1` R=5 RECOMMEND_ADOPT
-- [ ] Trap Candidate `execution-protocol-v2` (ADR 0017): EP v2 + `judge` + `orchestrate` — Preview then Adopt Ledger
+- [x] EP v2 Candidate killed after Preview — keep Current EP v1 (ADR 0017)
 - [x] Wipe incomparable camps + rate research (apple-to-apple)
 
 Live notes: `evals/traps/CAMPAIGN.md`.

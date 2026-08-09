@@ -165,11 +165,11 @@ On-demand azg-owned skill that binds a sector’s minimum evidence set, authorit
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
 
 **Judge Skill**:
-On-demand adversarial verification skill (`judge`): treats done reports as claims; re-runs checks; hunts classic frauds; verdict VERIFIED / CAVEATS / REFUTED. Fresh-context preferred. Lives in Candidate pack until Trap promote (ADR 0017) — not pasted into always-on EP.
+On-demand adversarial verification skill (`judge`) — **not shipped**. Layering: keep out of always-on (ADR 0017). May re-earn via future Candidate + Trap.
 _Avoid_: fable-judge, auditor as shipped id, full fraud catalogue in always-on AGENTS
 
 **Orchestrate Skill**:
-On-demand skill for multi-area / long unattended / large blast-radius work (evidence fan-out, plan bookend, main-thread edits, adversarial verifiers). User invoke or high bar only — **not** default after triviality (ADR 0017). Candidate pack `execution-protocol-v2` until Trap promote; not in current global Device Setup.
+On-demand multi-area / unattended fan-out skill — **not shipped**. Not always-on default (ADR 0017). Device Setup = EP v1 only (ADR 0016).
 _Avoid_: fable-loop as device skill id, orchestrator as shipped id, Act as always-on default, auto-Orchestrate for every non-trivial task
 
 **Method Naming**:

@@ -4,7 +4,7 @@ description: Adversarial verification of finished work. Treats any "done" as set
 trigger: /auditor
 ---
 
-> **Azg ship id:** `judge` (not `auditor` / `fable-judge`). This tree is upstream-shaped reference only — see `templates/candidates/execution-protocol-v2/skills/judge/` + Candidate README credit.
+> **Azg ship id (if ever shipped):** `judge` (not `auditor` / `fable-judge`). This tree is upstream-shaped reference only — credit Sahir619/fable-method; Device Setup is EP v1 (ADR 0016).
 
 # auditor
 

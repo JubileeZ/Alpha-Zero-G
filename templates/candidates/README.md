@@ -1,6 +1,6 @@
 # Candidate Treatments (Trap Process Gate)
 
-Empty after ADR 0015/0016 promotes until next pack. Active Candidate: **`execution-protocol-v2/`** (ADR 0017) — EP v2 + `judge` + `orchestrate`.
+Empty slot. Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 Candidate killed (ADR 0017). Next Candidate: new dir under `templates/candidates/` per below → Trap → promote.
 
 ## Add a Candidate
 
@@ -8,7 +8,7 @@ Empty after ADR 0015/0016 promotes until next pack. Active Candidate: **`executi
    - `AGENTS.md` — managed block(s) for always-on rules (usually `AZG:AGENT-INSTRUCTIONS`)
    - `cursor/rules/azg-*.mdc` — frontmatter stubs matching those blocks
    - `NOTICE` — origin / license if derived content
-2. Add `evals/stage-<pack-id>-home.sh` (copy pattern from git history `stage-unified-pipeline-home.sh` or mirror `stage-eval-home.sh`).
+2. Add `evals/stage-<pack-id>-home.sh` (copy pattern from git history `stage-execution-protocol-v1-home.sh` or mirror `stage-eval-home.sh`).
 3. Wire `evals/run-trap-cell.sh` candidate arm: `TRAP_CANDIDATE_PACK=<pack-id>` → your stager.
 4. Optional skills under `skills/`.
 5. Run Process Gate:

@@ -4,7 +4,7 @@ description: End-to-end orchestrated workflow that runs a task the way Fable ran
 trigger: /orchestrator
 ---
 
-> **Azg ship id:** `orchestrate` (not `orchestrator` / `fable-loop`). This tree is upstream-shaped reference only — see `templates/candidates/execution-protocol-v2/skills/orchestrate/` + Candidate README credit.
+> **Azg ship id (if ever shipped):** `orchestrate` (not `orchestrator` / `fable-loop`). This tree is upstream-shaped reference only — credit Sahir619/fable-method; Device Setup is EP v1 (ADR 0016).
 
 # The Orchestrator
 

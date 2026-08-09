@@ -1,7 +1,7 @@
 # Session Handoff (SFDBN)
 
-- **Status:** Grill closed · ADR 0017 accepted · Candidate `execution-protocol-v2` packaged
-- **Files:** `templates/candidates/execution-protocol-v2/`; `docs/adr/0017-*.md`; `evals/stage-execution-protocol-v2-home.sh`
-- **Decisions:** Lean EP always-on; `judge`+`orchestrate` on-demand same-wave Candidate; no `fable-*` ship ids; credit in Candidate README
+- **Status:** EP v2 Candidate **killed** — keep Current EP v1 (ADR 0016)
+- **Files:** pack/stager/wip v2 removed; ADR 0017 updated; Candidate slot empty
+- **Decisions:** Operator keep Current; no Adopt for v2; layering (no auto-Orchestrate / no fraud catalogue always-on) still stands
 - **Blocked:** none
-- **Next:** Trap Preview for pack when ready; do not promote to global without RECOMMEND_ADOPT
+- **Next:** none — idle until new Candidate
