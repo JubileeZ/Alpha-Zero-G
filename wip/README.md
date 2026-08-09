@@ -4,7 +4,7 @@ Git-tracked scratch for candidate handcraft. **Not** session temp debris; do not
 
 | Path | Purpose |
 |------|---------|
-| `execution-protocol-v1/` | Trap Candidate draft (`AGENTS.md` with `AZG:AGENT-INSTRUCTIONS`) |
+| `execution-protocol-v1/` | Promoted to global (ADR 0016); lab mirror optional |
 | `fable-method/compressed/` | Reference compress (skills, `references/`, portable protocol source) |
 
-Promote flow: finish `execution-protocol-v1/` → `templates/candidates/execution-protocol-v1/` per `templates/candidates/README.md`. Trap gate before global merge (ADR 0012).
+Promote flow: candidate → `templates/candidates/<pack-id>/` → Trap gate → `templates/global/` (see ADR 0016).
