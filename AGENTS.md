@@ -37,7 +37,10 @@ VERSION           # release version
 
 **Diff → suite:** setup/common/Cursor device → `test-cursor-device-setup.sh` · scaffold/apply → `test-azg.sh` + `test-phase*.sh` · `templates/project/` → `test-phase10.sh` + `test-mutation-verify.sh` · `evals/traps/` → `test-traps.sh` + `test-eval-isolation.sh` · hooks → `host-contract-smoke.sh` + `test-phase5.sh`
 
-**Commit readiness:** run the smallest applicable checks for the touched area (see Diff → suite); confirm they pass before proposing a commit. Pre-PR / CI parity: `bash tests/run-all.sh` (or `AZG_STRICT=1` when matching CI).
+**Commit Readiness:** Run smallest checks for touched area (Diff -> 
+suite); confirm pass before commit.Ensure CI passes after changes.; 
+confirm they pass before proposing a commit. Pre-PR / CI parity: 
+`bash tests/run-all.sh` (or `AZG_STRICT=1` when matching CI).
 
 **Windows:** run azg CLI, hooks, and `tests/*.sh` in Git Bash or another Bash-capable shell. App/node commands may use PowerShell.
 
