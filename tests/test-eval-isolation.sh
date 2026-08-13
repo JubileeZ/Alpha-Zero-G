@@ -105,9 +105,12 @@ for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
   fi
 done
 if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Telegraphic Writing Style\|Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && ! grep -qE 'Intent gates|INTENT:|Prove stance|PONYTAIL|lazy senior' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions clean-slate body"
+  && grep -q 'Execution Protocol v1' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Telegraphic Writing Style' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -qF 'INTENT:' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -qE 'Intent gates|Prove stance|PONYTAIL|lazy senior' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions ep-v1 body staged"
 else
   fail "agent-instructions body unexpected" ""
 fi

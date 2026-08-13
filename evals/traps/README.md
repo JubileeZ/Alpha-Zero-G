@@ -1,6 +1,6 @@
 # Trap Suite / Process Gate
 
-Vendored Fable-method trap fixtures + azg 3-arm runner. **Sole Evaluation Suite** (Lite deleted; ADR 0007 superseded). See ADR 0012.
+Azg 3-arm runner + docker isolation. **Adopt corpus = Earned Traps (ADR 0018)**. Planted Fable S1–S14 still on disk, **not** a promote input. Empty earned corpus → gate **INCOMPLETE**. Lite deleted (ADR 0007). Machinery: ADR 0012+0013.
 
 Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 
@@ -8,9 +8,9 @@ Parent: [`evals/README.md`](../README.md) (device setup + share vs local).
 
 | Path | Role | Git |
 |------|------|-----|
-| `vendor/fable-method/scenarios/` | Upstream fixtures (MIT); strip `GROUND-TRUTH.md` from agent copies | tracked |
-| `relevance-map.json` | change-type → preferred scenario IDs (selection only) | tracked |
-| `corpus.json` | Full S1–S14 id list | tracked |
+| `vendor/fable-method/scenarios/` | Planted S1–S14 (historical). **Not** adopt corpus (ADR 0018). Archive = explicit follow-up | tracked |
+| `relevance-map.json` | change-type → scenario IDs (selection only; planted map until earned corpus exists) | tracked |
+| `corpus.json` | Planted id list (stale for promote until rewritten for earned fixtures) | tracked |
 | `campaigns/<id>/` | Adopt Ledger `r1`–`r5`, scorecards, `LEDGER.md`, `aggregate.json` | **ignored** |
 | `homes/` | staged Eval Device Homes (`stage-eval-home.sh`) | **ignored** |
 | `LAST-GATE.md` | Pointer copy of latest `LEDGER.md` after analyze | **ignored** |
@@ -31,14 +31,15 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 
 **Eval Isolation (ADR 0013):** default `AZG_EVAL_DOCKER=1` — executor + judge in `azg-eval-agent` (empty image home; no host `~/.cursor`). **Eval Device Home:** Current/Candidate stage azg-owned rules from the arm git ref (`evals/stage-eval-home.sh`) and mount read-only; Baseline mounts none; worktree = fixture only. Clean slate: distill skills **not** staged unless `AZG_EVAL_AZG_SKILLS=1`. Fable-pack Candidate injects into worktree (no Device Home). Custom Candidate packs: `templates/candidates/<pack>/` + stager (see that README). `AZG_EVAL_DOCKER=0` = host smoke only; analyze refuses promote unless `isolation=docker`.
 
-## Default policy (ADR 0012)
+## Default policy (ADR 0018)
 
 - **Model** — `gpt-5.6-luna-low` only
-- **Preview Round** — full S1–S14 × R=1 × 3 arms; becomes ledger `r1`; **always ask** before Adopt
+- **Corpus** — Earned Traps only. Do not Recommend Adopt from planted S1–S14.
+- **Preview Round** — full **earned** corpus × R=1 × 3 arms; becomes ledger `r1`; **always ask** before Adopt. Not runnable while corpus empty.
 - **Adopt Run** — `r2`–`r5` (Preview included → R=5); sole recommend input with docker
 - **Concurrency** — all scenarios parallel **per arm**; arms serial: candidate → current → baseline
 - **Recommend** — overall maj Cand≥Cur≥B **and** Coverage (Cand mean≥Cur on ≥50% scenarios); else USER_DECIDES / REJECT / INCOMPLETE
-- **Jobs** — `TRAP_JOBS` (default 14)
+- **Jobs** — `TRAP_JOBS` (default 14; size to earned corpus when it exists)
 
 ## One-shot
 

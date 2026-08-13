@@ -1,10 +1,10 @@
 # Evaluation Suite
 
-**Sole gate:** Trap Suite Process Gate (ADR 0012+0013). SWE-bench Lite (ADR 0007) **deleted** 2026-08-07.
+**Sole gate:** Earned Trap Process Gate (ADR 0018). Runners/isolation ADR 0012+0013. Planted S1–S14 **not** a promote input. SWE-bench Lite (ADR 0007) **deleted** 2026-08-07. Empty earned corpus → INCOMPLETE.
 
 | Gate | Path | Role | Default models |
 |------|------|------|----------------|
-| **Trap Suite** | [`traps/`](traps/) | Intent/Prove / Treatment adopt | `gpt-5.6-luna-low` · Preview+Adopt Ledger R=5 |
+| **Earned Traps** | [`traps/`](traps/) | Treatment adopt (earned fixtures only) | `gpt-5.6-luna-low` · Preview+Adopt Ledger R=5 |
 
 Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agent-isolated.sh` + `stage-eval-home.sh`.
 

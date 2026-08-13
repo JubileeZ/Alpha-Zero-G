@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 — Lite suite **deleted**; Trap Process Gate = sole Evaluation Suite (ADR 0012); clean slate + tier sweep done; re-earn TBD
+**Active phase:** post-v4 — Lite **deleted**; planted S1–S14 **retired as adopt corpus** (ADR 0018); Earned Trap corpus **empty** (gate INCOMPLETE); EP v1 still shipped
 
 ---
 
@@ -19,14 +19,14 @@
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
 | Intent-gates Candidate | `templates/candidates/` | **Empty slot** — EP v2 Candidate killed (ADR 0017); live = EP v1 global |
 | Azg-owned skills | *(none in global)* | `judge`/`orchestrate` deferred; reference `wip/fable-method/compressed/` |
-| Evaluation Suite / Trap | `evals/traps/` + `run-process-gate.sh` + `analyze_ledger.py` + docker + `stage-eval-home` | **Sole gate** ADR 0012+0013; Preview+Adopt Ledger **R=5** @ `luna-low`; promote/recommend needs `isolation=docker` |
+| Evaluation Suite / Trap | `evals/traps/` + runners + docker + `stage-eval-home` | Machinery ADR 0012+0013; **corpus** ADR 0018 Earned Traps. Planted S1–S14 still on disk, **not** promote input. Empty earned corpus → INCOMPLETE |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** matrix only (no `windows-latest`); **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** layering (EP v2 Candidate killed — keep Current) |
+| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** layering; **0018** Earned Traps **accepted** (planted corpus retired; archive files = follow-up) |
 | Glossary | `CONTEXT.md` | Judge/Orchestrate deferred; Method Naming |
 | Lean continuity | `AGENTS.md` Session start (+ `read-agents-md.mdc`) | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
-| Research notes | `docs/research/` | Incl. **2026-08-09** auditor/orchestrator vs always-on |
+| Research notes | `docs/research/` | Incl. **2026-08-09** auditor/orchestrator vs always-on; **2026-08-13** protocol vs guidance always-on |
 | Candidate WIP (git-tracked) | `wip/` | `fable-method/compressed/` reference only |
 
 ---
@@ -35,7 +35,8 @@
 
 | Gap | Done |
 |-----|------|
-| Trap Suite Process Gate | ADR 0012+0013. Sole eval after Lite delete. **Preview Round** → ask → **Adopt Ledger R=5** @ `luna-low` |
+| Trap Suite Process Gate | ADR 0012+0013 machinery. **0018** planted S1–S14 retired as adopt corpus. Earned corpus empty → INCOMPLETE |
+| Always-on vs planted Trap | Grill 2026-08-13: Guidance = housekeeping intent; **0018 accepted**. EP v1 stays until earned gate can promote |
 | Fable-method distill + re-gate | Gaps from camps; never adopt upstream pack; clean slate shipped |
 | Ownership / Checkpoint / Skills | selective uninstall · unified Stop · full vendor |
 | Lite adopt gate | **Removed** 2026-08-07 — ADR 0007 superseded |
@@ -49,7 +50,8 @@
 
 | Item | Notes |
 |------|-------|
-| Next Candidate Treatment | Add under `templates/candidates/<pack>/` per README; Trap then promote |
+| Next Candidate Treatment | Guidance Treatment intent only — not a pack until Earned Trap corpus exists (ADR 0018) |
+| Earned Trap corpus | **None yet** — first fixture from a live miss + objective scorer |
 | `judge` / `orchestrate` Device skills | Deferred — not in global |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
@@ -62,7 +64,7 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 | Command | What it does |
 |---------|-------------|
 | `bash tests/run-all.sh` | Full aggregate gate |
-| `bash evals/traps/run-process-gate.sh` | Sole Process Gate (Preview → ask → Adopt Ledger R=5) |
+| `bash evals/traps/run-process-gate.sh` | Process Gate entrypoint. **Do not** Recommend Adopt from planted S1–S14 (ADR 0018). Empty earned corpus → INCOMPLETE |
 | `./azg setup` / `./azg setup --force` | Install Device Setup (AGENT-INSTRUCTIONS; prune retired ponytail rule) |
 | `bash evals/analyze-trap-ledger.sh <parent>` | `LEDGER.md` + recommend |
 | `bash evals/prepare-trap-campaign.sh` | Stub N×3 scorecards |
@@ -86,4 +88,5 @@ Delivery Cost auto-capture: parked / out of scope for now (never a promote input
 10. **Windows eval Python:** Store `python3` stub → use `azg_python`. Empty `TRAP_FULL` = unset for fable full default.
 11. **Windows jq manifest:** jq may emit `\r` on skill names — `_get_requested_skills` strips CR before lookup/install.
 12. **Windows ledger UTF-8:** `analyze_ledger.py` must `write_text(..., encoding="utf-8")` (`≥` in LEDGER.md).
-13. **No Lite** — `evals/lite/` gone; Trap only. Process Gate = `run-process-gate.sh` @ luna-low (not xhigh / Smoke / tiered-R).
+13. **No Lite** — `evals/lite/` gone. Planted S1–S14 not a promote input (ADR 0018). Earned corpus empty → Process Gate INCOMPLETE. Runners still `run-process-gate.sh` @ luna-low.
+14. **Eval staged home** — `stage-eval-home.sh` renders EP v1 + cleanup + telegraphic; `test-eval-isolation.sh` asserts that shape (not pre-EP clean-slate that forbids `INTENT:`).

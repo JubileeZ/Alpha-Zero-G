@@ -1,6 +1,6 @@
 # Trap Suite Process Gate (sole eval gate)
 
-**Status:** accepted (amended 2026-08-08 — Preview Round + Adopt Ledger @ `luna-low`)
+**Status:** accepted (amended 2026-08-08 — Preview Round + Adopt Ledger @ `luna-low`); **superseded in part by ADR 0018 (2026-08-13)** — planted S1–S14 no longer the adopt corpus. Runners, docker isolation, 3-arm math remain. Successor corpus = Earned Traps.
 
 Intent/Prove/Domain Candidates and Treatment adopt use the **Process Gate**: vendored Fable-method Trap Suite (MIT) under `evals/traps/vendor/fable-method/`, 3-arm compare on full corpus **and** `isolation=docker` (ADR 0013). Objective scoring preferred; LLM judge fallback for fixtures without a local scorer. Adherence mini-campaign retired. SWE-bench Lite (ADR 0007) **superseded** — harness deleted.
 

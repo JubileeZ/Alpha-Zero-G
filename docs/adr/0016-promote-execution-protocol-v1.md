@@ -9,3 +9,5 @@ Trap Process Gate (`gate-execution-protocol-v1`, R=5 @ `gpt-5.6-luna-low`, docke
 **Amends:** ADR 0009 clean-slate — intent gates re-earned via Trap, not full vendor paste.
 
 **Amended by ADR 0017 (2026-08-09):** Layering — no auto-Orchestrate / no full fraud catalogue in always-on. EP v2 Candidate later killed; Device Setup remains this ADR's EP v1.
+
+**Amended by ADR 0018 (2026-08-13):** Next always-on Device Setup change must pass the Earned Trap gate. EP v1 stays shipped until that gate can run. Planted S1–S14 not a promote input.

@@ -32,6 +32,14 @@ _Avoid_: Production harness, old core, control with azg
 Evaluation arm with Current Treatment plus one proposed change under test for adoption.
 _Avoid_: Experimental profile, feature flag arm, core+addon
 
+**Execution Protocol**:
+Numbered Device Setup always-on step machine. v1 live: classify → define done → evidence → act → verify → report, plus owed report tokens (`INTENT:` / `AUTH:` / `TWINS:` / `PENDING:`).
+_Avoid_: Principle guidance as always-on, skill playbook loaded every session
+
+**Guidance Treatment**:
+Intended next Device Setup always-on: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded failure-class heuristics. Not shipped until an Earned Trap campaign can promote (ADR 0018). Further lines or skills earned from later live misses.
+_Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Trap answer keys in always-on, policy ship without a gate
+
 **Ponytail**:
 On-demand lazy-senior coding skill from vendor catalog (`ponytail-skills`). **Not** Device Setup always-on (ADR 0015) — no `PONYTAIL:MANAGED` in global AGENTS, no `azg-ponytail.mdc`.
 _Avoid_: Always-on ponytail rule, nested PONYTAIL in Device Setup AGENTS
@@ -65,20 +73,28 @@ Pushed Checkpoint fetched on another device to resume same Work Packet from iden
 _Avoid_: Chat transfer, synchronized folder
 
 **Evaluation Suite**:
-Trap Suite Process Gate (ADR 0012) — sole in-repo adopt/eval path after Lite removal (ADR 0007 superseded).
-_Avoid_: SWE-bench Lite harness, homemade Blind Judge claim suite
+Earned Trap Process Gate (ADR 0018) — sole in-repo adopt/eval path. Runners/isolation from ADR 0012+0013. Planted S1–S14 not a promote input. Empty earned corpus → gate INCOMPLETE.
+_Avoid_: SWE-bench Lite harness, Blind Judge-only claim suite, planted S1–S14 as adopt corpus
 
 **Trap Suite**:
-Vendored Fable-method planted-trap fixtures (S1–S14) plus azg runners; Evaluation Suite / Process Gate corpus.
+Azg 3-arm runners + docker isolation + (until archived) planted Fable S1–S14 fixtures on disk. Not the adopt corpus after ADR 0018.
 _Avoid_: Adherence mini-campaign, full Fable product paste as shipped Treatment
 
+**Planted Trap**:
+Fable S1–S14 fixture written before the miss it encodes. Retired as adopt corpus (ADR 0018). Files may remain until an explicit archive step.
+_Avoid_: Earned Trap, always-on answer key
+
+**Earned Trap**:
+Eval fixture created from a live observed miss, with an objective scorer, added after the miss. Evaluation Suite corpus (ADR 0018). Not planted in advance; not the inverse of a heuristic just written.
+_Avoid_: Planted Trap, Blind Judge-only fixture, Trap answer key in always-on
+
 **Process Gate**:
-3-arm Trap promote when Candidate beats Current and Baseline on the agreed **Adopt Ledger** metrics **and** `isolation=docker`. Sole decision model: `gpt-5.6-luna-low`. Preceded by **Preview Round** (human must consent before more rounds). See ADR 0012.
-_Avoid_: Host-isolation promote, luna-xhigh Process Gate, tiered-R promote, 3-id smoke-as-gate
+3-arm promote when Candidate beats Current and Baseline on the agreed **Adopt Ledger** metrics **and** `isolation=docker`, on the **earned** corpus. Sole decision model: `gpt-5.6-luna-low`. Preceded by **Preview Round**. INCOMPLETE while earned corpus is empty. See ADR 0018.
+_Avoid_: Host-isolation promote, luna-xhigh Process Gate, tiered-R promote, planted S1–S14 promote
 
 **Preview Round**:
-Full Trap corpus (S1–S14) × **R=1** × 3 arms at `gpt-5.6-luna-low`; becomes **r1** of the Adopt Ledger. Always pause for human consent before further rounds. Not a cheap 3-id filter.
-_Avoid_: Smoke Filter, s2/s9/s13-only smoke, Preview-as-display-only
+Full **earned** corpus × **R=1** × 3 arms at `gpt-5.6-luna-low`; becomes **r1** of the Adopt Ledger. Always pause for human consent before further rounds. Not runnable until at least one Earned Trap exists.
+_Avoid_: Smoke Filter, s2/s9/s13-only smoke, Preview-as-display-only, planted S1–S14 Preview as promote
 
 **Adopt Ledger**:
 Comparable promote dataset for one Candidate: Preview Round (`r1`) plus up to four more full-corpus rounds (`r2`–`r5`) after human consent — uniform **R=5** max, same model/isolation/protocol.
@@ -101,11 +117,11 @@ Automated advice when Adopt Ledger is complete (R=5, no nulls, docker): overall 
 _Avoid_: Auto-merge to templates/global, smoke-only recommend
 
 **Live Campaign**:
-Candidate Treatment (and arm checkouts / packs) under test for the current Trap run. Recorded in `evals/traps/CAMPAIGN.md`; procedure in `evals/traps/README.md` + `evals/README.md`.
-_Avoid_: Operator runbook, map-only eval notes
+Candidate Treatment under test for the current Process Gate run. Recorded in `evals/traps/CAMPAIGN.md`. Earned corpus empty → no promote run.
+_Avoid_: Operator runbook, map-only eval notes, planted S1–S14 as live adopt corpus
 
 **Campaign cost envelope**:
-Order-of-magnitude operator resources for a trap campaign (e.g. Preview ≈ 42 cells; full Adopt Ledger R=5 ≈ 210 cells). Informational planning only — not a promote input and not Delivery Cost.
+Order-of-magnitude operator resources for an earned-trap campaign (Preview = 3 × corpus size cells; full Adopt Ledger R=5 = 15 × corpus size). Informational planning only — not a promote input and not Delivery Cost.
 _Avoid_: Delivery Cost, promote budget, efficiency score
 
 **Statusline**:
