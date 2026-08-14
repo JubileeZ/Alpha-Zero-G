@@ -9,7 +9,7 @@ extract_instructions() {
   awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{f=1; next} /<!-- AZG:AGENT-INSTRUCTIONS:END -->/{f=0; next} f' "${AGENTS}"
 }
 
-section "1. principles treatment always-on (ADR 0020)"
+section "1. principles treatment always-on (ADR 0021)"
 INST="$(extract_instructions)"
 if printf '%s\n' "${INST}" | grep -q 'Principles Treatment'; then pass "principles present"; else fail "missing Principles Treatment" ""; fi
 if printf '%s\n' "${INST}" | grep -q 'Temporary File Cleanup'; then pass "cleanup kept"; else fail "missing cleanup" ""; fi
@@ -19,9 +19,14 @@ if awk '/Principles Treatment/{ep=NR} /Temporary File Cleanup/{tc=NR} END{exit !
 else
   fail "wrong block order" ""
 fi
-for need in 'Twin Sweep' 'Intent Tie' 'azg-domain-data-analysis' 'azg-domain-research'; do
+for need in 'Twin Sweep' 'losing side' 'every hit' 'azg-domain-data-analysis' 'azg-domain-research'; do
   if printf '%s\n' "${INST}" | grep -qF "${need}"; then pass "has ${need}"; else fail "missing ${need}" ""; fi
 done
+if printf '%s\n' "${INST}" | grep -q 'Intent Tie'; then
+  fail "Intent Tie heading must be gone" ""
+else
+  pass "no Intent Tie"
+fi
 for bad in 'Execution Protocol v1' 'Follow literally' 'INTENT:' 'AUTH:' 'TWINS:' 'PENDING:' 'Prove stance' 'VERIFIED:' 'azg-method-refs' 'fable-method' 'fable-loop' 'PONYTAIL:MANAGED'; do
   if printf '%s\n' "${INST}" | grep -qF "${bad}"; then
     fail "residue: ${bad}" ""

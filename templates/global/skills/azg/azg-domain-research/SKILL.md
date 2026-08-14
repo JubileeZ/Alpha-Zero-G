@@ -17,6 +17,8 @@ Applies when the deliverable is an answer to a question about the world. The alw
 
 The user's actual question and constraints > primary sources > secondary sources > training memory. Official over aggregators over blogs over memory. A recalled URL you did not fetch is not evidence. When sources disagree, say which you trust and why; never silently average.
 
+When opened sources contradict a fact the user stated: attended → show the sources, recommend, wait. Unattended Session → labeled blocker; report the contradiction. An explicit user constraint stays rank 1.
+
 ## Verify by observation
 
 Every claim traces to a source opened this task, named. Arithmetic is recomputed. Cited links actually say what you claim. Keep an honest could-not-verify list.

@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 — Lite **deleted**; **Behavior Corpus** live (ADR 0019); Principles Treatment shipped (ADR 0020); Process Gate runnable (13 Executor Traps)
+**Active phase:** post-v4 — Lite **deleted**; **Behavior Corpus** live (ADR 0019, 12 Executor Traps); Principles Treatment **v2** shipped (ADR 0021); Candidate slot empty
 
 ---
 
@@ -17,12 +17,12 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Candidate slot | `templates/candidates/` | Empty after Principles promote (ADR 0020). Live Device Setup = Principles Treatment |
+| Candidate slot | `templates/candidates/` | Empty after v2 promote (ADR 0021). Live Device Setup = Principles v2 |
 | Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-data-analysis` + `azg-domain-research`. `judge`/`orchestrate` deferred |
 | Evaluation Suite | `evals/traps/scenarios/` + `score_outcome.py` + runners + docker | ADR 0012+0013 machinery; **0019** Behavior Corpus |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** only; **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | **0020** Principles live; **0016** EP v1 historical; **0017** layering; **0019** Behavior Corpus |
+| ADRs | `docs/adr/` | **0021** Principles v2 live; **0020** v1 historical; **0016** EP v1 historical; **0017** layering; **0019** Behavior Corpus |
 | Glossary | `CONTEXT.md` | |
 | Lean continuity | `AGENTS.md` Session start | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
@@ -35,7 +35,7 @@
 | Gap | Done |
 |-----|------|
 | Trap / eval | ADR 0012+0013 runners; **0019** Behavior Corpus (Outcome, not fable format) |
-| Always-on | Principles Treatment shipped (0020). Candidate slot empty |
+| Always-on | Principles v2 shipped (0021). Authority open-rank-edit; Twin Sweep every-hit; no Intent Tie heading |
 | Lite | Removed 2026-08-07 — ADR 0007 superseded |
 | EP layering | ADR 0017 — no auto-Orchestrate / no fraud catalogue in always-on |
 
@@ -45,7 +45,7 @@
 
 | Item | Notes |
 |------|-------|
-| Next Candidate Treatment | Slot empty. Last promote: Principles Treatment ADR 0020 (`gate-principles-v1` R=5 **RECOMMEND_ADOPT**) |
+| Next Candidate Treatment | Slot empty. Last promote: Principles v2 ADR 0021 (`gate-principles-v2` R=5 **RECOMMEND_ADOPT**). s2 + s13 still corpus ceilings |
 | `judge` / `orchestrate` Device skills | Deferred — not in global |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 

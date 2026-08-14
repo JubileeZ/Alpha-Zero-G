@@ -41,8 +41,8 @@ Shelved Device Setup always-on alternative: housekeeping only (temp-file cleanup
 _Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Principles Treatment, Trap answer keys in always-on
 
 **Principles Treatment**:
-Live Device Setup always-on (ADR 0020): short positive Owed Behaviors (shape, named observable, open-before-claim, smallest sufficient change, observe-to-done including surrounding checks, user’s words on outward action, secrets/env off-limits, check-integrity, authority order, Twin Sweep, Intent Tie) plus housekeeping plus a Domain Adapter Skill router. Unattended Intent Tie = labeled blocker (no ask, no edit). No numbered Execution Protocol, no Owed Report Token spelling. Ships `azg-domain-data-analysis` and `azg-domain-research` as model-invoked Device Setup skills.
-_Avoid_: Guidance Treatment, Execution Protocol as always-on, always-on ponytail, fraud catalogue in always-on, fable product name, token spelling as Task Success, unattended coin-flip on Intent Tie
+Live Device Setup always-on (ADR 0021): short positive Owed Behaviors (shape, named observable, open-before-claim, smallest sufficient change, observe-to-done, authority open-rank-edit, Twin Sweep every-hit, pick-one naming/format/path) plus housekeeping plus Domain Adapter Skill router. No Intent Tie heading. No numbered Execution Protocol, no Owed Report Token spelling. Ships `azg-domain-data-analysis` and `azg-domain-research` (attended source-vs-user → show, recommend, wait).
+_Avoid_: Guidance Treatment, Execution Protocol as always-on, always-on ponytail, fraud catalogue in always-on, fable product name, token spelling as Task Success, Intent Tie as always-on
 
 **Ponytail**:
 On-demand lazy-senior coding skill from vendor catalog (`ponytail-skills`). **Not** Device Setup always-on (ADR 0015) — no `PONYTAIL:MANAGED` in global AGENTS, no `azg-ponytail.mdc`.
@@ -181,19 +181,15 @@ Always-on discipline that treats a finished report as claims to re-observe (diff
 _Avoid_: fable-judge, blind trust in agent prose, verification theater
 
 **Reversible Default**:
-When scope is underspecified and a choice is local, cheap to undo, and nameable: state the assumption, ship, and verify. Ask when irreversible/outward or **Intent Tie**; **Impl-Equivalent Default** → state+ship+verify without asking.
+When scope is underspecified and a choice is local, cheap to undo, and nameable: state the assumption, ship, and verify. Ask when irreversible/outward; **Impl-Equivalent Default** → state+ship+verify without asking.
 _Avoid_: Always ask on ambiguity, silent guess without stating assumption
 
 **Impl-Equivalent Default**:
 Two underspec choices in the same risk class that are local and trivially reversible (naming, format, path under repo). Unattended: pick one, state, ship, verify.
-_Avoid_: Coin-flip product behavior, treat format choice as Intent Tie
-
-**Intent Tie**:
-Two competent product or requirement readings that code cannot settle. Unattended: labeled blocker — never ask, never coin-flip intent.
-_Avoid_: Assume-and-ship on requirement meaning, "equally costly" as always-ask for format/path
+_Avoid_: Coin-flip product behavior, treat format/path as a requirement conflict
 
 **Unattended Session**:
-Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present. Dispatch: see **Impl-Equivalent Default** and **Intent Tie**.
+Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present. Dispatch: see **Impl-Equivalent Default**.
 _Avoid_: User went quiet, assume unattended from silence
 
 **Twin Sweep**:
@@ -209,7 +205,7 @@ On-demand adversarial verification skill (`judge`) — **not shipped**. Layering
 _Avoid_: fable-judge, auditor as shipped id, full fraud catalogue in always-on AGENTS
 
 **Orchestrate Skill**:
-On-demand multi-area / unattended fan-out skill — **not shipped**. Not always-on default (ADR 0017). Device Setup = Principles Treatment (ADR 0020).
+On-demand multi-area / unattended fan-out skill — **not shipped**. Not always-on default (ADR 0017). Device Setup = Principles Treatment (ADR 0021).
 _Avoid_: fable-loop as device skill id, orchestrator as shipped id, Act as always-on default, auto-Orchestrate for every non-trivial task
 
 **Method Naming**:

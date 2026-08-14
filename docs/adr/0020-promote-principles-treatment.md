@@ -7,3 +7,5 @@ Trap Process Gate (`gate-principles-v1`, R=5 @ `gpt-5.6-luna-low`, docker) **REC
 **Consequences:** `azg setup --force` installs Principles always-on + two domain skills. Candidate slot cleared. Stager `stage-principles-v1-home.sh` removed; default Candidate arm = global @ `AZG_CANDIDATE_REF`. Eval Device Home stages those azg skills when present. Provenance: Sahir619/fable-method MIT ideas; azg-owned text.
 
 **Amends:** ADR 0016 (EP v1 superseded as live Device Setup). ADR 0017 (lean always-on remains; content is Principles not EP). ADR 0019 (gate ran; promote allowed).
+
+**Amended by ADR 0021 (2026-08-14):** Principles v2 promoted. Live always-on = Authority open-rank-edit + Twin Sweep every-hit; Intent Tie heading dropped.

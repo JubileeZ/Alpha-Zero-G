@@ -1,6 +1,6 @@
 # Candidate Treatments (Behavior Corpus Process Gate)
 
-Live Device Setup = Principles Treatment (`templates/global/`, ADR 0020). Candidate slot **empty**. Default Trap Candidate arm = Current global (`stage-eval-home` @ `AZG_CANDIDATE_REF`).
+Live Device Setup = Principles Treatment (`templates/global/`, ADR 0021). Candidate slot **empty**. Default Trap Candidate arm = Current global (`stage-eval-home` @ `AZG_CANDIDATE_REF`).
 
 ## Add a Candidate
 

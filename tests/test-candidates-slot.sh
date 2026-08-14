@@ -33,6 +33,16 @@ if [ -e "${ROOT}/evals/stage-principles-v1-home.sh" ]; then
 else
   pass "principles-v1 stager gone"
 fi
+if [ -d "${CAND_ROOT}/principles-v2" ]; then
+  fail "principles-v2 pack must be cleared after promote" ""
+else
+  pass "no principles-v2 pack"
+fi
+if [ -e "${ROOT}/evals/stage-principles-v2-home.sh" ]; then
+  fail "stage-principles-v2-home.sh must be removed" ""
+else
+  pass "principles-v2 stager gone"
+fi
 
 section "2. default Process Gate pack empty"
 if grep -F 'TRAP_CANDIDATE_PACK="${TRAP_CANDIDATE_PACK:-}"' "${ROOT}/evals/traps/run-process-gate.sh"; then
@@ -43,6 +53,7 @@ fi
 
 section "3. promote docs"
 assert_file_exists "ADR 0020" "${ROOT}/docs/adr/0020-promote-principles-treatment.md"
+assert_file_exists "ADR 0021" "${ROOT}/docs/adr/0021-promote-principles-v2.md"
 if grep -q 'azg setup' "${CAND_ROOT}/README.md" && grep -q 'TRAP_CANDIDATE_PACK' "${CAND_ROOT}/README.md"; then
   pass "README documents setup + Trap pack"
 else
