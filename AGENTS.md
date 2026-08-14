@@ -69,7 +69,7 @@ confirm they pass before proposing a commit. Pre-PR / CI parity:
 
 ### Eval campaigns — agent owns the watch
 
-When this agent **starts** or **inherits** a Trap Process Gate campaign (setsid, background `run-process-gate` / `run-trap-campaign`):
+When this agent **starts** or **inherits** a Behavior Corpus Process Gate campaign (setsid, background `run-process-gate` / `run-trap-campaign`):
 
 1. **Do not** leave the user to `tail -f` / poll alone. Agent watches until finish or hard block. Launch long runner with stdout visible and `notify_on_output` matcher `^AZG_TRAP_CAMPAIGN_FINISHED`; do not redirect away completion event. Preview pause may need human `y` or `--yes`.
 2. Poll: filled scorecards vs expected · `campaign.log` / `campaign.pid` · terminal artifacts (`LEDGER.md`, `aggregate.json`, `LAST-GATE.md`).

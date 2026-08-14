@@ -10,4 +10,4 @@ Trap Process Gate (`gate-execution-protocol-v1`, R=5 @ `gpt-5.6-luna-low`, docke
 
 **Amended by ADR 0017 (2026-08-09):** Layering — no auto-Orchestrate / no full fraud catalogue in always-on. EP v2 Candidate later killed; Device Setup remains this ADR's EP v1.
 
-**Amended by ADR 0018 (2026-08-13):** Next always-on Device Setup change must pass the Earned Trap gate. EP v1 stays shipped until that gate can run. Planted S1–S14 not a promote input.
+**Amended by ADR 0018 (2026-08-13) and ADR 0019 (2026-08-14):** Next always-on Device Setup change must pass the Behavior Corpus Process Gate. EP v1 stays shipped until that gate can run.

@@ -1,18 +1,15 @@
 # Earned Traps replace planted S1–S14 as Evaluation Suite corpus
 
-Planted Fable Trap Suite (S1–S14) is no longer the adopt corpus. Successor Evaluation Suite = **Earned Traps**: fixtures created from live observed misses, each with an objective scorer, still 3-arm vs No-Harness Baseline and Current, docker isolation (ADR 0013), `gpt-5.6-luna-low`, Preview then Adopt Ledger R=5 on the earned corpus. Always-on lines and skills are earned the same way (broad heuristic → one Device Setup line; repeated procedure → skill; never a fixture answer key). Execution Protocol v1 stays shipped (ADR 0016) until an Earned Trap campaign can promote a change. Guidance Treatment (housekeeping-only always-on) is intent, not `azg setup` in this ADR.
+**Status:** superseded by ADR 0019 (2026-08-14)
 
-**Status:** accepted 2026-08-13
+Planted Fable Trap Suite (S1–S14) left the adopt corpus. This ADR made **Earned Traps** (live miss + objective scorer) the successor. ADR 0019 then set the adopt corpus to the **Behavior Corpus** (reviewed executor traps + new azg-owned scenarios, Outcome scorers). Earned-from-live-miss remains an add path, not the sole corpus.
 
-Accept session: no vendor/scenario delete. Archive planted S1–S14 is an explicit follow-up.
+**Accepted:** 2026-08-13
 
-**Considered options:** keep planted S1–S14 as Process Gate (rejected — operator: create traps as misses appear); delete `evals/traps/` and ship Guidance on policy with no gate (rejected — no promote path; silent 0016 rollback); revive SWE-bench Lite (rejected — different corpus, ADR 0007 still superseded).
+**Considered options:** keep planted S1–S14 as Process Gate (rejected); delete `evals/traps/` and ship Guidance with no gate (rejected); revive SWE-bench Lite (rejected).
 
-**Consequences (on accept, not before):**
-- ADR 0012 superseded for *corpus*. Runners, docker Eval Isolation, Device Home stager, analyze/recommend math stay until an earned fixture exists.
-- Archive planted vendor scenarios (`evals/traps/vendor/fable-method/scenarios/`); do not use S1–S14 for Recommend Adopt. Do not `rm` runners or isolation tests in the same step as accept.
-- Process Gate is **INCOMPLETE** while earned corpus is empty — no Device Setup always-on promote, including Guidance Treatment.
-- First Earned Trap: live miss → objective scorer → fixture in corpus → then optional heuristic/skill. Inverse of a just-written instruction is not an Earned Trap.
-- EP v1 remains Current Treatment until that gate can run.
+**Historical consequences (at accept):** runners/isolation stayed; vendor S1–S14 not Recommend Adopt; gate INCOMPLETE while earned corpus empty; EP v1 stayed Current.
 
-**Amends:** ADR 0012 (corpus only); ADR 0016 (unchanged ship; next always-on change must pass Earned Trap gate); ADR 0017 (re-earn via Earned Trap, not planted S1–S14).
+**Amends:** ADR 0012 (corpus only, later 0019); ADR 0016; ADR 0017.
+
+**Superseded by:** [ADR 0019](0019-behavior-corpus-eval.md).

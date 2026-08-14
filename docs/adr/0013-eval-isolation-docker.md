@@ -2,9 +2,9 @@
 
 3-arm Agent CLI Trap campaigns must not see host `~/.cursor` from Device Setup. Shared image `azg-eval-agent` + `evals/run-agent-isolated.sh`. Lite suite removed (ADR 0007 superseded) — no separate SWE-bench score path in-repo. VM deferred.
 
-**Status:** accepted (amended 2026-08-07 — Eval Device Home; Trap-only)
+**Status:** accepted (amended 2026-08-07 — Eval Device Home; Trap-only; 2026-08-14 — fable-pack inject retired)
 
-**Decision:** Docker empty home by default. Current/Candidate mount an **Eval Device Home** staged from the arm git ref (`evals/stage-eval-home.sh`): Ponytail + AGENT-INSTRUCTIONS `.mdc` (+ optional azg skills if `AZG_EVAL_AZG_SKILLS=1`) — read-only under container `$HOME/.cursor/{rules,skills}` (+ `.agents/skills`). Baseline mounts none. Worktree holds fixture only (no azg rule inject). Fable-pack Candidate may still inject into worktree.
+**Decision:** Docker empty home by default. Current/Candidate mount an **Eval Device Home** staged from the arm git ref (`evals/stage-eval-home.sh`): Ponytail + AGENT-INSTRUCTIONS `.mdc` (+ optional azg skills if `AZG_EVAL_AZG_SKILLS=1`) — read-only under container `$HOME/.cursor/{rules,skills}` (+ `.agents/skills`). Baseline mounts none. Worktree holds fixture only (no pack inject). Custom Candidate packs: `templates/candidates/<id>/` + stager.
 
 **Considered options:** operator runbook only (rejected); isolated HOME without Docker (rejected for hermetic empty home); VM (overkill); worktree-only inject (rejected for Device Setup fidelity); full vendor+MCP in eval home (rejected — noise vs Process Gate).
 

@@ -1,6 +1,6 @@
-# Candidate Treatments (Earned Trap Process Gate)
+# Candidate Treatments (Behavior Corpus Process Gate)
 
-Empty slot. Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 killed (ADR 0017). Planted S1–S14 not a promote input (ADR 0018). Next Candidate: new dir under `templates/candidates/` **after** at least one Earned Trap exists → Process Gate → promote. Guidance Treatment is intent only until then.
+Empty slot. Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 killed (ADR 0017). Next Candidate: new dir under `templates/candidates/` → Behavior Corpus Process Gate (ADR 0019) → promote. Guidance Treatment is intent only until that gate can run.
 
 ## Add a Candidate
 

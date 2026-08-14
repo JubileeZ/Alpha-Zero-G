@@ -9,13 +9,6 @@ CAMP="${1:-${ROOT}/evals/traps/campaigns/default}"
 mkdir -p "${CAMP}"
 CAMP="$(cd "${CAMP}" && pwd)"
 
-# Adopt candidate (upstream fable pack): full corpus unless TRAP_FULL or TRAP_IDS set.
-# Empty TRAP_FULL counts as unset (Windows env -u / blank export quirks).
-if [ "${TRAP_CANDIDATE_PACK:-}" = "fable-method" ] && [ -z "${TRAP_FULL:-}" ] && [ -z "${TRAP_IDS:-}" ]; then
-  export TRAP_FULL=1
-  info "TRAP_CANDIDATE_PACK=fable-method → default TRAP_FULL=1 (override: TRAP_FULL=0)"
-fi
-
 # stable seed for this prepare (select reads TRAP_SEED)
 if [ -z "${TRAP_SEED:-}" ] && [ "${TRAP_FULL:-0}" != "1" ]; then
   export TRAP_SEED

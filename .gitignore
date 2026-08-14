@@ -3,7 +3,7 @@
 /tmp_azg*
 
 # --- evals ---
-# Shared (tracked): trap runners, README/CAMPAIGN, vendor + maps.
+# Shared (tracked): trap runners, README/CAMPAIGN, scenarios + maps.
 # Local only (ignored): campaign scorecards/logs, cell worktrees, staged homes.
 evals/traps/campaigns/
 evals/traps/worktrees/

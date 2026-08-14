@@ -15,7 +15,7 @@ if grep -q '^\*\*Eval Isolation\*\*:' "${ROOT}/CONTEXT.md"; then pass "CONTEXT E
 section "2. trap wiring"
 if grep -q 'run-agent-isolated.sh' "${ROOT}/evals/run-trap-cell.sh"; then pass "trap cell uses isolated runner"; else fail "trap cell" ""; fi
 c=$(grep -c 'run-agent-isolated.sh' "${ROOT}/evals/run-trap-cell.sh" || true)
-if [ "${c}" -ge 2 ]; then pass "executor+judge both isolated (${c})"; else fail "need ≥2 call sites" "c=${c}"; fi
+if [ "${c}" = "1" ]; then pass "executor isolated (no LLM-judge call)"; else fail "isolated runner call sites" "c=${c}"; fi
 
 section "3. analyze refuses host promote"
 tmp=$(azg_mktemp_d "tmp_azg_iso-XXXXXX")

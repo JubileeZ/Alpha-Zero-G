@@ -9,3 +9,5 @@ Always-on Device Setup stays **lean Execution Protocol** (EP v1 live, ADR 0016).
 **Consequences:** Candidate slot empty. Device Setup = ADR 0016. Research retained: `docs/research/2026-08-09-auditor-orchestrator-always-on.md`.
 
 **Amends:** ADR 0010; ADR 0016 (v2 path abandoned — stay on promoted v1).
+
+**Amended by ADR 0019 (2026-08-14):** Re-earn judge/orchestrate (if ever) via Behavior Corpus Process Gate, not planted S1–S14.

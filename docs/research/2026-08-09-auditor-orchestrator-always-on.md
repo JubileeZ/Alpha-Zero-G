@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-09  
 **Question:** For azg Device Setup always-on Execution Protocol — (A) fold auditor “Hunt classic frauds” into core verify + spawn verify subagent; (B) auto-run Orchestrator after triviality for non-trivial work vs raise trigger bar. Industry practice on separate judges, orchestration triggers, always-on vs skills, pitfalls.  
-**AZG framing:** Lean always-on AGENTS policy already (“absolute lean”); EP v1 promoted (ADR 0016); fable `auditor` / `orchestrator` live as on-demand WIP skills (`wip/fable-method/compressed/`). Prior size note: [`2026-08-05-agents-md-always-on-budget.md`](./2026-08-05-agents-md-always-on-budget.md).
+**AZG framing:** Lean always-on AGENTS policy already (“absolute lean”); EP v1 promoted (ADR 0016); fable `auditor` / `orchestrator` were on-demand WIP skills (`wip/fable-method/compressed/` — **removed 2026-08-14**, recover from git). Prior size note: [`2026-08-05-agents-md-always-on-budget.md`](./2026-08-05-agents-md-always-on-budget.md).
 
 ---
 

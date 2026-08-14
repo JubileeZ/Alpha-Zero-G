@@ -1,0 +1,3 @@
+Adapted fixtures (MIT) from Sahir619/fable-method.
+Source: https://github.com/Sahir619/fable-method
+Azg Behavior Corpus (ADR 0019). Never give GROUND-TRUTH.md to agents under test.

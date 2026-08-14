@@ -394,6 +394,11 @@ def main(argv: list[str] | None = None) -> int:
     (parent / "LEDGER.md").write_text(text, encoding="utf-8")
     if args.last_gate:
         pathlib.Path(args.last_gate).write_text(text, encoding="utf-8")
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except (OSError, ValueError):
+            pass
     print(text)
     return 0
 

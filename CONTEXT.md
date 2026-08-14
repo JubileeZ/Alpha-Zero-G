@@ -9,8 +9,8 @@ Completion of a user-requested task that passes explicit acceptance gates and ac
 _Avoid_: Guaranteed output, good result
 
 **Task Success**:
-Delivery where the evaluation task's automated checks pass (industry-bench tests or equivalent hard gates). No human rubric.
-_Avoid_: Done, completed run, blind-judge pass
+Delivery where the evaluation task's automated checks pass (industry-bench tests or equivalent hard gates). For a Trap, that check is **Observable Outcome**, not report-token presence. No human rubric.
+_Avoid_: Done, completed run, blind-judge pass, INTENT/AUTH/TWINS/PENDING grep as the pass bit
 
 **No-Harness Baseline**:
 Evaluation arm using the same task, repository state, model, IDE, permissions, and budget as harness arms, with only Alpha-Zero-G configuration removed.
@@ -33,11 +33,11 @@ Evaluation arm with Current Treatment plus one proposed change under test for ad
 _Avoid_: Experimental profile, feature flag arm, core+addon
 
 **Execution Protocol**:
-Numbered Device Setup always-on step machine. v1 live: classify → define done → evidence → act → verify → report, plus owed report tokens (`INTENT:` / `AUTH:` / `TWINS:` / `PENDING:`).
-_Avoid_: Principle guidance as always-on, skill playbook loaded every session
+Numbered Device Setup always-on step machine. v1 live: classify → define done → evidence → act → verify → report. May emit Owed Report Tokens; eval does not require that spelling.
+_Avoid_: Principle guidance as always-on, skill playbook loaded every session, token spelling as Task Success
 
 **Guidance Treatment**:
-Intended next Device Setup always-on: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded failure-class heuristics. Not shipped until an Earned Trap campaign can promote (ADR 0018). Further lines or skills earned from later live misses.
+Intended next Device Setup always-on: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded failure-class heuristics. Not shipped until a Behavior Corpus Process Gate can promote (ADR 0019). Further lines or skills may still be added from later live misses.
 _Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Trap answer keys in always-on, policy ship without a gate
 
 **Ponytail**:
@@ -73,28 +73,48 @@ Pushed Checkpoint fetched on another device to resume same Work Packet from iden
 _Avoid_: Chat transfer, synchronized folder
 
 **Evaluation Suite**:
-Earned Trap Process Gate (ADR 0018) — sole in-repo adopt/eval path. Runners/isolation from ADR 0012+0013. Planted S1–S14 not a promote input. Empty earned corpus → gate INCOMPLETE.
-_Avoid_: SWE-bench Lite harness, Blind Judge-only claim suite, planted S1–S14 as adopt corpus
+Behavior Corpus Process Gate (ADR 0019) — sole in-repo adopt/eval path. Runners/isolation from ADR 0012+0013. Task Success = Observable Outcome; Report Evidence recorded separately.
+_Avoid_: SWE-bench Lite harness, Blind Judge-only claim suite, token grep as pass
 
 **Trap Suite**:
-Azg 3-arm runners + docker isolation + (until archived) planted Fable S1–S14 fixtures on disk. Not the adopt corpus after ADR 0018.
-_Avoid_: Adherence mini-campaign, full Fable product paste as shipped Treatment
+Azg 3-arm runners + docker isolation for the Process Gate. Not the corpus.
+_Avoid_: Adherence mini-campaign, restore deleted vendor fable tree as adopt corpus
 
-**Planted Trap**:
-Fable S1–S14 fixture written before the miss it encodes. Retired as adopt corpus (ADR 0018). Files may remain until an explicit archive step.
-_Avoid_: Earned Trap, always-on answer key
+**Behavior Corpus**:
+Adopt corpus of Executor Traps with objective Observable Outcome scorers. May grow from a live miss (scorer after the miss; not the inverse of a just-written heuristic). Report Evidence recorded, not the pass bit.
+_Avoid_: Fable-format GROUND-TRUTH as scorer, judge-skill / assessor prompt as executor unit, token grep as pass, empty earned-only gate, planted S1–S14 as-is
 
-**Earned Trap**:
-Eval fixture created from a live observed miss, with an objective scorer, added after the miss. Evaluation Suite corpus (ADR 0018). Not planted in advance; not the inverse of a heuristic just written.
-_Avoid_: Planted Trap, Blind Judge-only fixture, Trap answer key in always-on
+**Executor Trap**:
+Fixture where the agent under test does the user task. Process Gate unit.
+_Avoid_: Assessor/judge prompt as the task
+
+**Observable Outcome**:
+World state after a Trap run that proves the task shipped: required checks pass, required files correct, forbidden side effects absent.
+_Avoid_: Token grep as ship, LLM vibe, report-only pass, correct_action 2 as Task Success
+
+**Owed Behavior**:
+Distinctive correct move a Trap exists to observe — decline unauthorized outward action, Twin Sweep copies, leave files untouched on a question, trust spec over a wrong test. Observed in world state and report substance, not a required token spelling.
+_Avoid_: Fable report format, method scaffolding, verbatim INTENT/AUTH/TWINS/PENDING as the behavior
+
+**Report Evidence**:
+Readable signal in the final report that an Owed Behavior happened — authorization needed or quoted, twin copies searched, intent/spec-vs-test named, prescribed follow-up declined. Equivalent prose counts; `AUTH:` / `TWINS:` / `INTENT:` / `PENDING:` are one spelling, not required. Recorded separately from Task Success. Token without the behavior is Costume.
+_Avoid_: Verbatim fable artifact gate as Task Success, N/A token lines, format-only pass, AUTH token for a declined deploy
+
+**Owed Report Token**:
+Device Setup spelling of Report Evidence (`INTENT:` / `AUTH:` / `TWINS:` / `PENDING:`). Eval does not require this spelling.
+_Avoid_: Token as Task Success, fable artifact gate as promote input
+
+**Costume**:
+Report token or method scaffolding that claims an Owed Behavior without the search or action behind it.
+_Avoid_: Fake TWINS, AUTH/PENDING line after unauthorized deploy, scaffolding leakage as Task Success
 
 **Process Gate**:
-3-arm promote when Candidate beats Current and Baseline on the agreed **Adopt Ledger** metrics **and** `isolation=docker`, on the **earned** corpus. Sole decision model: `gpt-5.6-luna-low`. Preceded by **Preview Round**. INCOMPLETE while earned corpus is empty. See ADR 0018.
-_Avoid_: Host-isolation promote, luna-xhigh Process Gate, tiered-R promote, planted S1–S14 promote
+3-arm promote when Candidate beats Current and Baseline on the agreed **Adopt Ledger** metrics **and** `isolation=docker`, on the **Behavior Corpus**. Sole decision model: `gpt-5.6-luna-low`. Preceded by **Preview Round**. See ADR 0019.
+_Avoid_: Host-isolation promote, luna-xhigh Process Gate, tiered-R promote, vendor fable-format promote
 
 **Preview Round**:
-Full **earned** corpus × **R=1** × 3 arms at `gpt-5.6-luna-low`; becomes **r1** of the Adopt Ledger. Always pause for human consent before further rounds. Not runnable until at least one Earned Trap exists.
-_Avoid_: Smoke Filter, s2/s9/s13-only smoke, Preview-as-display-only, planted S1–S14 Preview as promote
+Full **Behavior Corpus** × **R=1** × 3 arms at `gpt-5.6-luna-low`; becomes **r1** of the Adopt Ledger. Always pause for human consent before further rounds.
+_Avoid_: Smoke Filter, s2/s9/s13-only smoke, Preview-as-display-only
 
 **Adopt Ledger**:
 Comparable promote dataset for one Candidate: Preview Round (`r1`) plus up to four more full-corpus rounds (`r2`–`r5`) after human consent — uniform **R=5** max, same model/isolation/protocol.
@@ -117,11 +137,11 @@ Automated advice when Adopt Ledger is complete (R=5, no nulls, docker): overall 
 _Avoid_: Auto-merge to templates/global, smoke-only recommend
 
 **Live Campaign**:
-Candidate Treatment under test for the current Process Gate run. Recorded in `evals/traps/CAMPAIGN.md`. Earned corpus empty → no promote run.
-_Avoid_: Operator runbook, map-only eval notes, planted S1–S14 as live adopt corpus
+Candidate Treatment under test for the current Process Gate run. Recorded in `evals/traps/CAMPAIGN.md`.
+_Avoid_: Operator runbook, map-only eval notes, vendor fable-format as live adopt corpus
 
 **Campaign cost envelope**:
-Order-of-magnitude operator resources for an earned-trap campaign (Preview = 3 × corpus size cells; full Adopt Ledger R=5 = 15 × corpus size). Informational planning only — not a promote input and not Delivery Cost.
+Order-of-magnitude operator resources for a Behavior Corpus campaign (Preview = 3 × corpus size cells; full Adopt Ledger R=5 = 15 × corpus size). Informational planning only — not a promote input and not Delivery Cost.
 _Avoid_: Delivery Cost, promote budget, efficiency score
 
 **Statusline**:
@@ -181,7 +201,7 @@ On-demand azg-owned skill that binds a sector’s minimum evidence set, authorit
 _Avoid_: fable-domain maker, always-on full domain paste, coding-default duplicate adapters
 
 **Judge Skill**:
-On-demand adversarial verification skill (`judge`) — **not shipped**. Layering: keep out of always-on (ADR 0017). May re-earn via future Candidate + Trap.
+On-demand adversarial verification skill (`judge`) — **not shipped**. Layering: keep out of always-on (ADR 0017). May re-earn via future Candidate + Behavior Corpus Process Gate.
 _Avoid_: fable-judge, auditor as shipped id, full fraud catalogue in always-on AGENTS
 
 **Orchestrate Skill**:

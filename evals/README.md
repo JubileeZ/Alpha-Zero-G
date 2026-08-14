@@ -1,10 +1,10 @@
 # Evaluation Suite
 
-**Sole gate:** Earned Trap Process Gate (ADR 0018). Runners/isolation ADR 0012+0013. Planted S1–S14 **not** a promote input. SWE-bench Lite (ADR 0007) **deleted** 2026-08-07. Empty earned corpus → INCOMPLETE.
+**Sole gate:** Behavior Corpus Process Gate (ADR 0019). Runners/isolation ADR 0012+0013. Task Success = Observable Outcome. SWE-bench Lite (ADR 0007) **deleted**.
 
 | Gate | Path | Role | Default models |
 |------|------|------|----------------|
-| **Earned Traps** | [`traps/`](traps/) | Treatment adopt (earned fixtures only) | `gpt-5.6-luna-low` · Preview+Adopt Ledger R=5 |
+| **Behavior Corpus** | [`traps/`](traps/) | Treatment adopt (executor Outcome scorers) | `gpt-5.6-luna-low` · Preview+Adopt Ledger R=5 |
 
 Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agent-isolated.sh` + `stage-eval-home.sh`.
 
@@ -14,15 +14,15 @@ Shared isolation: [`docker/azg-eval-agent/`](docker/azg-eval-agent/) + `run-agen
 evals/
   README.md
   docker/azg-eval-agent/          # ADR 0013 image
-  traps/                          # corpus, vendor, CAMPAIGN, run-process-gate.sh
-  run-agent-isolated.sh  stage-eval-home.sh  trap-fable-pack.sh
+  traps/                          # corpus, CAMPAIGN, run-process-gate.sh
+  run-agent-isolated.sh  stage-eval-home.sh
   *-trap*.sh                      # prepare / cell / campaign / score / analyze / report / select
   analyze-trap-ledger.sh
 ```
 
 | Tracked | Ignored |
 |---------|---------|
-| runners + `traps/{README,CAMPAIGN,corpus,relevance-map,vendor,analyze_ledger.py,run-process-gate.sh}` | `traps/campaigns/`, `traps/worktrees/`, `traps/homes/`, `LAST-GATE.md` |
+| runners + `traps/{README,CAMPAIGN,corpus,relevance-map,scenarios,score_outcome.py,analyze_ledger.py,run-process-gate.sh}` | `traps/campaigns/`, `traps/worktrees/`, `traps/homes/`, `LAST-GATE.md` |
 
 ## Device setup (once)
 
@@ -46,4 +46,4 @@ bash tests/test-traps.sh
 bash tests/test-eval-isolation.sh
 ```
 
-**Recommend:** full S1–S14 × **R=5** Adopt Ledger at `luna-low` (Preview included). Do not commit under `traps/campaigns/` or `worktrees/`.
+**Recommend:** full Behavior Corpus × **R=5** Adopt Ledger at `luna-low` (Preview included). Do not commit under `traps/campaigns/` or `worktrees/`.

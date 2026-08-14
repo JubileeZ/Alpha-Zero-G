@@ -187,7 +187,7 @@ User:        git pull              →  get new Alpha-Zero-G
 4. `azg setup` installs all vendored skills + ponytail block; refuses `--profile`.
 5. `azg setup` skips skill copy when `VENDOR.lock` commit unchanged.
 6. Cold-start agent reading only onboarding docs produces the same build plan (validated by subagent test).
-7. Earned Trap Process Gate machinery exists (`evals/traps/` runners + isolation, ADR 0012+0013); adopt corpus = Earned Traps (ADR 0018); planted S1–S14 not a promote input; Lite suite removed (ADR 0007 superseded).
+7. Behavior Corpus Process Gate exists (`evals/traps/` runners + isolation, ADR 0012+0013+0019); Task Success = Observable Outcome; Lite suite removed (ADR 0007 superseded).
 
 ---
 
