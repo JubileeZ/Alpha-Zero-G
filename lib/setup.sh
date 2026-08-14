@@ -612,11 +612,11 @@ active: ${active_skills}"
     info "Tip: run 'azg update --vendor' to vendor skills"
   fi
 
-  # First-party azg distill skills — removed clean slate 2026-08-07 (re-earn via traps).
-  # Prune any leftover device installs from older releases.
+  # First-party azg Device Setup skills (ADR 0020). Ship dirs under
+  # templates/global/skills/azg/; prune leftover parked names not in that tree.
   local azg_skills_copied=0
   local azg_cursor_skills_copied=0
-  if [ -d "${azg_skills_dir}" ] && [ "${AZG_SHIP_AZG_SKILLS:-0}" = "1" ]; then
+  if [ -d "${azg_skills_dir}" ]; then
     if [ ! -f "${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl" ]; then
       die "azg skill overlay missing: ${azg_overlay_dir}/_shared/ANTIGRAVITY-NOTE.md.tmpl"
     fi
@@ -629,26 +629,27 @@ active: ${active_skills}"
         "${azg_overlay_dir}" "${force}" \
         azg_skills_copied azg_cursor_skills_copied
     done
-  else
-    info "azg distill skills absent/parked (no templates/global/skills/azg ship)"
-    local parked_sk
-    for parked_sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-      if [ -d "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}" ] \
-        && { [ -f "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}/AZG-OWNED.md" ] \
-          || azg_ownership_list_owns cursor_skills "${parked_sk}"; }; then
-        # DESTRUCTIVE: remove retired distill skill from Cursor
-        rm -rf "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}"
-        azg_ownership_list_remove cursor_skills "${parked_sk}"
-      fi
-      if [ -d "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}" ] \
-        && { [ -f "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}/ANTIGRAVITY-NOTE.md" ] \
-          || azg_ownership_list_owns skills "${parked_sk}"; }; then
-        # DESTRUCTIVE: remove retired distill skill from Gemini
-        rm -rf "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}"
-        azg_ownership_list_remove skills "${parked_sk}"
-      fi
-    done
   fi
+  local parked_sk
+  for parked_sk in azg-method-refs; do
+    if [ -d "${azg_skills_dir}/${parked_sk}" ] && [ -f "${azg_skills_dir}/${parked_sk}/SKILL.md" ]; then
+      continue
+    fi
+    if [ -d "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}" ] \
+      && { [ -f "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}/AZG-OWNED.md" ] \
+        || azg_ownership_list_owns cursor_skills "${parked_sk}"; }; then
+      # DESTRUCTIVE: remove retired distill skill from Cursor
+      rm -rf "${AZG_CURSOR_SKILLS_DIR}/${parked_sk}"
+      azg_ownership_list_remove cursor_skills "${parked_sk}"
+    fi
+    if [ -d "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}" ] \
+      && { [ -f "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}/ANTIGRAVITY-NOTE.md" ] \
+        || azg_ownership_list_owns skills "${parked_sk}"; }; then
+      # DESTRUCTIVE: remove retired distill skill from Gemini
+      rm -rf "${AZG_GLOBAL_SKILLS_DIR}/${parked_sk}"
+      azg_ownership_list_remove skills "${parked_sk}"
+    fi
+  done
 
   # Cursor azg-owned global rules (foreign-safe: only azg-*.mdc)
   local cursor_rules_installed=0

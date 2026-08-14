@@ -1,7 +1,7 @@
 # Session Handoff (SFDBN)
 
-- **Status:** Principles Treatment pack drafted — Current still EP v1; not promoted
-- **Files:** `templates/candidates/principles-v1/` · `evals/stage-principles-v1-home.sh` · `evals/run-trap-cell.sh` · `task.md`
-- **Decisions:** Short-principles always-on; Device Setup skills `azg-domain-data-analysis` / `azg-domain-research` (Candidate arm only until promote); unattended Intent Tie = park. ADR 0017 layering stands.
+- **Status:** Principles Treatment **promoted** (ADR 0020). Device Setup = Principles + domain skills. Candidate slot empty. No active Work Packet.
+- **Files:** `templates/global/AGENTS.md` · `templates/global/skills/azg/` · `docs/adr/0020-promote-principles-treatment.md`
+- **Decisions:** Adopt gate-principles-v1. Unattended Intent Tie = park. No EP / owed tokens / ponytail always-on / fraud catalogue.
 - **Blocked:** none
-- **Next:** Preview gate when operator asks: `TRAP_CANDIDATE_PACK=principles-v1 bash evals/traps/run-process-gate.sh --preview-only`
+- **Next:** none — `azg setup --force` on each device after pull.

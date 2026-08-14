@@ -97,20 +97,27 @@ if [ -f "${staged}/.cursor/rules/azg-ponytail.mdc" ]; then
 else
   pass "no staged azg-ponytail.mdc"
 fi
-for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-  if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ]; then
-    fail "clean slate must not stage skill ${sk}" ""
+for sk in azg-domain-research azg-domain-data-analysis; do
+  if [ -f "${staged}/.cursor/skills/${sk}/SKILL.md" ] \
+    && [ -f "${staged}/.agents/skills/${sk}/SKILL.md" ]; then
+    pass "staged skill ${sk}"
   else
-    pass "skill ${sk} not staged"
+    fail "missing staged skill ${sk}" ""
   fi
 done
+if [ -f "${staged}/.cursor/skills/azg-method-refs/SKILL.md" ]; then
+  fail "must not stage azg-method-refs" ""
+else
+  pass "azg-method-refs not staged"
+fi
 if grep -q 'alwaysApply: true' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -q 'Execution Protocol v1' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Principles Treatment' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
   && grep -q 'Telegraphic Writing Style' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
   && grep -q 'Temporary File Cleanup' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && grep -qF 'INTENT:' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
-  && ! grep -qE 'Intent gates|Prove stance|PONYTAIL|lazy senior' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions ep-v1 body staged"
+  && grep -q 'Twin Sweep' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -qF 'INTENT:' "${staged}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -qE 'Execution Protocol v1|Follow literally|Prove stance|PONYTAIL|lazy senior' "${staged}/.cursor/rules/azg-agent-instructions.mdc"; then
+  pass "agent-instructions principles body staged"
 else
   fail "agent-instructions body unexpected" ""
 fi

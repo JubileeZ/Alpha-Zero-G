@@ -10,4 +10,4 @@ Always-on Device Setup stays **lean Execution Protocol** (EP v1 live, ADR 0016).
 
 **Amends:** ADR 0010; ADR 0016 (v2 path abandoned — stay on promoted v1).
 
-**Amended by ADR 0019 (2026-08-14):** Re-earn judge/orchestrate (if ever) via Behavior Corpus Process Gate, not planted S1–S14.
+**Amended by ADR 0020 (2026-08-14):** Live always-on = Principles Treatment, not EP v1. Layering (no auto-Orchestrate / no fraud catalogue in always-on) stands.

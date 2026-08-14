@@ -2,7 +2,7 @@
 
 **Read this first** after `docs/AGENT-ONBOARDING.md`. `ROADMAP.md` is plan; this file is **what exists on disk today**. Current truth only — historical dumps → `docs/archive/` (see `docs/agents/progress.md`).
 
-**Active phase:** post-v4 — Lite **deleted**; **Behavior Corpus** live (ADR 0019); EP v1 shipped; Process Gate runnable (13 Executor Traps)
+**Active phase:** post-v4 — Lite **deleted**; **Behavior Corpus** live (ADR 0019); Principles Treatment shipped (ADR 0020); Process Gate runnable (13 Executor Traps)
 
 ---
 
@@ -17,12 +17,12 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Candidate slot | `templates/candidates/` | **principles-v1** pack on disk (not promoted). Live Device Setup = EP v1 |
-| Azg-owned skills | Candidate pack only | `azg-domain-data-analysis` + `azg-domain-research` in `templates/candidates/principles-v1/skills/`. None in `templates/global/skills/azg/` (parked). `judge`/`orchestrate` deferred |
+| Candidate slot | `templates/candidates/` | Empty after Principles promote (ADR 0020). Live Device Setup = Principles Treatment |
+| Azg-owned skills | `templates/global/skills/azg/` | `azg-domain-data-analysis` + `azg-domain-research`. `judge`/`orchestrate` deferred |
 | Evaluation Suite | `evals/traps/scenarios/` + `score_outcome.py` + runners + docker | ADR 0012+0013 machinery; **0019** Behavior Corpus |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** only; **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | **0016** EP v1 live; **0017** layering; **0018** superseded; **0019** Behavior Corpus |
+| ADRs | `docs/adr/` | **0020** Principles live; **0016** EP v1 historical; **0017** layering; **0019** Behavior Corpus |
 | Glossary | `CONTEXT.md` | |
 | Lean continuity | `AGENTS.md` Session start | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |
@@ -35,7 +35,7 @@
 | Gap | Done |
 |-----|------|
 | Trap / eval | ADR 0012+0013 runners; **0019** Behavior Corpus (Outcome, not fable format) |
-| Always-on | EP v1 shipped (0016). Next Candidate = **Principles Treatment** (`principles-v1`) — pack on disk; not promoted |
+| Always-on | Principles Treatment shipped (0020). Candidate slot empty |
 | Lite | Removed 2026-08-07 — ADR 0007 superseded |
 | EP layering | ADR 0017 — no auto-Orchestrate / no fraud catalogue in always-on |
 
@@ -45,7 +45,7 @@
 
 | Item | Notes |
 |------|-------|
-| Next Candidate Treatment | **Principles Treatment** (`principles-v1`) pack on disk. Promote needs Behavior Corpus gate (ADR 0019): `TRAP_CANDIDATE_PACK=principles-v1` |
+| Next Candidate Treatment | Slot empty. Last promote: Principles Treatment ADR 0020 (`gate-principles-v1` R=5 **RECOMMEND_ADOPT**) |
 | `judge` / `orchestrate` Device skills | Deferred — not in global |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 
@@ -82,4 +82,4 @@ Delivery Cost auto-capture: parked / out of scope (never a promote input).
 11. **Windows jq manifest:** jq may emit `\r` on skill names — `_get_requested_skills` strips CR before lookup/install.
 12. **Windows ledger UTF-8:** `analyze_ledger.py` must `write_text(..., encoding="utf-8")` (`≥` in LEDGER.md).
 13. **No Lite** — `evals/lite/` gone. Behavior Corpus = `evals/traps/scenarios/` + `score_outcome.py`.
-14. **Eval staged home** — `stage-eval-home.sh` renders EP v1 + cleanup + telegraphic; `test-eval-isolation.sh` asserts that shape (not a pre-EP home that forbids `INTENT:`).
+14. **Eval staged home** — `stage-eval-home.sh` renders Principles + cleanup + telegraphic + domain skills; `test-eval-isolation.sh` asserts that shape.

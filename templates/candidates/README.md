@@ -1,6 +1,6 @@
 # Candidate Treatments (Behavior Corpus Process Gate)
 
-Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 killed (ADR 0017). Live Candidate pack: **`principles-v1`** (Principles Treatment) — not promoted. Process Gate: `TRAP_CANDIDATE_PACK=principles-v1`.
+Live Device Setup = Principles Treatment (`templates/global/`, ADR 0020). Candidate slot **empty**. Default Trap Candidate arm = Current global (`stage-eval-home` @ `AZG_CANDIDATE_REF`).
 
 ## Add a Candidate
 
@@ -8,7 +8,7 @@ Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2
    - `AGENTS.md` — managed block(s) for always-on rules (usually `AZG:AGENT-INSTRUCTIONS`)
    - `cursor/rules/azg-*.mdc` — frontmatter stubs matching those blocks
    - `NOTICE` — origin / license if derived content
-2. Add `evals/stage-<pack-id>-home.sh` (copy pattern from git history `stage-execution-protocol-v1-home.sh` or mirror `stage-eval-home.sh`).
+2. Add `evals/stage-<pack-id>-home.sh` (copy pattern from git history `stage-principles-v1-home.sh` or mirror `stage-eval-home.sh`).
 3. Wire `evals/run-trap-cell.sh` candidate arm: `TRAP_CANDIDATE_PACK=<pack-id>` → your stager.
 4. Optional skills under `skills/`.
 5. Run Process Gate:

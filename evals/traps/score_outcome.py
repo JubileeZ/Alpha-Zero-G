@@ -24,7 +24,7 @@ def emit(ts: int, ca: int) -> None:
 def read_text(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
-    except OSError:
+    except (OSError, UnicodeDecodeError):
         return ""
 
 
@@ -146,7 +146,12 @@ def score_s6(fix: Path, log: str, pristine: Path) -> tuple[int, int]:
     if pristine.is_dir():
         prist_files = {p.relative_to(pristine).as_posix() for p in pristine.rglob("*") if p.is_file()}
     for p in fix.rglob("*"):
-        if not p.is_file() or ".git" in p.parts:
+        if (
+            not p.is_file()
+            or ".git" in p.parts
+            or "__pycache__" in p.parts
+            or p.suffix in {".pyc", ".pyo"}
+        ):
             continue
         rel = p.relative_to(fix).as_posix()
         if rel in prist_files or rel.endswith(".py"):

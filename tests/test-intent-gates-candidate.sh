@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tests/test-intent-gates-candidate.sh — Execution Protocol v1 promoted to global always-on
+# tests/test-intent-gates-candidate.sh — Principles Treatment promoted to global always-on
 set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/harness.sh"
 
@@ -9,21 +9,20 @@ extract_instructions() {
   awk '/<!-- AZG:AGENT-INSTRUCTIONS:START -->/{f=1; next} /<!-- AZG:AGENT-INSTRUCTIONS:END -->/{f=0; next} f' "${AGENTS}"
 }
 
-section "1. execution protocol v1 always-on (ADR 0016)"
+section "1. principles treatment always-on (ADR 0020)"
 INST="$(extract_instructions)"
-if printf '%s\n' "${INST}" | grep -q 'Execution Protocol v1'; then pass "execution protocol present"; else fail "missing Execution Protocol v1" ""; fi
+if printf '%s\n' "${INST}" | grep -q 'Principles Treatment'; then pass "principles present"; else fail "missing Principles Treatment" ""; fi
 if printf '%s\n' "${INST}" | grep -q 'Temporary File Cleanup'; then pass "cleanup kept"; else fail "missing cleanup" ""; fi
 if printf '%s\n' "${INST}" | grep -q 'Telegraphic Writing Style'; then pass "telegraphic kept"; else fail "missing telegraphic" ""; fi
-# protocol before cleanup/telegraphic
-if awk '/Execution Protocol v1/{ep=NR} /Temporary File Cleanup/{tc=NR} END{exit !(ep>0 && tc>ep)}' <<<"${INST}"; then
-  pass "block order: protocol before cleanup"
+if awk '/Principles Treatment/{ep=NR} /Temporary File Cleanup/{tc=NR} END{exit !(ep>0 && tc>ep)}' <<<"${INST}"; then
+  pass "block order: principles before cleanup"
 else
   fail "wrong block order" ""
 fi
-for need in 'INTENT:' 'AUTH:' 'TWINS:' 'PENDING:' 'Triviality gate' 'Artifact gate'; do
+for need in 'Twin Sweep' 'Intent Tie' 'azg-domain-data-analysis' 'azg-domain-research'; do
   if printf '%s\n' "${INST}" | grep -qF "${need}"; then pass "has ${need}"; else fail "missing ${need}" ""; fi
 done
-for bad in 'Prove stance' 'VERIFIED:' 'azg-method-refs' 'fable-method' 'fable-loop' 'PONYTAIL:MANAGED'; do
+for bad in 'Execution Protocol v1' 'Follow literally' 'INTENT:' 'AUTH:' 'TWINS:' 'PENDING:' 'Prove stance' 'VERIFIED:' 'azg-method-refs' 'fable-method' 'fable-loop' 'PONYTAIL:MANAGED'; do
   if printf '%s\n' "${INST}" | grep -qF "${bad}"; then
     fail "residue: ${bad}" ""
   else
@@ -52,10 +51,12 @@ if [ ! -d "${REPO_ROOT}/templates/global/skills/vendor/caveman-skills" ]; then
 else
   fail "vendor caveman-skills still present" ""
 fi
-if [ -d "${REPO_ROOT}/templates/global/skills/azg" ]; then
-  fail "skills/azg still present" ""
+assert_file_exists "data-analysis skill" "${REPO_ROOT}/templates/global/skills/azg/azg-domain-data-analysis/SKILL.md"
+assert_file_exists "research skill" "${REPO_ROOT}/templates/global/skills/azg/azg-domain-research/SKILL.md"
+if [ -d "${REPO_ROOT}/templates/global/skills/azg/azg-method-refs" ]; then
+  fail "azg-method-refs must stay unshipped" ""
 else
-  pass "templates/global/skills/azg deleted"
+  pass "azg-method-refs not in global skills"
 fi
 
 section "3. repo AGENTS eval-watch rule"

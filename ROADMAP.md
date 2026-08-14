@@ -10,7 +10,7 @@
 
 Reliable Delivery: higher Task Success per Delivery Cost than No-Harness Baseline, with Minimal Setup, across devices and Cursor/Antigravity. Repo-native gates own guarantees; IDE hooks are thin adapters.
 
-ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0012` Trap machinery](docs/adr/0012-trap-suite-process-gate.md) · [`0016` Execution Protocol v1](docs/adr/0016-promote-execution-protocol-v1.md) · [`0017` EP/judge/orchestrate layering](docs/adr/0017-ep-judge-orchestrate-layering.md) · [`0019` Behavior Corpus](docs/adr/0019-behavior-corpus-eval.md)
+ADRs: [`0004`](docs/adr/0004-repo-native-reliability-boundary.md) · [`0012` Trap machinery](docs/adr/0012-trap-suite-process-gate.md) · [`0016` EP v1 historical](docs/adr/0016-promote-execution-protocol-v1.md) · [`0017` EP/judge/orchestrate layering](docs/adr/0017-ep-judge-orchestrate-layering.md) · [`0019` Behavior Corpus](docs/adr/0019-behavior-corpus-eval.md) · [`0020` Principles Treatment](docs/adr/0020-promote-principles-treatment.md)
 
 ---
 
@@ -22,7 +22,7 @@ v4 harness · Portable Core · Evidence (`run-all` + CI) · legacy Core Pilot re
 
 ## Post-v4 hardening — complete
 
-Ownership, Checkpoint, EP v1, Eval Isolation, Behavior Corpus Outcome scorers. Vendor fable tree + `wip/` removed 2026-08-14.
+Ownership, Checkpoint, EP v1 then Principles (0020), Eval Isolation, Behavior Corpus Outcome scorers. Vendor fable tree + `wip/` removed 2026-08-14.
 
 Live notes: `evals/traps/CAMPAIGN.md`.
 

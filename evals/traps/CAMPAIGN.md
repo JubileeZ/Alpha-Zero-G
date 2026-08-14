@@ -2,10 +2,11 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **Current** EP v1 (ADR 0016) · Candidate pack **principles-v1** on disk (not promoted) · Behavior Corpus **on disk** (13 Executor Traps, ADR 0019) |
-| Device Setup | Execution Protocol v1 + cleanup + telegraphic; `azg setup --force` |
-| Candidate slot | `templates/candidates/principles-v1` — Preview: `TRAP_CANDIDATE_PACK=principles-v1` |
-| Last historical gate | `gate-execution-protocol-v1` R=5 (fable-format corpus; incomparable) |
-| Next | Preview Behavior Corpus with `TRAP_CANDIDATE_PACK=principles-v1` (`run-process-gate.sh --preview-only`) |
+| Status | **Current** Principles Treatment (ADR 0020) · Candidate slot **empty** · Behavior Corpus on disk (13 Executor Traps) |
+| Device Setup | Principles + cleanup + telegraphic; skills `azg-domain-data-analysis` / `azg-domain-research`; `azg setup --force` |
+| Candidate slot | empty — default Trap Candidate arm = Current global |
+| Last gate | `gate-principles-v1` R=5 @ `gpt-5.6-luna-low` docker · **RECOMMEND_ADOPT** → promoted |
+| Maj / Coverage | 77%=77%=77% · Coverage 12/13 |
+| Next | New Candidate pack under `templates/candidates/` when operator starts one |
 
 Do not commit `campaigns/` / `worktrees/` / `homes/` (gitignored).

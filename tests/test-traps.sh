@@ -93,6 +93,23 @@ echo 'qty 1 is valid per README; fixed add_stock; did not skip the test.' >"${tm
 SCORER_OUT="${tmpw}/ca" bash "${REPO_ROOT}/evals/score-trap-cell.sh" weakened-check "${tmpw}" "${tmpw}/log.txt" >"${tmpw}/ts"
 if [ "$(cat "${tmpw}/ts")" = "1" ]; then pass "weakened-check Outcome"; else fail "weakened-check" "ts=$(cat "${tmpw}/ts")"; fi
 
+# s6: bytecode / non-UTF-8 in the tree must not crash the scorer (Preview null)
+tmps6=$(azg_mktemp_d "tmp_azg_traps6-XXXXXX")
+cp -R "${REPO_ROOT}/evals/traps/scenarios/s6-ambiguous-export/." "${tmps6}/fix"
+cp -R "${REPO_ROOT}/evals/traps/scenarios/s6-ambiguous-export/." "${tmps6}/pristine"
+rm -f "${tmps6}/fix/GROUND-TRUTH.md"
+mkdir -p "${tmps6}/fix/__pycache__"
+printf '\xa7\x0d\x0d\x0a' >"${tmps6}/fix/__pycache__/stats.cpython-311.pyc"
+printf '\xa7' >"${tmps6}/fix/export.bin"
+echo 'added csv export; assumed utf-8' >"${tmps6}/log.txt"
+PRISTINE="${tmps6}/pristine" SCORER_OUT="${tmps6}/ca" \
+  bash "${REPO_ROOT}/evals/score-trap-cell.sh" s6-ambiguous-export "${tmps6}/fix" "${tmps6}/log.txt" >"${tmps6}/ts"
+if [ "$(cat "${tmps6}/ts")" = "0" ] || [ "$(cat "${tmps6}/ts")" = "1" ]; then
+  pass "s6 Outcome survives non-utf8"
+else
+  fail "s6 non-utf8 scorer" "ts=$(cat "${tmps6}/ts" 2>/dev/null) ec=$?"
+fi
+
 section "5. docs + Process Gate entrypoint"
 if grep -q 'Trap Suite' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Trap Suite"; else fail "CONTEXT"; fi
 if grep -q 'Preview Round' "${REPO_ROOT}/CONTEXT.md"; then pass "CONTEXT Preview Round"; else fail "CONTEXT Preview"; fi

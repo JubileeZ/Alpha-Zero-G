@@ -33,15 +33,15 @@ Evaluation arm with Current Treatment plus one proposed change under test for ad
 _Avoid_: Experimental profile, feature flag arm, core+addon
 
 **Execution Protocol**:
-Numbered Device Setup always-on step machine. v1 live: classify → define done → evidence → act → verify → report. May emit Owed Report Tokens; eval does not require that spelling.
-_Avoid_: Principle guidance as always-on, skill playbook loaded every session, token spelling as Task Success
+Numbered Device Setup always-on step machine (v1 historical — ADR 0016; superseded as live always-on by Principles Treatment, ADR 0020). May emit Owed Report Tokens; eval does not require that spelling.
+_Avoid_: Principle guidance as always-on (that's Principles Treatment), skill playbook loaded every session, token spelling as Task Success
 
 **Guidance Treatment**:
 Shelved Device Setup always-on alternative: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded heuristics. Not the live next Candidate.
 _Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Principles Treatment, Trap answer keys in always-on
 
 **Principles Treatment**:
-Intended next Device Setup always-on Candidate (`principles-v1`): short positive Owed Behaviors (shape, named observable, open-before-claim, smallest sufficient change, observe-to-done including surrounding checks, user’s words on outward action, secrets/env off-limits, check-integrity, authority order, Twin Sweep, Intent Tie) plus housekeeping plus a Domain Adapter Skill router. Unattended Intent Tie = labeled blocker (no ask, no edit). No numbered Execution Protocol, no Owed Report Token spelling. Ships `azg-domain-data-analysis` and `azg-domain-research` as model-invoked Device Setup skills. Not shipped until a Behavior Corpus Process Gate can promote (ADR 0019).
+Live Device Setup always-on (ADR 0020): short positive Owed Behaviors (shape, named observable, open-before-claim, smallest sufficient change, observe-to-done including surrounding checks, user’s words on outward action, secrets/env off-limits, check-integrity, authority order, Twin Sweep, Intent Tie) plus housekeeping plus a Domain Adapter Skill router. Unattended Intent Tie = labeled blocker (no ask, no edit). No numbered Execution Protocol, no Owed Report Token spelling. Ships `azg-domain-data-analysis` and `azg-domain-research` as model-invoked Device Setup skills.
 _Avoid_: Guidance Treatment, Execution Protocol as always-on, always-on ponytail, fraud catalogue in always-on, fable product name, token spelling as Task Success, unattended coin-flip on Intent Tie
 
 **Ponytail**:
@@ -209,7 +209,7 @@ On-demand adversarial verification skill (`judge`) — **not shipped**. Layering
 _Avoid_: fable-judge, auditor as shipped id, full fraud catalogue in always-on AGENTS
 
 **Orchestrate Skill**:
-On-demand multi-area / unattended fan-out skill — **not shipped**. Not always-on default (ADR 0017). Device Setup = EP v1 only (ADR 0016).
+On-demand multi-area / unattended fan-out skill — **not shipped**. Not always-on default (ADR 0017). Device Setup = Principles Treatment (ADR 0020).
 _Avoid_: fable-loop as device skill id, orchestrator as shipped id, Act as always-on default, auto-Orchestrate for every non-trivial task
 
 **Method Naming**:

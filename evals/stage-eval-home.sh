@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # evals/stage-eval-home.sh — stage azg-owned Device Setup core into a fake HOME (ADR 0013).
 # Usage: bash evals/stage-eval-home.sh <git-ref> <dest-dir>
-# Contents: AGENT-INSTRUCTIONS .mdc only (ponytail retired from always-on — ADR 0015).
-# Clean slate: azg distill skills NOT staged unless AZG_EVAL_AZG_SKILLS=1
-# (and templates/global/skills/azg/<name> exist at ref).
+# Contents: AGENT-INSTRUCTIONS .mdc + azg Device Setup skills present at ref
+# (ponytail retired from always-on — ADR 0015).
 # When ref resolves to HEAD, prefer worktree templates (uncommitted Candidate OK).
 # Idempotent when dest/.azg-eval-home-ref matches fingerprint.
 set -euo pipefail
@@ -26,11 +25,20 @@ if [ "${USE_WT}" -eq 1 ] && [ -f "${AGENTS_SRC}" ]; then
 else
   AGENTS_HASH="$(git -C "${ROOT}" show "${SHA}:templates/global/AGENTS.md" | cksum | awk '{print $1"-"$2}')"
 fi
-SHIP_SKILLS=0
-case "${AZG_EVAL_AZG_SKILLS:-0}" in
-  1|true|TRUE|yes|YES|on|ON) SHIP_SKILLS=1 ;;
-esac
-FINGERPRINT="${SHA}:wt${USE_WT}:sk${SHIP_SKILLS}:ag${AGENTS_HASH}:nopony"
+SK_HASH="none"
+if [ "${USE_WT}" -eq 1 ] && [ -d "${ROOT}/templates/global/skills/azg" ]; then
+  _sk_blob=""
+  for _sk_md in "${ROOT}/templates/global/skills/azg"/*/SKILL.md; do
+    [ -f "${_sk_md}" ] || continue
+    _sk_blob="${_sk_blob}$(cksum "${_sk_md}" | awk '{print $1"-"$2}')"
+  done
+  [ -n "${_sk_blob}" ] && SK_HASH="$(printf '%s' "${_sk_blob}" | cksum | awk '{print $1"-"$2}')"
+elif git -C "${ROOT}" cat-file -e "${SHA}:templates/global/skills/azg" 2>/dev/null; then
+  SK_HASH="$(git -C "${ROOT}" ls-tree -r --name-only "${SHA}" templates/global/skills/azg \
+    | grep '/SKILL.md$' | cksum | awk '{print $1"-"$2}')"
+fi
+[ -n "${SK_HASH}" ] || SK_HASH="none"
+FINGERPRINT="${SHA}:wt${USE_WT}:sk${SK_HASH}:ag${AGENTS_HASH}:nopony"
 MARKER="${DEST}/.azg-eval-home-ref"
 
 if [ -f "${MARKER}" ] && [ "$(cat "${MARKER}")" = "${FINGERPRINT}" ] \
@@ -94,20 +102,32 @@ render_rule() {
 mkdir -p "${TMP}/.cursor/rules" "${TMP}/.cursor/skills" "${TMP}/.agents/skills"
 render_rule azg-agent-instructions.mdc '<!-- AZG:AGENT-INSTRUCTIONS:START -->' '<!-- AZG:AGENT-INSTRUCTIONS:END -->'
 
-if [ "${SHIP_SKILLS}" -eq 1 ]; then
-  for sk in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-    sk_wt="${ROOT}/templates/global/skills/azg/${sk}/SKILL.md"
-    mkdir -p "${TMP}/.cursor/skills/${sk}" "${TMP}/.agents/skills/${sk}"
-    if [ "${USE_WT}" -eq 1 ] && [ -f "${sk_wt}" ]; then
-      cp "${sk_wt}" "${TMP}/.cursor/skills/${sk}/SKILL.md"
-    elif git -C "${ROOT}" cat-file -e "${SHA}:templates/global/skills/azg/${sk}/SKILL.md" 2>/dev/null; then
-      git -C "${ROOT}" show "${SHA}:templates/global/skills/azg/${sk}/SKILL.md" \
-        >"${TMP}/.cursor/skills/${sk}/SKILL.md"
-    else
-      die "missing azg skill at ${SHA}: ${sk}"
-    fi
-    cp "${TMP}/.cursor/skills/${sk}/SKILL.md" "${TMP}/.agents/skills/${sk}/SKILL.md"
+_stage_azg_skill() {
+  local sk="$1"
+  local sk_wt="${ROOT}/templates/global/skills/azg/${sk}/SKILL.md"
+  mkdir -p "${TMP}/.cursor/skills/${sk}" "${TMP}/.agents/skills/${sk}"
+  if [ "${USE_WT}" -eq 1 ] && [ -f "${sk_wt}" ]; then
+    cp "${sk_wt}" "${TMP}/.cursor/skills/${sk}/SKILL.md"
+  elif git -C "${ROOT}" cat-file -e "${SHA}:templates/global/skills/azg/${sk}/SKILL.md" 2>/dev/null; then
+    git -C "${ROOT}" show "${SHA}:templates/global/skills/azg/${sk}/SKILL.md" \
+      >"${TMP}/.cursor/skills/${sk}/SKILL.md"
+  else
+    return 0
+  fi
+  cp "${TMP}/.cursor/skills/${sk}/SKILL.md" "${TMP}/.agents/skills/${sk}/SKILL.md"
+}
+if [ "${USE_WT}" -eq 1 ] && [ -d "${ROOT}/templates/global/skills/azg" ]; then
+  for sk_dir in "${ROOT}/templates/global/skills/azg"/*/; do
+    [ -d "${sk_dir}" ] || continue
+    [ -f "${sk_dir}/SKILL.md" ] || continue
+    _stage_azg_skill "$(basename "${sk_dir}")"
   done
+elif git -C "${ROOT}" cat-file -e "${SHA}:templates/global/skills/azg" 2>/dev/null; then
+  while IFS= read -r sk; do
+    [ -n "${sk}" ] || continue
+    _stage_azg_skill "${sk}"
+  done < <(git -C "${ROOT}" ls-tree --name-only "${SHA}:templates/global/skills/azg" \
+    | awk -F/ 'NF==1 {print}')
 fi
 
 printf '%s\n' "${FINGERPRINT}" >"${TMP}/.azg-eval-home-ref"

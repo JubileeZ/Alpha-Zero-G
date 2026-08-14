@@ -144,27 +144,34 @@ else
   fail "ownership still lists azg-ponytail.mdc"
 fi
 
-section "1b. azg distill skills removed + Execution Protocol v1 always-on"
+section "1b. azg domain skills + Principles Treatment always-on"
 
-for azg_skill in azg-domain-research azg-domain-data-analysis azg-method-refs; do
-  assert_file_not_exists "Cursor azg skill ${azg_skill} not installed" \
+assert_file_not_exists "Cursor azg-method-refs not installed" \
+  "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
+assert_file_not_exists "Gemini azg-method-refs not installed" \
+  "${TEMP_HOME}/.gemini/config/skills/azg-method-refs/SKILL.md"
+for azg_skill in azg-domain-research azg-domain-data-analysis; do
+  assert_file_exists "Cursor azg skill ${azg_skill} installed" \
     "${TEMP_HOME}/.cursor/skills/${azg_skill}/SKILL.md"
-  assert_file_not_exists "Gemini azg skill ${azg_skill} not installed" \
+  assert_file_exists "Gemini azg skill ${azg_skill} installed" \
     "${TEMP_HOME}/.gemini/config/skills/${azg_skill}/SKILL.md"
 done
 
-if [ -d "${TEMP_REPO}/templates/global/skills/azg" ]; then
-  fail "templates/global/skills/azg must be deleted (clean slate)"
+if [ ! -d "${TEMP_REPO}/templates/global/skills/azg" ]; then
+  fail "templates/global/skills/azg missing after promote"
 else
-  pass "azg distill skill sources removed"
+  pass "azg domain skill sources present"
 fi
 
-if grep -q 'Execution Protocol v1' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+if grep -q 'Principles Treatment' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && grep -q 'Telegraphic Writing Style' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && grep -q 'Temporary File Cleanup' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && grep -q 'Twin Sweep' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -qF 'INTENT:' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
+  && ! grep -q 'Execution Protocol v1' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && ! grep -q 'Prove stance' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc" \
   && ! grep -q 'Placeholder Rule' "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"; then
-  pass "agent-instructions has Execution Protocol v1 + cleanup + telegraphic"
+  pass "agent-instructions has Principles Treatment + cleanup + telegraphic"
 else
   fail "agent-instructions missing promoted always-on shape"
 fi
@@ -174,6 +181,8 @@ assert_exit "second setup (smart sync) exits 0" 0 \
   env HOME="${TEMP_HOME}" AZG_ROOT="${TEMP_REPO}" "${TEMP_AZG}" setup
 assert_file_not_exists "azg-method-refs stays absent after smart sync" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
+assert_file_exists "domain-research stays after smart sync" \
+  "${TEMP_HOME}/.cursor/skills/azg-domain-research/SKILL.md"
 
 assert_marker_rejected() {
   local label="${1}"
@@ -242,6 +251,10 @@ assert_file_not_exists "uninstall removed owned Cursor skill" \
   "${TEMP_HOME}/.cursor/skills/${SAMPLE_SKILL}/SKILL.md"
 assert_file_not_exists "uninstall removed azg-method-refs (already parked)" \
   "${TEMP_HOME}/.cursor/skills/azg-method-refs/SKILL.md"
+assert_file_not_exists "uninstall removed azg-domain-research" \
+  "${TEMP_HOME}/.cursor/skills/azg-domain-research/SKILL.md"
+assert_file_not_exists "uninstall removed azg-domain-data-analysis" \
+  "${TEMP_HOME}/.cursor/skills/azg-domain-data-analysis/SKILL.md"
 assert_file_not_exists "uninstall removed azg-agent-instructions.mdc" \
   "${TEMP_HOME}/.cursor/rules/azg-agent-instructions.mdc"
 assert_file_not_exists "uninstall left no azg-ponytail.mdc" \
