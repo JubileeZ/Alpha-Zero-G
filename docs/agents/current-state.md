@@ -17,8 +17,8 @@
 | Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
-| Candidate slot | `templates/candidates/` | **Empty** — EP v2 killed (ADR 0017); live = EP v1 global |
-| Azg-owned skills | *(none in global)* | `judge`/`orchestrate` deferred |
+| Candidate slot | `templates/candidates/` | **principles-v1** pack on disk (not promoted). Live Device Setup = EP v1 |
+| Azg-owned skills | Candidate pack only | `azg-domain-data-analysis` + `azg-domain-research` in `templates/candidates/principles-v1/skills/`. None in `templates/global/skills/azg/` (parked). `judge`/`orchestrate` deferred |
 | Evaluation Suite | `evals/traps/scenarios/` + `score_outcome.py` + runners + docker | ADR 0012+0013 machinery; **0019** Behavior Corpus |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** only; **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
@@ -35,7 +35,7 @@
 | Gap | Done |
 |-----|------|
 | Trap / eval | ADR 0012+0013 runners; **0019** Behavior Corpus (Outcome, not fable format) |
-| Always-on | EP v1 shipped (0016). Guidance Treatment intent until Behavior Corpus promote |
+| Always-on | EP v1 shipped (0016). Next Candidate = **Principles Treatment** (`principles-v1`) — pack on disk; not promoted |
 | Lite | Removed 2026-08-07 — ADR 0007 superseded |
 | EP layering | ADR 0017 — no auto-Orchestrate / no fraud catalogue in always-on |
 
@@ -45,7 +45,7 @@
 
 | Item | Notes |
 |------|-------|
-| Next Candidate Treatment | Guidance Treatment intent only — not a pack until a Behavior Corpus gate promotes (ADR 0019) |
+| Next Candidate Treatment | **Principles Treatment** (`principles-v1`) pack on disk. Promote needs Behavior Corpus gate (ADR 0019): `TRAP_CANDIDATE_PACK=principles-v1` |
 | `judge` / `orchestrate` Device skills | Deferred — not in global |
 | SWE-bench Lite harness | **Deleted** — do not restore without new ADR |
 

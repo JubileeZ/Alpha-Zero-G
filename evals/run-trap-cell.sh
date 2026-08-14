@@ -83,8 +83,22 @@ case "${ARM}" in
     ;;
   candidate)
     CAN_SHA="$(git -C "${ROOT}" rev-parse "${CANDIDATE_REF}^{commit}")"
-    EVAL_HOME="${ROOT}/evals/traps/homes/candidate-${CAN_SHA}"
-    bash "${ROOT}/evals/stage-eval-home.sh" "${CAN_SHA}" "${EVAL_HOME}"
+    PACK="${TRAP_CANDIDATE_PACK:-}"
+    case "${PACK}" in
+      '')
+        EVAL_HOME="${ROOT}/evals/traps/homes/candidate-${CAN_SHA}"
+        bash "${ROOT}/evals/stage-eval-home.sh" "${CAN_SHA}" "${EVAL_HOME}"
+        ;;
+      *[!a-z0-9-]*)
+        die "bad TRAP_CANDIDATE_PACK: ${PACK}"
+        ;;
+      *)
+        STAGER="${ROOT}/evals/stage-${PACK}-home.sh"
+        [ -f "${STAGER}" ] || die "missing candidate stager: ${STAGER}"
+        EVAL_HOME="${ROOT}/evals/traps/homes/candidate-${PACK}-${CAN_SHA}"
+        bash "${STAGER}" "${EVAL_HOME}"
+        ;;
+    esac
     ;;
   *) die "bad arm" ;;
 esac

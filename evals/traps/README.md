@@ -48,7 +48,7 @@ bash evals/docker/azg-eval-agent/build.sh   # once (or auto-built on first cell)
 export PATH="$HOME/.local/bin:$PATH"
 cd /path/to/alpha-zero-g
 
-export TRAP_CANDIDATE_PACK=   # empty = Candidate arm stages Current global; or <pack-id>
+export TRAP_CANDIDATE_PACK=principles-v1   # empty = Candidate arm stages Current global
 export TRAP_CAMP="$PWD/evals/traps/campaigns/gate-${TRAP_CANDIDATE_PACK}"
 bash evals/traps/run-process-gate.sh
 # after Preview: answer y to continue, or:

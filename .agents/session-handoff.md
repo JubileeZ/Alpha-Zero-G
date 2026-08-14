@@ -1,7 +1,7 @@
 # Session Handoff (SFDBN)
 
-- **Status:** EP v2 Candidate **killed** — keep Current EP v1 (ADR 0016)
-- **Files:** pack/stager/wip v2 removed; ADR 0017 updated; Candidate slot empty
-- **Decisions:** Operator keep Current; no Adopt for v2; layering (no auto-Orchestrate / no fraud catalogue always-on) still stands
+- **Status:** Principles Treatment pack drafted — Current still EP v1; not promoted
+- **Files:** `templates/candidates/principles-v1/` · `evals/stage-principles-v1-home.sh` · `evals/run-trap-cell.sh` · `task.md`
+- **Decisions:** Short-principles always-on; Device Setup skills `azg-domain-data-analysis` / `azg-domain-research` (Candidate arm only until promote); unattended Intent Tie = park. ADR 0017 layering stands.
 - **Blocked:** none
-- **Next:** none — idle until new Candidate
+- **Next:** Preview gate when operator asks: `TRAP_CANDIDATE_PACK=principles-v1 bash evals/traps/run-process-gate.sh --preview-only`

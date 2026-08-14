@@ -1,6 +1,6 @@
 # Candidate Treatments (Behavior Corpus Process Gate)
 
-Empty slot. Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 killed (ADR 0017). Next Candidate: new dir under `templates/candidates/` → Behavior Corpus Process Gate (ADR 0019) → promote. Guidance Treatment is intent only until that gate can run.
+Live Device Setup = Execution Protocol v1 (`templates/global/`, ADR 0016). EP v2 killed (ADR 0017). Live Candidate pack: **`principles-v1`** (Principles Treatment) — not promoted. Process Gate: `TRAP_CANDIDATE_PACK=principles-v1`.
 
 ## Add a Candidate
 

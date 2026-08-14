@@ -37,8 +37,12 @@ Numbered Device Setup always-on step machine. v1 live: classify → define done 
 _Avoid_: Principle guidance as always-on, skill playbook loaded every session, token spelling as Task Success
 
 **Guidance Treatment**:
-Intended next Device Setup always-on: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded failure-class heuristics. Not shipped until a Behavior Corpus Process Gate can promote (ADR 0019). Further lines or skills may still be added from later live misses.
-_Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Trap answer keys in always-on, policy ship without a gate
+Shelved Device Setup always-on alternative: housekeeping only (temp-file cleanup + telegraphic agent-docs). No Execution Protocol, no owed report tokens, no preloaded heuristics. Not the live next Candidate.
+_Avoid_: Empty always-on (Baseline omits the whole rule), vanilla model, Execution Protocol as always-on, Principles Treatment, Trap answer keys in always-on
+
+**Principles Treatment**:
+Intended next Device Setup always-on Candidate (`principles-v1`): short positive Owed Behaviors (shape, named observable, open-before-claim, smallest sufficient change, observe-to-done including surrounding checks, user’s words on outward action, secrets/env off-limits, check-integrity, authority order, Twin Sweep, Intent Tie) plus housekeeping plus a Domain Adapter Skill router. Unattended Intent Tie = labeled blocker (no ask, no edit). No numbered Execution Protocol, no Owed Report Token spelling. Ships `azg-domain-data-analysis` and `azg-domain-research` as model-invoked Device Setup skills. Not shipped until a Behavior Corpus Process Gate can promote (ADR 0019).
+_Avoid_: Guidance Treatment, Execution Protocol as always-on, always-on ponytail, fraud catalogue in always-on, fable product name, token spelling as Task Success, unattended coin-flip on Intent Tie
 
 **Ponytail**:
 On-demand lazy-senior coding skill from vendor catalog (`ponytail-skills`). **Not** Device Setup always-on (ADR 0015) — no `PONYTAIL:MANAGED` in global AGENTS, no `azg-ponytail.mdc`.
