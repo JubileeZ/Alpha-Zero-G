@@ -22,6 +22,7 @@ cd "${WORK}"
 mkdir -p .agents/hooks .cursor/hooks tests
 cp "${ROOT}/templates/project/.agents/hooks/block-destructive-ops.sh" .agents/hooks/
 cp "${ROOT}/templates/project/.agents/hooks/commit-gate.sh" .agents/hooks/
+cp "${ROOT}/templates/project/.agents/hooks/commit-scan.sh" .agents/hooks/
 cp "${ROOT}/templates/project/.cursor/hooks/commit-verify.sh" .cursor/hooks/
 cp "${ROOT}/templates/project/tests/verify.sh" tests/
 chmod +x .agents/hooks/*.sh .cursor/hooks/*.sh tests/verify.sh
@@ -33,10 +34,6 @@ for f in current-state.md progress.md issue-tracker.md triage-labels.md domain.m
   printf '# stub\n' > "docs/agents/${f}"
 done
 cp "${ROOT}/templates/project/.agents/hooks.json" .agents/hooks.json
-for hook in checkpoint.sh pre-compact.sh; do
-  cp "${ROOT}/templates/project/.agents/hooks/${hook}" .agents/hooks/
-  chmod +x ".agents/hooks/${hook}"
-done
 cp "${ROOT}/templates/project/tests/test-harness.sh" tests/
 chmod +x tests/test-harness.sh
 
@@ -93,6 +90,22 @@ else
   fail "Antigravity allow should run side effect" "decision=${decision} canary_exists=$([ -e "${CANARY}" ] && echo yes || echo no)"
 fi
 
+section "2b. Cursor safety adapter deny must not execute side effect"
+
+mkdir -p .cursor/hooks .agents/hooks
+cp "${ROOT}/templates/project/.agents/hooks/block-destructive-ops.sh" .agents/hooks/
+cp "${ROOT}/templates/project/.cursor/hooks/block-destructive-ops.sh" .cursor/hooks/
+chmod +x .agents/hooks/block-destructive-ops.sh .cursor/hooks/block-destructive-ops.sh
+CANARY="${WORK}/cursor-safety-deny-canary"
+rm -f "${CANARY}"
+payload='{"command":"rm -rf /"}'
+decision=$(simulate_host ".cursor/hooks/block-destructive-ops.sh" "${payload}" "touch '${CANARY}'")
+if [ "${decision}" = "deny" ] && [ ! -e "${CANARY}" ]; then
+  pass "Cursor safety adapter deny prevented side effect"
+else
+  fail "Cursor safety adapter must block side effect" "decision=${decision} canary_exists=$([ -e "${CANARY}" ] && echo yes || echo no)"
+fi
+
 section "3. Cursor deny must not execute side effect"
 
 # Break verify so commit-verify denies
@@ -142,6 +155,23 @@ if grep -E '"command"[[:space:]]*:[[:space:]]*"[^"]*\.sh"' "${HOOKS_JSON}"; then
   fail "Cursor hooks.json must not put .sh paths in command (causes editor open on Windows)"
 else
   pass "Cursor hooks.json commands contain no .sh paths"
+fi
+# Regression: policy lived in .agents/hooks but Cursor only matched git commit (never ran it).
+if command -v jq >/dev/null 2>&1; then
+  first_cmd=$(jq -r '.hooks.beforeShellExecution[0].command // empty' "${HOOKS_JSON}")
+  first_matcher=$(jq -r '.hooks.beforeShellExecution[0].matcher // empty' "${HOOKS_JSON}")
+  if echo "${first_cmd}" | grep -q 'block-destructive-ops' && [ -z "${first_matcher}" ]; then
+    pass "Cursor first beforeShellExecution is unmatched safety adapter"
+  else
+    fail "Cursor safety adapter must be first beforeShellExecution with no matcher" \
+      "cmd=${first_cmd} matcher=${first_matcher}"
+  fi
+else
+  if grep -q 'block-destructive-ops' "${HOOKS_JSON}"; then
+    pass "Cursor hooks.json cites block-destructive-ops (jq missing; matcher not checked)"
+  else
+    fail "Cursor hooks.json must cite block-destructive-ops"
+  fi
 fi
 
 section "6. Manual smoke doc present"

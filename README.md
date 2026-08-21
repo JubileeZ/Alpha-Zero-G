@@ -3,9 +3,9 @@
 Alpha-Zero-G is an **outer agent harness installer and template system** designed to make AI agents (specifically **Cursor** and **Antigravity (`agy`)**) reliable and budget-conscious for solo developers and small teams. It does not replace your IDE's agent loops; instead, it provides essential guardrails, skills, and project scaffolding.
 
 It ships the following capabilities out-of-the-box across macOS, Linux, and Windows:
-- **Harness-Only Project Templates**: Automatically scaffolds `AGENTS.md`, `ROADMAP.md`, `task.md`, and issue-tracker adapters so agents can maintain cross-device context without relying on expensive chat history or full MCP schemas.
+- **Harness-Only Project Templates**: Automatically scaffolds `AGENTS.md`, `ROADMAP.md`, Work Packets under `.agents/work-packets/`, and issue-tracker adapters so agents can maintain cross-device context without relying on expensive chat history or full MCP schemas.
 - **Global Config & Skills**: Installs all vendored global skills and a cross-platform statusline script to `~/.gemini/` (azg-owned assets only; see ADR 0008).
-- **Safety Hooks**: Provides local `.agents/hooks/` for your repositories to block destructive operations, enforce commit gates, and verify work-state checkpoints.
+- **Safety Hooks**: Provides local `.agents/hooks/` for your repositories to block destructive operations and enforce commit gates.
 - **Brownfield & Greenfield Support**: Easily apply the harness to new projects (`azg new`) or safely retrofit existing repositories (`azg apply`).
 
 **v4 complete.** Start here:

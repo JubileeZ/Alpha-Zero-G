@@ -31,7 +31,7 @@ Both paths consume the same `templates/project/` tree.
 | Token budget | Thin always-on `AGENTS.md` (~80 lines managed block); skills user-invoked where possible; `gh` CLI over MCP by default |
 | Multi-device | Git-synced project harness; global machine UX via `azg setup` |
 | Multi-IDE | `AGENTS.md` cross-tool truth; `.agents/` Antigravity home; `.cursor/rules/` thin Cursor deltas only |
-| No GitHub required for work state | Filesystem layers (`task.md`, `current-state.md`, handoff) always work; GitHub is default **adapter** only |
+| No GitHub required for work state | Filesystem layers (Work Packets, `current-state.md`) always work; GitHub is default **adapter** only |
 
 ---
 
@@ -66,7 +66,7 @@ cd existing-repo && azg apply --tracker github
 | All vendored global skills (full setup) | `.agents/hooks.json` + hook scripts |
 | Statusline script | `.cursor/rules/` (thin) |
 | MCP config stub (`gh` default; commented read-only GitHub MCP) | `docs/agents/*` work-state & adapters |
-| | Continuity files: `task.md`, `ROADMAP.md`, `current-state.md`, handoff |
+| | Continuity: Work Packets under `.agents/work-packets/`, `ROADMAP.md`, `current-state.md` |
 
 **Never** put team-critical rules only in `~/.cursor/` — other devs and cloud agents cannot see them.
 
@@ -79,7 +79,6 @@ No app code, no stack wizard in v4. Template ships **agent infrastructure only**
 ```
 AGENTS.md                    # thin managed block
 ROADMAP.md                   # empty phase scaffold (- [ ] placeholders)
-task.md                      # from task.md.tmpl
 docs/agents/
   current-state.md           # reality snapshot
   progress.md                # three-layer update ritual
@@ -91,9 +90,9 @@ docs/agents/
   hooks.json
   hooks/
     block-destructive-ops.sh
-    commit-gate.sh             # NEW v4
-    checkpoint.sh              # NEW v4 — Stop hook, not PreCompact block
-  session-handoff.md           # SFDBN template
+    commit-gate.sh             # git commit: verify.sh + Work Packet
+    commit-scan.sh
+  work-packet.md.tmpl          # copy to work-packets/<slug>.md when Bind/new
 .cursor/rules/                 # 2–3 Cursor-only deltas max
 .vscode/settings.json        # terminal cwd = workspace (Windows-safe)
 tests/test-harness.sh        # meta-harness self-check (no app stack required)
@@ -104,7 +103,7 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 - Project identity (this repo: Alpha-Zero-G CLI itself)
 - Verify commands (`shellcheck`, `bash tests/test-azg.sh`, phase tests)
 - Safety rules (secrets, destructive ops, hook deny handling)
-- Session start ritual (read `current-state.md` → `task.md` → `git log -5`; do not rely on chat)
+- Session start ritual (read `current-state.md` → ROADMAP slice → `git log -5`; Bind a Work Packet only when asked; do not rely on chat)
 - Domain vocabulary trigger: if terms ambiguous, create `CONTEXT.md` from `docs/agents/CONTEXT.md.tmpl` before more implementation
 - Pointer to `docs/agents/progress.md` and issue tracker adapter
 
@@ -116,11 +115,10 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 
 | Hook | Event | Purpose |
 |------|-------|---------|
-| `block-destructive-ops.sh` | PreToolUse / shell | Block `rm -rf`, force-push main, credential leaks |
-| `commit-gate.sh` | PreToolUse on `git commit` | Block commit until `bash tests/verify.sh` passes |
-| `checkpoint.sh` | **Stop** (Cursor + Antigravity) | Enforce fresh `current-state.md` or handoff before agent stops; return continue/followup if stale |
+| `block-destructive-ops.sh` | PreToolUse / Cursor `beforeShellExecution` | Block `rm -rf`, force-push main, credential leaks |
+| `commit-gate.sh` / `commit-verify.sh` | `git commit` | Block until `bash tests/verify.sh` passes; code commit must stage `.agents/work-packets/` |
 
-**PreCompact:** Cursor `preCompact` is **observability only** (log/toast) — cannot block compaction on Cursor or Antigravity. Do not design around blocking PreCompact.
+Stop / PreCompact continuity hooks are **retired** (ADR 0022). Checkpoint = git commit, not agent turn-complete. Cursor safety adapter must stay wired — the policy script is otherwise never activated on Cursor.
 
 ---
 
@@ -128,11 +126,11 @@ tests/test-harness.sh        # meta-harness self-check (no app stack required)
 
 | Layer | File | Purpose |
 |-------|------|---------|
-| 1 — Task | `task.md` or GitHub issue | Active chunk: why, scope, blockers |
+| 1 — Task | `.agents/work-packets/<packet-id>.md` or GitHub issue | Active chunk: why, scope, blockers |
 | 2 — Phase | `ROADMAP.md` | Checkboxes; mark done only when code + tests pass |
 | 3 — Reality | `docs/agents/current-state.md` | What exists on disk today |
 
-**Handoff:** `.agents/session-handoff.md` — SFDBN (Status / Files / Decision / Blocked / Next). Commit when switching device or IDE.
+**Handoff:** `.agents/handoff-pointer` (Packet ID) + the packet file. Commit when switching device or IDE. Not a second SFDBN file.
 
 **Issue tracker:** Adapter pattern. Default GitHub (`gh` CLI). `docs/agents/issue-tracker.md` names active backend. Filesystem layers work without any hosted tracker.
 
@@ -183,7 +181,7 @@ User:        git pull              →  get new Alpha-Zero-G
 
 1. `azg new` produces harness-only tree matching §5 with no app scaffold questions.
 2. `azg apply` pre-seeds GitHub adapter docs without running setup skill.
-3. Four enforcement hooks + PreCompact observability hook pass shellcheck and integration tests on Linux + documented Windows path.
+3. Safety + commit-gate hooks pass shellcheck and integration tests on Linux + documented Windows path.
 4. `azg setup` installs all vendored skills + ponytail block; refuses `--profile`.
 5. `azg setup` skips skill copy when `VENDOR.lock` commit unchanged.
 6. Cold-start agent reading only onboarding docs produces the same build plan (validated by subagent test).

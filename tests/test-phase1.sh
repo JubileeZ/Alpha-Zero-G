@@ -10,8 +10,9 @@
 #   4. Checks for templates and generated files:
 #        - AGENTS.md (thin managed block)
 #        - ROADMAP.md (empty phases)
-#        - task.md (from task.md.tmpl)
-#        - docs/agents/current-state.md
+#        - task.md must NOT be seeded
+#        - .agents/work-packet.md.tmpl
+#        - .agents/session-handoff.md must NOT be seeded
 #        - docs/agents/progress.md
 #        - docs/agents/issue-tracker.md (GitHub default)
 #        - docs/agents/triage-labels.md
@@ -65,7 +66,8 @@ APP_DIR="${TEMP_WORKSPACE}/my-app"
 assert_dir_exists "Project directory exists" "${APP_DIR}"
 assert_file_exists "AGENTS.md exists" "${APP_DIR}/AGENTS.md"
 assert_file_exists "ROADMAP.md exists" "${APP_DIR}/ROADMAP.md"
-assert_file_exists "task.md exists" "${APP_DIR}/task.md"
+assert_file_not_exists "task.md not seeded" "${APP_DIR}/task.md"
+assert_file_exists "work-packet.md.tmpl exists" "${APP_DIR}/.agents/work-packet.md.tmpl"
 
 assert_dir_exists "docs/agents/ directory exists" "${APP_DIR}/docs/agents"
 assert_file_exists "docs/agents/current-state.md exists" "${APP_DIR}/docs/agents/current-state.md"
@@ -79,7 +81,7 @@ assert_dir_exists ".agents/ directory exists" "${APP_DIR}/.agents"
 assert_file_exists ".agents/hooks.json exists" "${APP_DIR}/.agents/hooks.json"
 assert_file_exists ".agents/hooks/block-destructive-ops.sh exists" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
 assert_executable "block-destructive-ops.sh is executable" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
-assert_file_exists ".agents/session-handoff.md exists" "${APP_DIR}/.agents/session-handoff.md"
+assert_file_not_exists ".agents/session-handoff.md not seeded" "${APP_DIR}/.agents/session-handoff.md"
 assert_file_not_exists ".agents/spawn-budget.json retired (ADR 0011)" \
   "${APP_DIR}/.agents/spawn-budget.json"
 

@@ -8,7 +8,7 @@ How agents record progress so the **next** agent (or device) can continue withou
 
 | Layer | File | Update when | Purpose |
 |-------|------|-------------|---------|
-| **1 — Task** | GitHub Issue or `task.md` | Start / finish a focused chunk of work | Why, scope, blockers, link to commits |
+| **1 — Task** | GitHub Issue or `.agents/work-packets/<packet-id>.md` | Start / finish a focused chunk | Why, scope, blockers, commit links |
 | **2 — Phase checklist** | `ROADMAP.md` | A roadmap bullet is **done** (code + tests + lint pass) | `- [ ]` → `- [x]` on the matching line |
 | **3 — Reality snapshot** | `docs/agents/current-state.md` | Something moves from "planned" to "exists" | Next agent knows what is on disk **today** |
 
@@ -39,14 +39,14 @@ Follow Session start in `AGENTS.md` (once per session). Then pick or create task
 ### 2b. Device Handoff (user-triggered)
 
 - Handoff write: only when user asks (handoff / device switch / leave-for-other-agent).
-- Canonical: `.agents/session-handoff.md` (SFDBN); commit with work.
-- Day-to-day same device: prefer `task.md` + `current-state.md`.
-- If another handoff skill writes elsewhere (e.g. temp): copy SFDBN into `.agents/session-handoff.md` and commit before switch. Non-repo handoff ≠ Device Handoff.
+- Canonical: bound Work Packet + `.agents/handoff-pointer` (Packet ID only). Commit with work.
+- Day-to-day same device: bound packet + `current-state.md`.
+- Do not write `.agents/session-handoff.md` (retired duplicate SFDBN).
 
 ### 3. Before finishing (pre-commit gate)
 
 - Run applicable lint/test commands to verify success.
-- Cleanup when task complete: delete `implementation_plan.md` / `walkthrough.md`; delete or empty `task.md` (finished packet — do not re-seed old content). Next task: create a new Work Packet with required SFDBN markers; durable state stays in ROADMAP / current-state / git.
+- Cleanup when task complete: delete `implementation_plan.md` / `walkthrough.md`; **delete** the Work Packet file (do not empty). Next task: new packet from `.agents/work-packet.md.tmpl`. Durable state stays in ROADMAP / current-state / git.
 
 ### 4. On completion — update docs
 

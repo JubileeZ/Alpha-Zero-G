@@ -56,27 +56,27 @@ fi
 # Reset verify to pass for subsequent cleanup tests
 printf '#!/usr/bin/env bash\nexit 0\n' > tests/verify.sh
 
-# 3. Cleanup case: task.md exists with all items completed, but implementation_plan.md exists -> deny
-echo "- [x] task 1" > task.md
-touch implementation_plan.md
+# 3. Cleanup case: finished Work Packet still on disk → deny
+mkdir -p .agents/work-packets
+echo "- [x] task 1" > .agents/work-packets/done.md
 _res_cleanup_deny=$(echo '{"toolCall":{"name":"run_command","args":{"CommandLine":"git commit -m \"feat: foo\""}}}' | bash .agents/hooks/commit-gate.sh)
-if echo "${_res_cleanup_deny}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"deny"' && echo "${_res_cleanup_deny}" | grep -q "transient files"; then
-  pass "commit-gate denies commit when task complete but transient plans exist"
+if echo "${_res_cleanup_deny}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"deny"' && echo "${_res_cleanup_deny}" | grep -q "Finished Work Packet"; then
+  pass "commit-gate denies commit when finished Work Packet remains"
 else
-  fail "commit-gate failed to deny commit when transient plans exist on completed task" "got: ${_res_cleanup_deny}"
+  fail "commit-gate failed to deny commit when finished packet remains" "got: ${_res_cleanup_deny}"
 fi
 
-# 4. Cleanup case: task.md exists with unchecked items, and implementation_plan.md exists -> allow
-echo "- [ ] task 1" > task.md
+# 4. Cleanup case: open Work Packet with unchecked items → allow (no git)
+echo "- [ ] task 1" > .agents/work-packets/done.md
 _res_cleanup_allow=$(echo '{"toolCall":{"name":"run_command","args":{"CommandLine":"git commit -m \"feat: foo\""}}}' | bash .agents/hooks/commit-gate.sh)
 if echo "${_res_cleanup_allow}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"allow"'; then
-  pass "commit-gate allows commit when task is in-progress and transient plans exist"
+  pass "commit-gate allows commit when Work Packet is in progress"
 else
-  fail "commit-gate denied commit when task in-progress and transient plans exist" "got: ${_res_cleanup_allow}"
+  fail "commit-gate denied commit when packet in-progress" "got: ${_res_cleanup_allow}"
 fi
 
 # Clean up files created for testing
-rm -f task.md implementation_plan.md
+rm -rf .agents/work-packets
 
 test_summary
 

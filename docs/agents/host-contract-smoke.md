@@ -18,8 +18,8 @@ Simulator: hook stdout `deny` / `permission:deny` → side-effect command is **n
 
 1. Scaffold or apply harness into a throwaway repo (`azg new smoke-app` or `azg apply`).
 2. Open the repo in Cursor; confirm `.cursor/hooks.json` loaded (Hooks output / agent settings).
-3. Ask the agent to run a destructive shell command, e.g. `rm -rf /tmp/azg-smoke-should-not-exist` (or any pattern blocked by policy you care about). Prefer a matcher that hits `beforeShellExecution` / project hooks.
-4. For commit gate: stage a code file **without** updating `task.md`, ask agent to `git commit`. Expect **deny** (verify or Checkpoint) and **no commit**.
+3. Ask the agent to run a destructive shell command, e.g. `rm -rf /tmp/azg-smoke-should-not-exist` (or any pattern blocked by policy you care about). The safety adapter has **no matcher** — every `beforeShellExecution` hits it.
+4. For commit gate: stage a code file **without** a `.agents/work-packets/` path, ask agent to `git commit`. Expect **deny** (verify or Checkpoint) and **no commit**.
 5. Pass criteria: action blocked in UI; working tree / canary path unchanged; agent sees deny reason.
 6. Fail criteria: command runs, commit lands, or hook never fires.
 

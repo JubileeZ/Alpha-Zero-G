@@ -65,16 +65,36 @@ The one-per-machine install (`azg setup`): shared vendor skill packs into each I
 _Avoid_: Manual skill import, Cursor-only ritual, Antigravity-only setup, skills-cursor, wiping ~/.cursor/rules
 
 **Work Packet**:
-Canonical Git-synced state for one active task: objective, acceptance criteria, status, files, decisions, blockers, and next action.
-_Avoid_: Handoff file, task list
+Git-synced SFDBN document for one task: objective, acceptance, status, files, decisions, blockers, next. A repo may hold several at once. Identified by Packet ID. Deleted when that task is finished — leftovers confuse later bind.
+_Avoid_: Handoff file, task list, singleton task.md as the only packet, host session id, empty stub left after done
+
+**Packet ID**:
+Repo-native human kebab slug that names a Work Packet. Travels via git to any device or IDE.
+_Avoid_: Cursor chat id, Antigravity session id, opaque UUID as the only key, chat title
+
+**Handoff Pointer**:
+Committed Packet ID used as the default bind when the user asks to continue, handoff, or switch device. Not the packet body. Concurrent Agent Sessions do not update it unless the user asked for a Device Handoff.
+_Avoid_: Full SFDBN copy, session-handoff.md as a second packet, singleton active task.md
 
 **Checkpoint**:
-Git commit pairing in-progress work with a fresh Work Packet so another session can resume from one durable state.
-_Avoid_: Autosave, IDE Stop
+Git commit pairing code with the Work Packet for that work: update the packet while in progress; delete it when finished.
+_Avoid_: Autosave, IDE Stop, rewrite packet on agent turn-complete
 
 **Device Handoff**:
-Pushed Checkpoint fetched on another device to resume same Work Packet from identical repository state.
-_Avoid_: Chat transfer, synchronized folder
+Pushed Checkpoint pulled on another device or IDE, then bind to a Work Packet by named Packet ID or Handoff Pointer.
+_Avoid_: Chat transfer, synchronized folder, host session id, reading every packet as the handoff
+
+**Agent Session**:
+One IDE chat or thread. May bind to at most one Work Packet. Not Unattended Session and not Device Handoff.
+_Avoid_: Treating a chat as a Work Packet, continue-by-default from leftover files
+
+**Bind**:
+This Agent Session's chosen Work Packet. Set only on continue, handoff, named Packet ID, Handoff Pointer, or when a change is asked and a new packet is created. Not a file write. Lasts for the Agent Session; packet files change only at Checkpoint.
+_Avoid_: Auto-bind the last leftover packet, rewrite on Stop, session-start read of every packet body
+
+**Independent Request**:
+A user ask that does not request a change. No bind, no Work Packet I/O.
+_Avoid_: Continue-by-default, session-start packet rewrite, Stop-hook follow-up as a task
 
 **Evaluation Suite**:
 Behavior Corpus Process Gate (ADR 0019) — sole in-repo adopt/eval path. Runners/isolation from ADR 0012+0013. Task Success = Observable Outcome; Report Evidence recorded separately.
@@ -189,8 +209,8 @@ Two underspec choices in the same risk class that are local and trivially revers
 _Avoid_: Coin-flip product behavior, treat format/path as a requirement conflict
 
 **Unattended Session**:
-Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present. Dispatch: see **Impl-Equivalent Default**.
-_Avoid_: User went quiet, assume unattended from silence
+Run where the agent must not ask clarifying questions: prompt says offline / don't ask / unattended, or a known non-interactive runner (`agent -p`, batch, eval). Interactive IDE chat is attended unless that prompt signal is present. Dispatch: see **Impl-Equivalent Default**. Distinct from Agent Session.
+_Avoid_: User went quiet, assume unattended from silence, confuse with Bind
 
 **Twin Sweep**:
 After fixing a defect: search reachable code for the same wrong construct in the same risk class; fix each hit or list it with a leave-reason before claiming done.

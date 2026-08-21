@@ -109,7 +109,8 @@ else
 fi
 
 if [ -f "my-new-app/.agents/hooks/commit-gate.sh" ] && \
-   [ -f "my-new-app/.agents/hooks/checkpoint.sh" ] && \
+   [ ! -f "my-new-app/.agents/hooks/checkpoint.sh" ] && \
+   [ ! -f "my-new-app/.cursor/hooks/stop-checkpoint.sh" ] && \
    [ ! -f "my-new-app/.agents/hooks/spawn-budget.sh" ]; then
   pass "Hooks generated correctly during new"
 else
@@ -179,11 +180,12 @@ else
   fail "Apply failed to create tracking templates"
 fi
 
-if [ -f ".agents/session-handoff.md" ] && [ -f ".vscode/settings.json" ] && [ -f "tests/test-harness.sh" ] && \
-   [ ! -f ".agents/spawn-budget.json" ]; then
-  pass "Apply copied handoff, vscode settings, and test harness (spawn-budget retired)"
+if [ -f ".vscode/settings.json" ] && [ -f "tests/test-harness.sh" ] && \
+   [ ! -f ".agents/spawn-budget.json" ] && \
+   [ ! -f "task.md" ] && [ ! -f ".agents/session-handoff.md" ]; then
+  pass "Apply copied vscode settings and test harness (no seeded task.md/handoff)"
 else
-  fail "Apply failed to copy handoff, vscode settings, or test harness"
+  fail "Apply failed to copy vscode/test harness or seeded leftover task.md/handoff"
 fi
 
 # Retired template Cursor rule must be removed on reapply
@@ -210,6 +212,83 @@ assert_file_not_exists "reapply removes retired spawn-budget.sh" \
   ".agents/hooks/spawn-budget.sh"
 assert_file_not_exists "reapply removes retired spawn-budget.json" \
   ".agents/spawn-budget.json"
+# Retired Stop/PreCompact must be removed on reapply
+mkdir -p .agents/hooks .cursor/hooks
+printf 'orphan\n' > .agents/hooks/checkpoint.sh
+printf 'orphan\n' > .agents/hooks/checkpoint-scan.sh
+printf 'orphan\n' > .agents/hooks/pre-compact.sh
+printf 'orphan\n' > .cursor/hooks/stop-checkpoint.sh
+printf 'orphan\n' > .cursor/hooks/pre-compact.sh
+assert_exit "azg apply retires Stop/PreCompact hooks" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "reapply removes retired checkpoint.sh" \
+  ".agents/hooks/checkpoint.sh"
+assert_file_not_exists "reapply removes retired checkpoint-scan.sh" \
+  ".agents/hooks/checkpoint-scan.sh"
+assert_file_not_exists "reapply removes retired agy pre-compact.sh" \
+  ".agents/hooks/pre-compact.sh"
+assert_file_not_exists "reapply removes retired stop-checkpoint.sh" \
+  ".cursor/hooks/stop-checkpoint.sh"
+assert_file_not_exists "reapply removes retired Cursor pre-compact.sh" \
+  ".cursor/hooks/pre-compact.sh"
+assert_file_not_contains "reapply strips Stop from hooks.json" \
+  ".agents/hooks.json" '"Stop"'
+assert_file_not_contains "reapply strips preCompact from Cursor hooks.json" \
+  ".cursor/hooks.json" '"preCompact"'
+if command -v jq >/dev/null 2>&1; then
+  jq '.["safety-gate"].Stop = [{"matcher":"*","hooks":[{"type":"command","command":"./hooks/checkpoint.sh"}]}]' \
+    .agents/hooks.json > .agents/hooks.json.azg-stop || true
+  if [ -f .agents/hooks.json.azg-stop ]; then
+    mv .agents/hooks.json.azg-stop .agents/hooks.json
+    assert_exit "azg apply strips leftover Stop key" 0 "${AZG}" apply . >/dev/null
+    assert_file_not_contains "reapply deletes leftover Stop key" \
+      ".agents/hooks.json" '"Stop"'
+  fi
+fi
+# Migrate leftover task.md + unused session-handoff
+printf '# Active Task: Stop Hook Fix\n' > task.md
+cat > .agents/session-handoff.md <<'EOF'
+# Session Handoff (SFDBN)
+
+- **Status:** [Current status of implementation/session]
+- **Files:** [Key files modified or being worked on]
+- **Decisions:** [Decisions made in the session]
+- **Blocked:** [Blockers, if any]
+- **Next:** [Actionable next steps for the next agent/session]
+EOF
+assert_exit "azg apply migrates task.md" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "apply removes task.md after migrate" "task.md"
+assert_file_exists "apply writes work packet from task.md heading" \
+  ".agents/work-packets/stop-hook-fix.md"
+assert_file_not_exists "apply removes unused session-handoff template" \
+  ".agents/session-handoff.md"
+# Collision: same heading must not clobber an existing packet
+printf '# Active Task: Stop Hook Fix\n' > task.md
+assert_exit "azg apply unique-names colliding task.md" 0 "${AZG}" apply . >/dev/null
+assert_file_exists "original packet kept on collision" \
+  ".agents/work-packets/stop-hook-fix.md"
+assert_file_exists "colliding task.md gets unique packet path" \
+  ".agents/work-packets/stop-hook-fix-2.md"
+assert_file_not_exists "colliding task.md removed" "task.md"
+# Filled session-handoff merges into a new packet
+cat > .agents/session-handoff.md <<'EOF'
+# Session Handoff (SFDBN)
+
+- **Status:** Real device notes
+- **Files:** foo.sh
+- **Decisions:** keep packets
+- **Blocked:** none
+- **Next:** apply migrate
+EOF
+assert_exit "azg apply merges filled session-handoff" 0 "${AZG}" apply . >/dev/null
+assert_file_not_exists "apply removes filled session-handoff" \
+  ".agents/session-handoff.md"
+assert_file_exists "apply writes imported-handoff packet" \
+  ".agents/work-packets/imported-handoff.md"
+if grep -q "Real device notes" ".agents/work-packets/imported-handoff.md"; then
+  pass "imported packet contains filled handoff body"
+else
+  fail "imported packet missing filled handoff body"
+fi
 if [ -f "AGENTS.md" ] && grep -q "## Session start" "AGENTS.md"; then
   pass "Session start remains in AGENTS.md after continuity rule retire"
 else

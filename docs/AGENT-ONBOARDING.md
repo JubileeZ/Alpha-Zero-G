@@ -17,7 +17,7 @@ Optional during implementation:
 
 ## One-paragraph summary
 
-Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), full vendored global skills + Ponytail catalog skill, four enforcement hooks, one PreCompact observability hook, and Behavior Corpus Process Gate (ADR 0019; Lite suite removed). `SPEC.md` defines design and `current-state.md` records reality.
+Alpha-Zero-G v4 is complete: **budget-conscious, multi-IDE outer harness** with harness-only project templates, filesystem continuity, GitHub-default issue adapter (`gh`, not MCP), full vendored global skills + Ponytail catalog skill, safety + commit-gate hooks, and Behavior Corpus Process Gate (ADR 0019; Lite suite removed). `SPEC.md` defines design and `current-state.md` records reality.
 
 ## Before writing code
 

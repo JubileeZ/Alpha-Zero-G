@@ -77,5 +77,28 @@ assert_output "Blocks git checkout on hooks.json" \
   '{"decision":"deny","reason":"Modifying safety-gate configuration or hooks is not allowed. Apply edits to these files manually if needed."}' \
   run_custom_hook '{"toolCall":{"name":"run_command","args":{"CommandLine":"git checkout -- .agents/hooks.json"}}}'
 
+section "4. Cursor safety adapter (policy was agy-only until wired)"
+
+CURSOR_ADAPTER="${REPO_ROOT}/.cursor/hooks/block-destructive-ops.sh"
+assert_file_exists "Cursor safety adapter exists" "${CURSOR_ADAPTER}"
+assert_executable "Cursor safety adapter is executable" "${CURSOR_ADAPTER}"
+
+cursor_safety_out() {
+  printf '%s\n' "$1" | "${CURSOR_ADAPTER}"
+}
+
+_deny_out=$(cursor_safety_out '{"command":"rm -rf /"}')
+if printf '%s' "${_deny_out}" | grep -qE '"permission"[[:space:]]*:[[:space:]]*"deny"'; then
+  pass "Cursor adapter denies rm -rf /"
+else
+  fail "Cursor adapter denies rm -rf /" "got: ${_deny_out}"
+fi
+_allow_out=$(cursor_safety_out '{"command":"git status"}')
+if printf '%s' "${_allow_out}" | grep -qE '"permission"[[:space:]]*:[[:space:]]*"allow"'; then
+  pass "Cursor adapter allows git status"
+else
+  fail "Cursor adapter allows git status" "got: ${_allow_out}"
+fi
+
 # ---------------------------------------------------------------------------
 test_summary

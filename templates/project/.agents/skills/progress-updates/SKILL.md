@@ -1,6 +1,6 @@
 ---
 name: progress-updates
-description: Record agent progress across sessions via task.md / ROADMAP / current-state, and compact or archive tracking docs. Use when finishing work, updating checklists, advancing a phase, trimming bloated ROADMAP/current-state/CONTEXT, or deciding what goes in docs/archive/.
+description: Record agent progress across sessions via Work Packets / ROADMAP / current-state, and compact or archive tracking docs. Use when finishing work, updating checklists, advancing a phase, trimming bloated ROADMAP/current-state/CONTEXT, or deciding what goes in docs/archive/.
 ---
 
 # Progress updates

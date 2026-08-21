@@ -14,7 +14,7 @@
 | Skills Catalog | `templates/global/skills/vendor/` | `mattpocock-skills` only (VENDOR.lock pin; catalog-only by default) |
 | Active Skills Manifest | `${AZG_GLOBAL_DIR}/azg-skills.json` | Declarative active set; 1:1 `~/.gemini/config/skills/` and `~/.cursor/skills/` |
 | Ownership | `azg-ownership.json` under global dir | ADR 0008 |
-| Checkpoint Stop | templates `.agents` + `.cursor` | Unified workstate: task.md · current-state · session-handoff |
+| Checkpoint | commit-gate at `git commit` | Work Packets under `.agents/work-packets/`. Stop/PreCompact **retired**. Cursor wires `block-destructive-ops` on `beforeShellExecution` (was agy-only) |
 | Cursor hook launch | `.cursor/hooks/run-hook.cmd` | Polyglot; **must be executable on Unix** (`100755`); hooks.json cites basename only |
 | Cursor device setup | `azg setup` → `~/.cursor/skills` + rendered `azg-*.mdc` | ADR 0008; marker validation hard-fails; foreign-safe |
 | Candidate slot | `templates/candidates/` | Empty after v2 promote (ADR 0021). Live Device Setup = Principles v2 |
@@ -22,7 +22,7 @@
 | Evaluation Suite | `evals/traps/scenarios/` + `score_outcome.py` + runners + docker | ADR 0012+0013 machinery; **0019** Behavior Corpus |
 | Aggregate / CI | `tests/run-all.sh`, `.github/workflows/ci.yml` | **ubuntu + macos** only; **no** `test-lite`; `azg_python` |
 | Portable gate | `templates/project/tests/verify.sh` | Harness integrity |
-| ADRs | `docs/adr/` | **0021** Principles v2 live; **0020** v1 historical; **0016** EP v1 historical; **0017** layering; **0019** Behavior Corpus |
+| ADRs | `docs/adr/` | **0022** Work Packets + Stop retired; **0021** Principles v2; **0019** Behavior Corpus |
 | Glossary | `CONTEXT.md` | |
 | Lean continuity | `AGENTS.md` Session start | Always-on lean set |
 | Project skills | `.agents/skills/progress-updates` + matching `.cursor/rules/*.mdc` | Agent-requestable |

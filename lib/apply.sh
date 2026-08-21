@@ -101,6 +101,34 @@ cmd_apply() {
         fi
     }
 
+    azg_slugify() {
+        local s
+        s=$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//')
+        if [ -z "$s" ]; then
+            printf 'legacy\n'
+        else
+            printf '%s\n' "$s"
+        fi
+    }
+
+    azg_unique_packet_path() {
+        local dest="$1"
+        local dir base n cand
+        if [ ! -e "$dest" ]; then
+            printf '%s\n' "$dest"
+            return
+        fi
+        dir=$(dirname "$dest")
+        base=$(basename "$dest" .md)
+        n=2
+        cand="$dir/${base}-${n}.md"
+        while [ -e "$cand" ]; do
+            n=$((n + 1))
+            cand="$dir/${base}-${n}.md"
+        done
+        printf '%s\n' "$cand"
+    }
+
     # 1. Refresh AZG-owned hooks from template (custom hooks outside template kept)
     if [ "$dry_run" != "yes" ]; then
         ensure_dir "$target_dir/.agents/hooks"
@@ -139,7 +167,8 @@ cmd_apply() {
     done
 
     # 3. Merge hooks.json — preserve user gates; template keys (incl. safety-gate) win.
-    # jq `*` keeps left-only keys; strip retired SubagentStart + spawn-budget wires (ADR 0011).
+    # jq `*` keeps left-only keys; strip retired SubagentStart + spawn-budget (ADR 0011)
+    # and Stop/PreCompact (continuity at Checkpoint/commit only).
     if [ ! -f "$target_dir/.agents/hooks.json" ]; then
         if [ "$dry_run" = "yes" ]; then
             printf "[CREATE] .agents/hooks.json\n"
@@ -162,6 +191,8 @@ cmd_apply() {
 
               .[0] * .[1]
               | del(."safety-gate".SubagentStart)
+              | del(."safety-gate".Stop)
+              | del(."safety-gate".PreCompact)
               | ."safety-gate" |= (
                   if .PreToolUse then .PreToolUse |= strip_spawn_budget else . end
                   | if .SubagentStop then .SubagentStop |= strip_spawn_budget else . end
@@ -309,6 +340,22 @@ cmd_apply() {
           ok "Removed retired config: spawn-budget.json"
         fi
       fi
+      for retired_agy in checkpoint.sh checkpoint-scan.sh pre-compact.sh; do
+        if [ ! -f "$tmpl_proj/.agents/hooks/$retired_agy" ] \
+          && [ -f "$target_dir/.agents/hooks/$retired_agy" ]; then
+          # DESTRUCTIVE: remove retired Stop/PreCompact hooks (Checkpoint = git commit)
+          rm -f "$target_dir/.agents/hooks/$retired_agy"
+          ok "Removed retired hook: $retired_agy"
+        fi
+      done
+      for retired_cur in stop-checkpoint.sh pre-compact.sh; do
+        if [ ! -f "$tmpl_proj/.cursor/hooks/$retired_cur" ] \
+          && [ -f "$target_dir/.cursor/hooks/$retired_cur" ]; then
+          # DESTRUCTIVE: remove retired Cursor Stop/PreCompact adapters
+          rm -f "$target_dir/.cursor/hooks/$retired_cur"
+          ok "Removed retired Cursor hook: $retired_cur"
+        fi
+      done
     fi
     azg_owned_refresh "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json" ".cursor/hooks.json"
     azg_owned_refresh "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd" ".cursor/hooks/run-hook.cmd"
@@ -394,7 +441,7 @@ cmd_apply() {
                 info "Created docs/agents/issue-tracker.md (tracker: $active_tracker)"
             else
                 # none or fallback
-                printf "# Issue tracker: None\n\nNo external issue tracker is configured.\nAll work state is tracked locally on the filesystem using task.md and ROADMAP.md.\n" > "$target_dir/docs/agents/issue-tracker.md"
+                printf "# Issue tracker: None\n\nNo external issue tracker is configured.\nAll work state is tracked locally on the filesystem using Work Packets under .agents/work-packets/ and ROADMAP.md.\n" > "$target_dir/docs/agents/issue-tracker.md"
                 info "Created docs/agents/issue-tracker.md (tracker: $active_tracker)"
             fi
         fi
@@ -404,32 +451,68 @@ cmd_apply() {
         fi
     fi
 
-    # 9. Create session-handoff only if missing (user content)
-    if [ ! -f "$target_dir/.agents/session-handoff.md" ]; then
-        if [ "$dry_run" = "yes" ]; then
-            printf "[CREATE] .agents/session-handoff.md\n"
-        else
-            copy_template "$tmpl_proj/.agents/session-handoff.md.tmpl" "$target_dir/.agents/session-handoff.md"
-            info "Created .agents/session-handoff.md"
-        fi
-    else
-        if [ "$dry_run" = "yes" ]; then
-            printf "[SKIP] .agents/session-handoff.md (already exists)\n"
-        fi
-    fi
+    azg_owned_refresh "$tmpl_proj/.agents/work-packet.md.tmpl" \
+      "$target_dir/.agents/work-packet.md.tmpl" ".agents/work-packet.md.tmpl"
 
-    # 9b. Create task.md Work Packet if missing
-    if [ ! -f "$target_dir/task.md" ]; then
-        if [ "$dry_run" = "yes" ]; then
-            printf "[CREATE] task.md\n"
-        else
-            render_template "$tmpl_proj/task.md.tmpl" "$target_dir/task.md" \
-                "TASK_NAME" "Initial retrofit task"
-            info "Created task.md (Work Packet)"
+    # 9. Migrate leftover task.md / session-handoff.md → Work Packets. Do not seed packets.
+    if [ "$dry_run" = "yes" ]; then
+        if [ -f "$target_dir/task.md" ]; then
+            printf "[MIGRATE] task.md → .agents/work-packets/\n"
+        fi
+        if [ -f "$target_dir/.agents/session-handoff.md" ]; then
+            printf "[MIGRATE] .agents/session-handoff.md → Work Packet or delete unused template\n"
         fi
     else
-        if [ "$dry_run" = "yes" ]; then
-            printf "[SKIP] task.md (already exists)\n"
+        ensure_dir "$target_dir/.agents/work-packets"
+        _packet=""
+        if [ -f "$target_dir/.agents/session-handoff.md.tmpl" ]; then
+            rm -f "$target_dir/.agents/session-handoff.md.tmpl"
+            ok "Removed leftover session-handoff.md.tmpl"
+        fi
+        if [ -f "$target_dir/task.md" ]; then
+            _heading=$(sed -n 's/^# Active Task:[[:space:]]*//p' "$target_dir/task.md" | head -n 1)
+            _slug=$(azg_slugify "$_heading")
+            _dest=$(azg_unique_packet_path "$target_dir/.agents/work-packets/${_slug}.md")
+            mv "$target_dir/task.md" "$_dest"
+            _packet="$_dest"
+            ok "Migrated task.md → ${_dest#"$target_dir"/}"
+        fi
+        if [ -f "$target_dir/.agents/session-handoff.md" ]; then
+            if grep -q '\[Current status of implementation/session\]' "$target_dir/.agents/session-handoff.md"; then
+                rm -f "$target_dir/.agents/session-handoff.md"
+                ok "Removed unused session-handoff.md template"
+            else
+                if [ -z "$_packet" ]; then
+                    _packet=$(azg_unique_packet_path "$target_dir/.agents/work-packets/imported-handoff.md")
+                    {
+                        echo "# Active Task: imported-handoff"
+                        echo ""
+                        echo "- **Status:** Imported from session-handoff.md"
+                        echo "- **Objective:** Resume Device Handoff notes"
+                        echo "- **Acceptance:** Bound packet is current or packet deleted"
+                        echo "- **Issue/Ticket:**"
+                        echo ""
+                        echo "## Work Packet (SFDBN)"
+                        echo ""
+                        echo "- **Status:** Imported"
+                        echo "- **Files:** (see imported section)"
+                        echo "- **Decisions:** none"
+                        echo "- **Blocked:** none"
+                        echo "- **Next:** Bind this packet or delete it"
+                        echo ""
+                        echo "## Todo"
+                        echo "- [ ] Resume or delete this imported packet"
+                    } > "$_packet"
+                fi
+                {
+                    echo ""
+                    echo "## Imported session-handoff.md"
+                    echo ""
+                    cat "$target_dir/.agents/session-handoff.md"
+                } >> "$_packet"
+                rm -f "$target_dir/.agents/session-handoff.md"
+                ok "Merged session-handoff.md into ${_packet#"$target_dir"/}"
+            fi
         fi
     fi
 

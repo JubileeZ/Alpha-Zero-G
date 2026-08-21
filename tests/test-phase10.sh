@@ -59,12 +59,17 @@ fi
 
 section "5. Work Packet template fields"
 
-assert_file_contains "task.md has Acceptance field" "${APP_DIR}/task.md" "**Acceptance:**"
-assert_file_contains "task.md has Work Packet SFDBN" "${APP_DIR}/task.md" "## Work Packet (SFDBN)"
-assert_file_contains "task.md has Next field" "${APP_DIR}/task.md" "**Next:**"
+assert_file_contains "work-packet tmpl has Acceptance" \
+  "${APP_DIR}/.agents/work-packet.md.tmpl" "**Acceptance:**"
+assert_file_contains "work-packet tmpl has SFDBN" \
+  "${APP_DIR}/.agents/work-packet.md.tmpl" "## Work Packet (SFDBN)"
+assert_file_contains "work-packet tmpl has Next" \
+  "${APP_DIR}/.agents/work-packet.md.tmpl" "**Next:**"
 
-printf '# Broken task\n' > task.md
+mkdir -p .agents/work-packets
+printf '# Broken packet\n' > .agents/work-packets/broken.md
 assert_exit "verify.sh exits non-zero for incomplete Work Packet" 1 bash tests/verify.sh
+rm -f .agents/work-packets/broken.md
 
 section "6. setup preflight requires jq"
 
@@ -109,7 +114,7 @@ else
   fail "Cursor commit-verify should deny" "got: ${_cv_out}"
 fi
 
-section "8. azg apply creates task.md"
+section "8. azg apply does not seed task.md"
 
 cd "${TEMP_WORKSPACE}"
 mkdir -p brownfield && cd brownfield
@@ -117,11 +122,12 @@ git init -q
 git commit --allow-empty -m "init" -q
 # apply requires jq — skip clearly if missing
 if ! command -v jq >/dev/null 2>&1; then
-  skip "azg apply task.md test requires jq"
+  skip "azg apply packet test requires jq"
 else
   assert_exit "azg apply succeeds" 0 "${AZG}" apply .
-  assert_file_exists "apply created task.md" "${TEMP_WORKSPACE}/brownfield/task.md"
-  assert_file_contains "applied task.md is Work Packet" "${TEMP_WORKSPACE}/brownfield/task.md" "## Work Packet (SFDBN)"
+  assert_file_not_exists "apply does not seed task.md" "${TEMP_WORKSPACE}/brownfield/task.md"
+  assert_file_exists "apply copies work-packet.md.tmpl" \
+    "${TEMP_WORKSPACE}/brownfield/.agents/work-packet.md.tmpl"
 fi
 
 section "9. Checkpoint freshness requires Work Packet with code"
@@ -133,26 +139,51 @@ cd "${CP_DIR}"
 git config user.email "test@azg"
 git config user.name "AZG Test"
 
-# Stage code without task.md
+# Stage code without Work Packet
 mkdir -p src
 echo "print(1)" > src/app.py
 git add src/app.py
 commit_json='{"toolCall":{"name":"run_command","args":{"CommandLine":"git commit -m \"feat: code without packet\""}}}'
 _cp_out=$(echo "${commit_json}" | bash .agents/hooks/commit-gate.sh)
-if echo "${_cp_out}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"deny"' && echo "${_cp_out}" | grep -qi 'Work Packet\|task.md\|Checkpoint'; then
+if echo "${_cp_out}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"deny"' && echo "${_cp_out}" | grep -qi 'Work Packet\|work-packets\|Checkpoint'; then
   pass "commit-gate denies code commit without staged Work Packet"
 else
-  fail "commit-gate should deny Checkpoint without task.md" "got: ${_cp_out}"
+  fail "commit-gate should deny Checkpoint without work-packets path" "got: ${_cp_out}"
 fi
 
-# Stage updated task.md too → allow (verify still passes)
-echo "- **Next:** continue checkpoint test" >> task.md
-git add task.md src/app.py
+# Stage updated Work Packet too → allow (verify still passes)
+mkdir -p .agents/work-packets
+cp "${AZG_ROOT}/templates/project/.agents/work-packet.md.tmpl" .agents/work-packets/checkpoint-test.md
+# tmpl has {{TASK_NAME}} — still has SFDBN markers; add an unchecked todo (already in tmpl)
+git add .agents/work-packets/checkpoint-test.md src/app.py
 _cp_ok=$(echo "${commit_json}" | bash .agents/hooks/commit-gate.sh)
 if echo "${_cp_ok}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"allow"'; then
   pass "commit-gate allows Checkpoint when Work Packet staged with code"
 else
-  fail "commit-gate should allow when task.md staged" "got: ${_cp_ok}"
+  fail "commit-gate should allow when work-packets path staged" "got: ${_cp_ok}"
+fi
+
+# Packet with no checkboxes is not finished (abandoned stay)
+{
+  echo "# Active Task: no-boxes"
+  echo ""
+  echo "- **Objective:** abandoned import"
+  echo "- **Acceptance:** stay until user deletes"
+  echo ""
+  echo "## Work Packet (SFDBN)"
+  echo ""
+  echo "- **Status:** parked"
+  echo "- **Files:** src/app.py"
+  echo "- **Decisions:** none"
+  echo "- **Blocked:** none"
+  echo "- **Next:** user says done"
+} > .agents/work-packets/no-boxes.md
+git add .agents/work-packets/no-boxes.md src/app.py
+_cp_nb=$(echo "${commit_json}" | bash .agents/hooks/commit-gate.sh)
+if echo "${_cp_nb}" | grep -qE '"decision"[[:space:]]*:[[:space:]]*"allow"'; then
+  pass "commit-gate allows packet with no checkboxes"
+else
+  fail "abandoned packet without checkboxes must not count as finished" "got: ${_cp_nb}"
 fi
 
 section "10. azg apply refreshes AZG-owned hooks"

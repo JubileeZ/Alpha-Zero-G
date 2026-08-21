@@ -42,11 +42,31 @@ assert_dir_exists ".cursor/rules directory exists" "${APP_DIR}/.cursor/rules"
 
 assert_file_exists "hooks.json exists" "${APP_DIR}/.agents/hooks.json"
 assert_file_exists "block-destructive-ops.sh exists" "${APP_DIR}/.agents/hooks/block-destructive-ops.sh"
-assert_file_exists "commit-gate.sh exists" "${APP_DIR}/.agents/hooks/commit-gate.sh"
-assert_file_exists "checkpoint.sh exists" "${APP_DIR}/.agents/hooks/checkpoint.sh"
+assert_file_exists "commit-scan.sh exists" "${APP_DIR}/.agents/hooks/commit-scan.sh"
+assert_file_exists "Cursor block-destructive-ops adapter exists" \
+  "${APP_DIR}/.cursor/hooks/block-destructive-ops.sh"
+assert_file_contains "Cursor hooks.json wires safety adapter" \
+  "${APP_DIR}/.cursor/hooks.json" "block-destructive-ops"
 assert_file_not_exists "spawn-budget.sh retired (ADR 0011)" \
   "${APP_DIR}/.agents/hooks/spawn-budget.sh"
-assert_file_exists "pre-compact.sh exists" "${APP_DIR}/.agents/hooks/pre-compact.sh"
+assert_file_not_exists "checkpoint.sh retired (Stop hook gone)" \
+  "${APP_DIR}/.agents/hooks/checkpoint.sh"
+assert_file_not_exists "checkpoint-scan.sh retired" \
+  "${APP_DIR}/.agents/hooks/checkpoint-scan.sh"
+assert_file_not_exists "pre-compact.sh retired" \
+  "${APP_DIR}/.agents/hooks/pre-compact.sh"
+assert_file_not_exists "stop-checkpoint.sh retired" \
+  "${APP_DIR}/.cursor/hooks/stop-checkpoint.sh"
+assert_file_not_exists "Cursor pre-compact.sh retired" \
+  "${APP_DIR}/.cursor/hooks/pre-compact.sh"
+assert_file_not_contains "agy hooks.json has no Stop" \
+  "${APP_DIR}/.agents/hooks.json" '"Stop"'
+assert_file_not_contains "agy hooks.json has no PreCompact" \
+  "${APP_DIR}/.agents/hooks.json" '"PreCompact"'
+assert_file_not_contains "Cursor hooks.json has no stop" \
+  "${APP_DIR}/.cursor/hooks.json" '"stop"'
+assert_file_not_contains "Cursor hooks.json has no preCompact" \
+  "${APP_DIR}/.cursor/hooks.json" '"preCompact"'
 
 assert_file_exists "read-agents-md.mdc rule exists" "${APP_DIR}/.cursor/rules/read-agents-md.mdc"
 assert_file_not_exists "work-state-continuity.mdc retired (Session start in AGENTS.md)" \
@@ -63,7 +83,7 @@ assert_file_exists "Cursor commit-verify hook exists" "${APP_DIR}/.cursor/hooks/
 assert_file_exists "Cursor run-hook.cmd exists" "${APP_DIR}/.cursor/hooks/run-hook.cmd"
 
 # Executable checks
-for h in block-destructive-ops.sh commit-gate.sh checkpoint.sh pre-compact.sh; do
+for h in block-destructive-ops.sh commit-gate.sh commit-scan.sh; do
   if [ -x "${APP_DIR}/.agents/hooks/${h}" ]; then
     pass "Hook ${h} is executable"
   else
@@ -122,8 +142,8 @@ else
 fi
 
 # Test 3: For git commit command, portable gate failing
-# DESTRUCTIVE: overwrite task in temp scaffold to exercise Work Packet validation
-printf '# Incomplete task\n' > task.md
+# DESTRUCTIVE: remove required file in temp scaffold to fail verify
+rm -f AGENTS.md
 out_commit_fail=$(echo "${commit_json}" | "${COMMIT_GATE}")
 dec_commit_fail=$(echo "${out_commit_fail}" | jq -r '.decision')
 if [ "${dec_commit_fail}" = "deny" ]; then
@@ -132,7 +152,7 @@ else
   fail "Allowed commit when verify fails" "got: ${out_commit_fail}"
 fi
 # Restore workspace integrity for other tests
-cp "${REPO_ROOT}/templates/project/task.md.tmpl" task.md
+cp "${REPO_ROOT}/templates/project/AGENTS.md.tmpl" AGENTS.md
 
 # Test 4: Project tests override
 # Configure a passing project test script
@@ -162,123 +182,18 @@ fi
 rm -f tests/project-tests.sh
 
 # ---------------------------------------------------------------------------
-# checkpoint.sh Integration Tests
+# Stop / PreCompact retired
 # ---------------------------------------------------------------------------
-section "4. checkpoint.sh Tests"
+section "4. Stop and PreCompact retired"
 
-CHECKPOINT="${APP_DIR}/.agents/hooks/checkpoint.sh"
-stop_json='{"session_id":"test-session"}'
-
-# Setup git repo in target to test git operations
-git init -q
-git config user.email "test@azg"
-git config user.name "AZG Test"
-git add .
-git commit -q -m "initial commit"
-
-# Test 1: If git status is clean, it should allow Stop
-out_stop=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop=$(echo "${out_stop}" | jq -r '.decision')
-if [ "${dec_stop}" = "allow" ]; then
-  pass "Allows Stop when repo is clean"
-else
-  fail "Blocked Stop on clean repo" "got: ${out_stop}"
-fi
-
-# Test 2: If code changes exist but no workstate files modified, it should continue (Stop schema)
-mkdir -p src
-echo "print('hello')" > src/main.py
-out_stop_code=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop_code=$(echo "${out_stop_code}" | jq -r '.decision')
-if [ "${dec_stop_code}" = "continue" ]; then
-  pass "Continues Stop when code changes exist without work-state documentation updates"
-else
-  fail "Allowed Stop with undocumented code changes" "got: ${out_stop_code}"
-fi
-
-# Test 2b: Cursor stop-checkpoint adapter (followup_message; same policy)
-STOP_CHECKPOINT="${APP_DIR}/.cursor/hooks/stop-checkpoint.sh"
-cursor_stop_json='{"status":"completed","loop_count":0}'
-out_cursor_stop=$(echo "${cursor_stop_json}" | "${STOP_CHECKPOINT}")
-if echo "${out_cursor_stop}" | jq -e '.followup_message | length > 0' >/dev/null 2>&1; then
-  pass "Cursor stop-checkpoint followup when code dirty without workstate"
-else
-  fail "Cursor stop-checkpoint should return followup_message" "got: ${out_cursor_stop}"
-fi
-out_cursor_cap=$(echo '{"status":"completed","loop_count":3}' | "${STOP_CHECKPOINT}")
-if [ "$(echo "${out_cursor_cap}" | tr -d '[:space:]')" = "{}" ]; then
-  pass "Cursor stop-checkpoint silent at loop cap"
-else
-  fail "Cursor stop-checkpoint should return {} at loop cap" "got: ${out_cursor_cap}"
-fi
-
-# Test 3: If code changes exist and current-state.md is updated, it should allow
-echo "update" >> docs/agents/current-state.md
-out_stop_doc=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop_doc=$(echo "${out_stop_doc}" | jq -r '.decision')
-if [ "${dec_stop_doc}" = "allow" ]; then
-  pass "Allows Stop when docs/agents/current-state.md is updated alongside code changes"
-else
-  fail "Blocked Stop even though docs/agents/current-state.md was updated" "got: ${out_stop_doc}"
-fi
-# Clean up for next test
-git checkout -q docs/agents/current-state.md
-
-# Test 4: If code changes exist and session-handoff.md is updated, it should allow
-echo "handoff details" > .agents/session-handoff.md
-out_stop_handoff=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop_handoff=$(echo "${out_stop_handoff}" | jq -r '.decision')
-if [ "${dec_stop_handoff}" = "allow" ]; then
-  pass "Allows Stop when .agents/session-handoff.md is updated alongside code changes"
-else
-  fail "Blocked Stop even though .agents/session-handoff.md was updated" "got: ${out_stop_handoff}"
-fi
-# DESTRUCTIVE: clean temporary handoff; keep src for task.md+code test
-rm -f .agents/session-handoff.md
-git checkout -q docs/agents/current-state.md 2>/dev/null || true
-
-# Test 4b: code + task.md (Work Packet) allows — unified with Cursor Stop
-echo "print('hello')" > src/main.py
-echo "- **Next:** checkpoint unify" >> task.md
-out_stop_wp=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop_wp=$(echo "${out_stop_wp}" | jq -r '.decision')
-if [ "${dec_stop_wp}" = "allow" ]; then
-  pass "Allows Stop when task.md updated alongside code changes"
-else
-  fail "Blocked Stop even though task.md was updated" "got: ${out_stop_wp}"
-fi
-rm -f src/main.py
-rm -rf src
-git checkout -q task.md
-
-# Test 5: Editing only task.md or ROADMAP.md should be allowed without docs/agents/current-state.md changes
-echo "mod" >> task.md
-out_stop_task=$(echo "${stop_json}" | "${CHECKPOINT}")
-dec_stop_task=$(echo "${out_stop_task}" | jq -r '.decision')
-if [ "${dec_stop_task}" = "allow" ]; then
-  pass "Allows Stop when only task.md is edited"
-else
-  fail "Blocked Stop when only task.md was edited" "got: ${out_stop_task}"
-fi
-git checkout -q task.md
-
-# ---------------------------------------------------------------------------
-# pre-compact.sh Integration Tests
-# ---------------------------------------------------------------------------
-section "5. pre-compact.sh Tests"
-
-PRE_COMPACT="${APP_DIR}/.agents/hooks/pre-compact.sh"
-# Test 1: Always allows and logs message to stderr
-out_pc=$(echo "{}" | "${PRE_COMPACT}" 2>/dev/null)
-dec_pc=$(echo "${out_pc}" | jq -r '.decision')
-
-err_pc=$(echo "{}" | "${PRE_COMPACT}" 2>&1 >/dev/null)
-
-if [ "${dec_pc}" = "allow" ] && echo "${err_pc}" | grep -q "PreCompact event triggered"; then
-  pass "pre-compact.sh logs to stderr and allows context compaction"
-else
-  fail "pre-compact.sh behavior incorrect" "dec=${dec_pc} stderr=${err_pc}"
-fi
+assert_file_not_exists "no checkpoint.sh after scaffold" \
+  "${APP_DIR}/.agents/hooks/checkpoint.sh"
+assert_file_not_exists "no stop-checkpoint.sh after scaffold" \
+  "${APP_DIR}/.cursor/hooks/stop-checkpoint.sh"
+assert_file_not_exists "no agy pre-compact.sh after scaffold" \
+  "${APP_DIR}/.agents/hooks/pre-compact.sh"
+assert_file_not_exists "no Cursor pre-compact.sh after scaffold" \
+  "${APP_DIR}/.cursor/hooks/pre-compact.sh"
 
 # ---------------------------------------------------------------------------
 # Summary

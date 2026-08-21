@@ -78,22 +78,12 @@ cmd_new() {
     chmod +x "$target_dir/.agents/hooks/commit-gate.sh"
 
     copy_template \
-        "$tmpl_proj/.agents/hooks/checkpoint-scan.sh" \
-        "$target_dir/.agents/hooks/checkpoint-scan.sh"
-    chmod +x "$target_dir/.agents/hooks/checkpoint-scan.sh"
-
-    copy_template \
-        "$tmpl_proj/.agents/hooks/checkpoint.sh" \
-        "$target_dir/.agents/hooks/checkpoint.sh"
-    chmod +x "$target_dir/.agents/hooks/checkpoint.sh"
-
-    copy_template \
-        "$tmpl_proj/.agents/hooks/pre-compact.sh" \
-        "$target_dir/.agents/hooks/pre-compact.sh"
-    chmod +x "$target_dir/.agents/hooks/pre-compact.sh"
+        "$tmpl_proj/.agents/hooks/commit-scan.sh" \
+        "$target_dir/.agents/hooks/commit-scan.sh"
+    chmod +x "$target_dir/.agents/hooks/commit-scan.sh"
 
     copy_template "$tmpl_proj/.agents/hooks.json" "$target_dir/.agents/hooks.json"
-    copy_template "$tmpl_proj/.agents/session-handoff.md.tmpl" "$target_dir/.agents/session-handoff.md"
+    copy_template "$tmpl_proj/.agents/work-packet.md.tmpl" "$target_dir/.agents/work-packet.md.tmpl"
     copy_template "$tmpl_proj/.gitignore" "$target_dir/.gitignore"
 
     # Copy .cursor/rules/ (.mdc — Cursor ignores plain .md rules)
@@ -117,7 +107,7 @@ cmd_new() {
     copy_template "$tmpl_proj/.cursor/hooks.json" "$target_dir/.cursor/hooks.json"
     copy_template "$tmpl_proj/.cursor/hooks/run-hook.cmd" "$target_dir/.cursor/hooks/run-hook.cmd"
     chmod +x "$target_dir/.cursor/hooks/run-hook.cmd"
-    for chook in commit-verify.sh stop-checkpoint.sh pre-compact.sh; do
+    for chook in commit-verify.sh block-destructive-ops.sh; do
         copy_template "$tmpl_proj/.cursor/hooks/$chook" "$target_dir/.cursor/hooks/$chook"
         chmod +x "$target_dir/.cursor/hooks/$chook"
     done
@@ -150,7 +140,7 @@ cmd_new() {
         copy_template "$tracker_src" "$target_dir/docs/agents/issue-tracker.md"
     else
         # None or fallback
-        printf "# Issue tracker: None\n\nNo external issue tracker is configured.\nAll work state is tracked locally on the filesystem using task.md and ROADMAP.md.\n" > "$target_dir/docs/agents/issue-tracker.md"
+        printf "# Issue tracker: None\n\nNo external issue tracker is configured.\nAll work state is tracked locally on the filesystem using Work Packets under .agents/work-packets/ and ROADMAP.md.\n" > "$target_dir/docs/agents/issue-tracker.md"
     fi
 
     # Build commands default table
@@ -194,12 +184,6 @@ cmd_new() {
         "AZG_VERSION" "$AZG_VERSION" \
         "DATE" "$TODAY" \
         "BUILD_COMMANDS" "$build_cmds_table"
-
-    # Render task.md from template
-    render_template \
-        "$tmpl_proj/task.md.tmpl" \
-        "$target_dir/task.md" \
-        "TASK_NAME" "Initial project setup"
 
     # Git init
     if [ "$git_init" = "yes" ]; then

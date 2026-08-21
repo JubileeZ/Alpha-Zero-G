@@ -39,7 +39,7 @@ Evaluate the repository across the following 5 core pillars:
    - Evaluate current learning records and custom skills; treat Knowledge Items, `/learn`, and trajectory loops as candidates only if repository or host evidence supports them.
 
 3. **Agent Memory Architecture (Short & Long-Term)**
-   - Assess generated-project continuity (`templates/project/.agents/session-handoff.md.tmpl`, `task.md.tmpl`, `docs/agents/current-state.md.tmpl`) and this repository's work-state.
+   - Assess generated-project continuity (`templates/project/.agents/work-packet.md.tmpl`, `docs/agents/current-state.md.tmpl`) and this repository's work-state.
    - Prefer existing filesystem layers; propose semantic or episodic adapters only with a measured gap.
 
 4. **Proactive & Autonomous Execution**

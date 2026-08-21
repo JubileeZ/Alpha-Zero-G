@@ -31,8 +31,7 @@ REQUIRED=(
   .agents/hooks.json
   .agents/hooks/block-destructive-ops.sh
   .agents/hooks/commit-gate.sh
-  .agents/hooks/checkpoint.sh
-  .agents/hooks/pre-compact.sh
+  .agents/hooks/commit-scan.sh
   tests/test-harness.sh
   tests/verify.sh
 )
