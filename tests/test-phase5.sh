@@ -31,6 +31,8 @@ TEMP_TEST_DIR="$(azg_mktemp_d "tmp_azg_phase5-XXXXXX")"
 cd "${TEMP_TEST_DIR}"
 mkdir -p .agents/hooks tests
 cp "$REPO_ROOT/templates/project/.agents/hooks/commit-gate.sh" .agents/hooks/
+cp "$REPO_ROOT/templates/project/.agents/hooks/commit-scan.sh" .agents/hooks/
+chmod +x .agents/hooks/commit-gate.sh .agents/hooks/commit-scan.sh
 
 # commit-gate testing (uses portable tests/verify.sh)
 # 1. Success case: verify returns 0
