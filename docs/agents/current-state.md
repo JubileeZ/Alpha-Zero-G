@@ -11,7 +11,7 @@
 | Area | Path | Notes |
 |------|------|-------|
 | CLI | `azg`, `lib/` | setup (curated active core + transitive deps), skill list/enable/disable, new, apply, update (--vendor), selective uninstall; **`azg_python`** |
-| Skills Catalog | `templates/global/skills/vendor/` | `mattpocock-skills` only (VENDOR.lock pin; catalog-only by default) |
+| Skills Catalog | `templates/global/skills/vendor/` | `mattpocock-skills` only (VENDOR.lock pin `3cca18b`; catalog-only by default) |
 | Active Skills Manifest | `${AZG_GLOBAL_DIR}/azg-skills.json` | Declarative active set; 1:1 `~/.gemini/config/skills/` and `~/.cursor/skills/` |
 | Ownership | `azg-ownership.json` under global dir | ADR 0008 |
 | Checkpoint | commit-gate at `git commit` | Work Packets under `.agents/work-packets/`. Stop/PreCompact **retired**. Cursor wires `block-destructive-ops` on `beforeShellExecution` (was agy-only) |
