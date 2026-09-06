@@ -199,8 +199,14 @@ _scan_skill_prereqs() {
   local vendor_base="${2}"
   [ -f "${skill_md}" ] || return 0
 
+  # Slash tokens (`/tdd`) and quoted Skill-tool names (`with "grilling"`).
   local tokens
-  tokens="$(grep -oE '/[a-z0-9-]+' "${skill_md}" 2>/dev/null | sed 's|^/||' | sort -u || true)"
+  tokens="$(
+    {
+      grep -oE '/[a-z0-9-]+' "${skill_md}" 2>/dev/null | sed 's|^/||' || true
+      grep -oE '"[a-z0-9-]+"' "${skill_md}" 2>/dev/null | sed 's/^"//;s/"$//' || true
+    } | sort -u
+  )"
   for tok in ${tokens}; do
     if _find_skill_info "${vendor_base}" "${tok}" >/dev/null 2>&1; then
       printf '%s\n' "${tok}"
